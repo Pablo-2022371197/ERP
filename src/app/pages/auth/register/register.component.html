@@ -1,0 +1,181 @@
+<div class="register-page">
+    <div class="register-container">
+        <div class="register-form-section">
+            <p-card class="register-card">
+                <ng-template pTemplate="header">
+                    <div class="card-header">
+                        <div class="header-icon">
+                            <i class="pi pi-user-plus"></i>
+                        </div>
+                        <h2>Crear Cuenta</h2>
+                        <p>Únete a nuestro sistema ERP</p>
+                    </div>
+                </ng-template>
+
+                <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+                    <div class="form-field">
+                        <p-floatlabel>
+                            <input pInputText id="fullName" formControlName="fullName" class="w-full"
+                                [class.ng-invalid]="fullName?.invalid && fullName?.touched"
+                                [class.ng-dirty]="fullName?.touched" />
+                            <label for="fullName">Nombre Completo</label>
+                        </p-floatlabel>
+                        @if (fullName?.invalid && fullName?.touched) {
+                        <small class="error-message">
+                            @if (fullName?.errors?.['required']) {
+                            El nombre es requerido
+                            }
+                            @if (fullName?.errors?.['minlength']) {
+                            El nombre debe tener al menos 3 caracteres
+                            }
+                        </small>
+                        }
+                    </div>
+
+                    <div class="form-field">
+                        <p-floatlabel>
+                            <input pInputText id="email" formControlName="email" class="w-full"
+                                [class.ng-invalid]="email?.invalid && email?.touched"
+                                [class.ng-dirty]="email?.touched" />
+                            <label for="email">Correo Electrónico</label>
+                        </p-floatlabel>
+                        @if (email?.invalid && email?.touched) {
+                        <small class="error-message">
+                            @if (email?.errors?.['required']) {
+                            El correo es requerido
+                            }
+                            @if (email?.errors?.['email']) {
+                            Ingresa un correo válido
+                            }
+                        </small>
+                        }
+                    </div>
+
+                    <div class="form-field">
+                        <p-floatlabel>
+                            <p-password id="password" formControlName="password" [toggleMask]="true" [feedback]="true"
+                                styleClass="w-full" inputStyleClass="w-full"
+                                [class.ng-invalid]="password?.invalid && password?.touched"
+                                [class.ng-dirty]="password?.touched" />
+                            <label for="password">Contraseña</label>
+                        </p-floatlabel>
+                        @if (password?.invalid && password?.touched) {
+                        <small class="error-message">
+                            @if (password?.errors?.['required']) {
+                            La contraseña es requerida
+                            }
+                            @if (password?.errors?.['minlength']) {
+                            La contraseña debe tener al menos 6 caracteres
+                            }
+                        </small>
+                        }
+                    </div>
+
+                    <div class="form-field">
+                        <p-floatlabel>
+                            <p-password id="confirmPassword" formControlName="confirmPassword" [toggleMask]="true"
+                                [feedback]="false" styleClass="w-full" inputStyleClass="w-full"
+                                [class.ng-invalid]="confirmPassword?.invalid && confirmPassword?.touched"
+                                [class.ng-dirty]="confirmPassword?.touched" />
+                            <label for="confirmPassword">Confirmar Contraseña</label>
+                        </p-floatlabel>
+                        @if (confirmPassword?.invalid && confirmPassword?.touched) {
+                        <small class="error-message">
+                            @if (confirmPassword?.errors?.['required']) {
+                            Debes confirmar tu contraseña
+                            }
+                            @if (confirmPassword?.errors?.['passwordMismatch']) {
+                            Las contraseñas no coinciden
+                            }
+                        </small>
+                        }
+                    </div>
+
+                    <div class="terms-section">
+                        <div class="terms-checkbox">
+                            <p-checkbox formControlName="acceptTerms" [binary]="true" inputId="acceptTerms" />
+                            <label for="acceptTerms">
+                                Acepto los <a href="#" class="terms-link">Términos y Condiciones</a> y la
+                                <a href="#" class="terms-link">Política de Privacidad</a>
+                            </label>
+                        </div>
+                        @if (acceptTerms?.invalid && acceptTerms?.touched) {
+                        <small class="error-message">
+                            Debes aceptar los términos y condiciones
+                        </small>
+                        }
+                    </div>
+
+                    <div class="form-actions">
+                        <p-button label="Crear Cuenta" icon="pi pi-user-plus" type="submit"
+                            styleClass="w-full btn-primary" [disabled]="registerForm.invalid" />
+                    </div>
+
+                    <div class="divider">
+                        <span>o regístrate con</span>
+                    </div>
+
+                    <div class="social-register">
+                        <div class="social-buttons">
+                            <p-button icon="pi pi-google" severity="secondary" [outlined]="true"
+                                styleClass="social-btn" />
+                            <p-button icon="pi pi-github" severity="secondary" [outlined]="true"
+                                styleClass="social-btn" />
+                            <p-button icon="pi pi-microsoft" severity="secondary" [outlined]="true"
+                                styleClass="social-btn" />
+                        </div>
+                    </div>
+
+                    <div class="login-link">
+                        <p>¿Ya tienes una cuenta? <a routerLink="/auth/login">Inicia sesión aquí</a></p>
+                    </div>
+                </form>
+            </p-card>
+        </div>
+
+        <div class="register-banner">
+            <div class="banner-content">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="pi pi-users"></i>
+                        </div>
+                        <h3>10,000+</h3>
+                        <p>Usuarios activos</p>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="pi pi-building"></i>
+                        </div>
+                        <h3>500+</h3>
+                        <p>Empresas confían</p>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="pi pi-chart-line"></i>
+                        </div>
+                        <h3>99.9%</h3>
+                        <p>Uptime garantizado</p>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="pi pi-shield"></i>
+                        </div>
+                        <h3>100%</h3>
+                        <p>Datos seguros</p>
+                    </div>
+                </div>
+                <div class="testimonial">
+                    <i class="pi pi-quote-right quote-icon"></i>
+                    <p class="testimonial-text">
+                        "El mejor sistema ERP que hemos utilizado. Intuitivo, potente y confiable."
+                    </p>
+                    <div class="testimonial-author">
+                        <strong>María González</strong>
+                        <span>CEO, Tech Solutions</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

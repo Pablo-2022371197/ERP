@@ -1,0 +1,483 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+.register-page {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 50%, #4facfe 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.register-page::before {
+    content: '';
+    position: absolute;
+    bottom: -50%;
+    left: -50%;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    animation: pulse 15s infinite ease-in-out;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 0.3;
+    }
+
+    50% {
+        transform: scale(1.5);
+        opacity: 0.5;
+    }
+}
+
+.register-container {
+    display: flex;
+    width: 100%;
+    max-width: 1200px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+}
+
+.register-form-section {
+    flex: 1.2;
+    padding: 3rem 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(to bottom right, #ffffff 0%, #f9fafb 100%);
+}
+
+.register-card {
+    width: 100%;
+    max-width: 500px;
+    box-shadow: none;
+    border: none;
+}
+
+.card-header {
+    text-align: center;
+    padding: 0 0 2rem;
+}
+
+.header-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1.5rem;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 30px rgba(245, 87, 108, 0.3);
+}
+
+.header-icon i {
+    font-size: 2.5rem;
+    color: white;
+}
+
+.card-header h2 {
+    margin: 0 0 0.5rem;
+    color: #1a1a2e;
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.card-header p {
+    margin: 0;
+    color: #6c757d;
+    font-size: 0.95rem;
+    font-weight: 400;
+}
+
+form {
+    padding: 0;
+}
+
+.form-field {
+    margin-bottom: 1.5rem;
+}
+
+.w-full {
+    width: 100%;
+}
+
+.error-message {
+    display: block;
+    color: #ef4444;
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.terms-section {
+    margin-bottom: 2rem;
+    padding: 1.25rem;
+    background: #f9fafb;
+    border-radius: 10px;
+    border-left: 4px solid #f5576c;
+}
+
+.terms-checkbox {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+}
+
+.terms-checkbox label {
+    color: #4b5563;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    font-weight: 500;
+}
+
+.terms-link {
+    color: #f5576c;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.terms-link:hover {
+    color: #f093fb;
+    text-decoration: underline;
+}
+
+.form-actions {
+    margin-bottom: 1.5rem;
+}
+
+.divider {
+    position: relative;
+    text-align: center;
+    margin: 2rem 0 1.5rem;
+}
+
+.divider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: #e5e7eb;
+}
+
+.divider span {
+    position: relative;
+    background: white;
+    padding: 0 1rem;
+    color: #9ca3af;
+    font-weight: 600;
+    font-size: 0.875rem;
+    letter-spacing: 0.5px;
+}
+
+.social-register {
+    margin-bottom: 2rem;
+}
+
+.social-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.login-link {
+    text-align: center;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+.login-link p {
+    margin: 0;
+    color: #6c757d;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.login-link a {
+    color: #f5576c;
+    text-decoration: none;
+    font-weight: 700;
+    transition: color 0.3s;
+}
+
+.login-link a:hover {
+    color: #f093fb;
+    text-decoration: underline;
+}
+
+.register-banner {
+    flex: 1;
+    background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%);
+    padding: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.register-banner::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: repeating-linear-gradient(-45deg,
+            transparent,
+            transparent 10px,
+            rgba(255, 255, 255, 0.03) 10px,
+            rgba(255, 255, 255, 0.03) 20px);
+}
+
+.banner-content {
+    position: relative;
+    z-index: 1;
+    color: white;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+.stat-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 1.5rem;
+    border-radius: 15px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s;
+}
+
+.stat-card:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-5px);
+}
+
+.stat-icon {
+    width: 50px;
+    height: 50px;
+    margin: 0 auto 1rem;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.stat-icon i {
+    font-size: 1.5rem;
+}
+
+.stat-card h3 {
+    margin: 0 0 0.25rem;
+    font-size: 1.75rem;
+    font-weight: 800;
+}
+
+.stat-card p {
+    margin: 0;
+    font-size: 0.875rem;
+    opacity: 0.9;
+    font-weight: 500;
+}
+
+.testimonial {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 2rem;
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    position: relative;
+}
+
+.quote-icon {
+    font-size: 3rem;
+    opacity: 0.2;
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+}
+
+.testimonial-text {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin: 0 0 1.5rem;
+    font-style: italic;
+    font-weight: 300;
+}
+
+.testimonial-author {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.testimonial-author strong {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.testimonial-author span {
+    font-size: 0.875rem;
+    opacity: 0.8;
+}
+
+:host ::ng-deep .p-card {
+    border-radius: 0;
+    box-shadow: none;
+}
+
+:host ::ng-deep .p-card-body {
+    padding: 0;
+}
+
+:host ::ng-deep .p-password {
+    width: 100%;
+}
+
+:host ::ng-deep .p-password input {
+    width: 100% !important;
+}
+
+:host ::ng-deep .p-inputtext {
+    padding: 0.875rem 1rem;
+    font-size: 0.95rem;
+    border-radius: 10px;
+    border: 2px solid #e5e7eb;
+    transition: all 0.3s;
+    font-family: 'Inter', sans-serif;
+}
+
+:host ::ng-deep .p-inputtext:focus {
+    border-color: #f5576c;
+    box-shadow: 0 0 0 3px rgba(245, 87, 108, 0.1);
+}
+
+:host ::ng-deep .p-inputtext.ng-invalid.ng-dirty {
+    border-color: #ef4444;
+}
+
+:host ::ng-deep .p-password.ng-invalid.ng-dirty input {
+    border-color: #ef4444;
+}
+
+:host ::ng-deep .btn-primary {
+    background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%);
+    border: none;
+    padding: 0.875rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 10px;
+    transition: all 0.3s;
+    margin-top: 0.5rem;
+    letter-spacing: 0.3px;
+}
+
+:host ::ng-deep .btn-primary:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(245, 87, 108, 0.4);
+}
+
+:host ::ng-deep .btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+:host ::ng-deep .social-btn {
+    border: 2px solid #e5e7eb;
+    color: #4b5563;
+    font-weight: 600;
+    border-radius: 10px;
+    padding: 0.75rem;
+    transition: all 0.3s;
+    width: 60px;
+    height: 60px;
+}
+
+:host ::ng-deep .social-btn:hover {
+    border-color: #f5576c;
+    background: #fff5f7;
+    color: #f5576c;
+    transform: translateY(-2px);
+}
+
+:host ::ng-deep .p-floatlabel label {
+    font-weight: 500;
+    color: #6b7280;
+    left: 1rem;
+    font-family: 'Inter', sans-serif;
+}
+
+:host ::ng-deep .p-checkbox {
+    width: 20px;
+    height: 20px;
+}
+
+:host ::ng-deep .p-checkbox .p-checkbox-box {
+    width: 20px;
+    height: 20px;
+    border-radius: 5px;
+    border: 2px solid #d1d5db;
+}
+
+:host ::ng-deep .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box.p-highlight {
+    background: #f5576c;
+    border-color: #f5576c;
+}
+
+:host ::ng-deep .p-password-meter {
+    background: #e5e7eb;
+    border-radius: 3px;
+    height: 6px;
+}
+
+@media (max-width: 968px) {
+    .register-banner {
+        display: none;
+    }
+
+    .register-container {
+        max-width: 550px;
+    }
+
+    .card-header h2 {
+        font-size: 1.75rem;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .register-form-section {
+        padding: 2rem 1.5rem;
+    }
+
+    .social-buttons {
+        gap: 0.5rem;
+    }
+
+    :host ::ng-deep .social-btn {
+        width: 50px;
+        height: 50px;
+    }
+}

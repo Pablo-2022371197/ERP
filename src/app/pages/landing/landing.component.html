@@ -1,0 +1,170 @@
+<app-navbar></app-navbar>
+
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="hero-content">
+        <div class="hero-text">
+            <h1 class="hero-title">
+                Transforma tu Negocio con
+                <span class="gradient-text">Sistema ERP</span>
+            </h1>
+            <p class="hero-description">
+                La plataforma de gestión empresarial más completa del mercado. Optimiza tus procesos,
+                aumenta tu productividad y lleva tu negocio al siguiente nivel.
+            </p>
+            <div class="hero-buttons">
+                <p-button label="Comenzar Ahora" icon="pi pi-arrow-right" iconPos="right" styleClass="btn-hero-primary"
+                    routerLink="/auth/register" />
+                <p-button label="Ver Demo" icon="pi pi-play" [outlined]="true" severity="secondary"
+                    styleClass="btn-hero-secondary" />
+            </div>
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-number">10K+</span>
+                    <span class="stat-label">Usuarios activos</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">500+</span>
+                    <span class="stat-label">Empresas</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">99.9%</span>
+                    <span class="stat-label">Uptime</span>
+                </div>
+            </div>
+        </div>
+        <div class="hero-image">
+            <div class="floating-card card-1">
+                <i class="pi pi-chart-bar"></i>
+                <span>Análisis en tiempo real</span>
+            </div>
+            <div class="floating-card card-2">
+                <i class="pi pi-shield"></i>
+                <span>Seguridad garantizada</span>
+            </div>
+            <div class="floating-card card-3">
+                <i class="pi pi-bolt"></i>
+                <span>Ultra rápido</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section id="features" class="features-section">
+    <div class="section-container">
+        <div class="section-header">
+            <h2 class="section-title">Características Destacadas</h2>
+            <p class="section-subtitle">
+                Todo lo que necesitas para gestionar tu negocio en un solo lugar
+            </p>
+        </div>
+        <div class="features-grid">
+            @for (feature of features; track feature.icon) {
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="pi {{ feature.icon }}"></i>
+                </div>
+                <h3 class="feature-title">{{ feature.title }}</h3>
+                <p class="feature-description">{{ feature.description }}</p>
+            </div>
+            }
+        </div>
+    </div>
+</section>
+
+<!-- Benefits Section -->
+<section id="benefits" class="benefits-section">
+    <div class="section-container">
+        <div class="section-header">
+            <h2 class="section-title">¿Por qué Elegirnos?</h2>
+            <p class="section-subtitle">Beneficios que marcan la diferencia</p>
+        </div>
+        <div class="benefits-list">
+            @for (benefit of benefits; track benefit.number) {
+            <div class="benefit-item">
+                <div class="benefit-number">{{ benefit.number }}</div>
+                <div class="benefit-content">
+                    <h3 class="benefit-title">{{ benefit.title }}</h3>
+                    <p class="benefit-description">{{ benefit.description }}</p>
+                </div>
+            </div>
+            }
+        </div>
+    </div>
+</section>
+
+<!-- Pricing Section -->
+<section id="pricing" class="pricing-section">
+    <div class="section-container">
+        <div class="section-header">
+            <h2 class="section-title">Planes y Precios</h2>
+            <p class="section-subtitle">Elige el plan perfecto para tu negocio</p>
+        </div>
+        <div class="pricing-grid">
+            @for (plan of pricingPlans; track plan.name) {
+            <div class="pricing-card" [class.highlighted]="plan.highlighted">
+                @if (plan.highlighted) {
+                <div class="popular-badge">Más Popular</div>
+                }
+                <h3 class="plan-name">{{ plan.name }}</h3>
+                <div class="plan-price">
+                    <span class="currency">$</span>
+                    <span class="amount">{{ plan.price }}</span>
+                    <span class="period">/mes</span>
+                </div>
+                <p class="plan-description">{{ plan.description }}</p>
+                <ul class="plan-features">
+                    @for (feature of plan.features; track feature) {
+                    <li>
+                        <i class="pi pi-check"></i>
+                        <span>{{ feature }}</span>
+                    </li>
+                    }
+                </ul>
+                <p-button [label]="plan.highlighted ? 'Empezar Ahora' : 'Seleccionar Plan'" styleClass="btn-plan"
+                    routerLink="/auth/register" />
+            </div>
+            }
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section id="contact" class="cta-section">
+    <div class="cta-content">
+        <h2 class="cta-title">¿Listo para transformar tu negocio?</h2>
+        <p class="cta-description">
+            Únete a miles de empresas que ya confían en nuestro sistema ERP
+        </p>
+        <div class="cta-buttons">
+            <p-button label="Comenzar Gratis" icon="pi pi-arrow-right" iconPos="right" styleClass="btn-cta-primary"
+                routerLink="/auth/register" />
+            <p-button label="Contactar Ventas" icon="pi pi-phone" [outlined]="true" severity="secondary"
+                styleClass="btn-cta-secondary" />
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="footer-content">
+        <div class="footer-logo">
+            <i class="pi pi-shield"></i>
+            <span>Sistema ERP</span>
+        </div>
+        <div class="footer-links">
+            <a routerLink="/auth/login">Iniciar Sesión</a>
+            <a routerLink="/auth/register">Registrarse</a>
+            <a href="#">Términos</a>
+            <a href="#">Privacidad</a>
+        </div>
+        <div class="footer-social">
+            <a href="#" aria-label="Facebook"><i class="pi pi-facebook"></i></a>
+            <a href="#" aria-label="Twitter"><i class="pi pi-twitter"></i></a>
+            <a href="#" aria-label="LinkedIn"><i class="pi pi-linkedin"></i></a>
+            <a href="#" aria-label="GitHub"><i class="pi pi-github"></i></a>
+        </div>
+        <p class="footer-copyright">© 2026 Sistema ERP. Todos los derechos reservados.</p>
+    </div>
+</footer>

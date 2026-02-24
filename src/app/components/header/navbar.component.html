@@ -1,0 +1,31 @@
+<nav class="navbar">
+    <div class="navbar-container">
+        <div class="navbar-logo">
+            <i class="pi pi-shield"></i>
+            <span class="logo-text">Sistema ERP</span>
+        </div>
+
+        <button class="menu-toggle" (click)="toggleMenu()" [class.active]="menuOpen">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <div class="navbar-menu" [class.active]="menuOpen">
+            <ul class="nav-links">
+                <li><a routerLink="/" (click)="closeMenu()">Inicio</a></li>
+                <li><a href="#features" (click)="closeMenu()">Características</a></li>
+                <li><a href="#benefits" (click)="closeMenu()">Beneficios</a></li>
+                <li><a href="#pricing" (click)="closeMenu()">Precios</a></li>
+                <li><a href="#contact" (click)="closeMenu()">Contacto</a></li>
+            </ul>
+
+            <div class="nav-buttons">
+                <p-button label="Iniciar Sesión" [outlined]="true" severity="secondary" routerLink="/auth/login"
+                    styleClass="btn-login" (click)="closeMenu()" />
+                <p-button label="Registrarse" severity="info" routerLink="/auth/register" styleClass="btn-register"
+                    (click)="closeMenu()" />
+            </div>
+        </div>
+    </div>
+</nav>
