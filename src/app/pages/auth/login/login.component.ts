@@ -8,6 +8,8 @@ import { ButtonModule } from 'primeng/button';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { CheckboxModule } from 'primeng/checkbox';
 import { CommonModule } from '@angular/common';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 
 @Component({
     selector: 'app-login',
@@ -21,17 +23,26 @@ import { CommonModule } from '@angular/common';
         PasswordModule,
         ButtonModule,
         FloatLabelModule,
-        CheckboxModule
+        CheckboxModule,
+        ToastModule
     ],
+    providers: [MessageService],
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
     loginForm: FormGroup;
 
+    // Credenciales hardcodeadas
+    private readonly VALID_CREDENTIALS = {
+        email: 'admin@erp.com',
+        password: 'Admin@2024!'
+    };
+
     constructor(
         private fb: FormBuilder,
-        private router: Router
+        private router: Router,
+        private messageService: MessageService
     ) {
         this.loginForm = this.fb.group({
             email: ['', [Validators.required, Validators.email]],
@@ -42,10 +53,37 @@ export class LoginComponent {
 
     onSubmit() {
         if (this.loginForm.valid) {
-            console.log('Login data:', this.loginForm.value);
-            // Aquí implementarías la lógica de autenticación
+            const { email, password } = this.loginForm.value;
+
+            // Validar credenciales
+            if (email === this.VALID_CREDENTIALS.email && password === this.VALID_CREDENTIALS.password) {
+                this.messageService.add({
+                    severity: 'success',
+                    summary: 'Login Exitoso',
+                    detail: 'Bienvenido al sistema ERP',
+                    life: 3000
+                });
+
+                // Aquí puedes navegar a la página principal
+                setTimeout(() => {
+                    this.router.navigate(['/']);
+                }, 1500);
+            } else {
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error de Autenticación',
+                    detail: 'Correo o contraseña incorrectos',
+                    life: 3000
+                });
+            }
         } else {
             this.loginForm.markAllAsTouched();
+            this.messageService.add({
+                severity: 'warn',
+                summary: 'Formulario Inválido',
+                detail: 'Por favor, completa todos los campos correctamente',
+                life: 3000
+            });
         }
     }
 
