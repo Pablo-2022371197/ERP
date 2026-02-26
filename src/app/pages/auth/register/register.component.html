@@ -93,7 +93,8 @@
 
                     <div class="form-field">
                         <p-floatlabel>
-                            <input pInputText id="phone" formControlName="phone" class="w-full"
+                            <input pInputText id="phone" formControlName="phone" class="w-full" type="tel"
+                                maxlength="10" pattern="[0-9]*" inputmode="numeric" (keypress)="onlyNumbers($event)"
                                 [class.ng-invalid]="phone?.invalid && phone?.touched"
                                 [class.ng-dirty]="phone?.touched" />
                             <label for="phone">Número de Teléfono</label>
@@ -104,7 +105,7 @@
                             El teléfono es requerido
                             }
                             @if (phone?.errors?.['invalidPhone']) {
-                            El teléfono debe contener solo números (7-15 dígitos)
+                            El teléfono debe contener exactamente 10 dígitos
                             }
                         </small>
                         }

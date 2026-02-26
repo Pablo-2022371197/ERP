@@ -66,7 +66,7 @@ export class LoginComponent {
 
                 // Aquí puedes navegar a la página principal
                 setTimeout(() => {
-                    this.router.navigate(['/']);
+                    this.router.navigate(['/home']);
                 }, 1500);
             } else {
                 this.messageService.add({

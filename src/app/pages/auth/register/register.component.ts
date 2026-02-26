@@ -109,8 +109,8 @@ export class RegisterComponent {
             return null;
         }
 
-        // Solo números, puede tener entre 7 y 15 dígitos
-        const phonePattern = /^[0-9]{7,15}$/;
+        // Solo números, exactamente 10 dígitos
+        const phonePattern = /^[0-9]{10}$/;
         if (!phonePattern.test(value)) {
             return { invalidPhone: true };
         }
@@ -215,5 +215,16 @@ export class RegisterComponent {
 
     get acceptTerms() {
         return this.registerForm.get('acceptTerms');
+    }
+
+    // Método para permitir solo números en el campo de teléfono
+    onlyNumbers(e: KeyboardEvent): boolean {
+        const charCode = e.which ? e.which : e.keyCode;
+        // Solo permitir números (48-57 son los códigos de 0-9)
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            e.preventDefault();
+            return false;
+        }
+        return true;
     }
 }
