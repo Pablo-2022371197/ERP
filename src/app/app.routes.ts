@@ -7,9 +7,26 @@ export const routes: Routes = [
             import('./pages/landing/landing.component').then((m) => m.LandingComponent),
     },
     {
-        path: 'home',
+        path: '',
         loadComponent: () =>
-            import('./pages/home/home.component').then((m) => m.HomeComponent),
+            import('./layouts/MainLayout/main-layout.component').then((m) => m.MainLayoutComponent),
+        children: [
+            {
+                path: 'home',
+                loadComponent: () =>
+                    import('./pages/home/home.component').then((m) => m.HomeComponent),
+            },
+            {
+                path: 'group',
+                loadComponent: () =>
+                    import('./pages/group/group.component').then((m) => m.GroupComponent),
+            },
+            {
+                path: 'user',
+                loadComponent: () =>
+                    import('./pages/user/user.component').then((m) => m.UserComponent),
+            },
+        ],
     },
     {
         path: 'auth',

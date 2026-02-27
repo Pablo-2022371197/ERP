@@ -1,0 +1,69 @@
+<div class="group-container">
+    <!-- Header Section with Total -->
+    <div class="header-section">
+        <div class="total-card">
+            <div class="total-content">
+                <div class="total-icon">
+                    <i class="pi pi-users"></i>
+                </div>
+                <div class="total-info">
+                    <h3>Total Groups</h3>
+                    <p class="total-number">{{ totalGroups }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Advances Section Title -->
+    <div class="section-title">
+        <h2>
+            <i class="pi pi-chart-line"></i>
+            Group Advances
+        </h2>
+        <p-button icon="pi pi-plus" label="New Group" severity="primary" [rounded]="true"></p-button>
+    </div>
+
+    <!-- Group Cards Grid -->
+    <div class="cards-grid">
+        @for (group of groups; track group.name) {
+        <p-card>
+            <ng-template pTemplate="header">
+                <div class="card-header-content">
+                    <div class="card-header-title">
+                        <i class="pi pi-users"></i>
+                        <h3>{{ group.name }}</h3>
+                    </div>
+                    <p-tag [value]="group.status" [severity]="group.status === 'active' ? 'success' : 'warn'"
+                        [rounded]="true"></p-tag>
+                </div>
+            </ng-template>
+
+            <ng-template pTemplate="content">
+                <div class="card-stats">
+                    <div class="stat-item">
+                        <p-chip [label]="group.members + ' Members'" icon="pi pi-user"></p-chip>
+                    </div>
+                    <div class="stat-item">
+                        <p-chip [label]="group.projects + ' Projects'" icon="pi pi-briefcase"></p-chip>
+                    </div>
+                </div>
+
+                <div class="progress-section">
+                    <div class="progress-header">
+                        <span class="progress-label">Progress</span>
+                        <p-badge [value]="group.progress + '%'" severity="info"></p-badge>
+                    </div>
+                    <p-progressBar [value]="group.progress" [showValue]="false"></p-progressBar>
+                </div>
+            </ng-template>
+
+            <ng-template pTemplate="footer">
+                <div class="card-actions">
+                    <p-button icon="pi pi-eye" label="View" [text]="true" severity="info"></p-button>
+                    <p-button icon="pi pi-pencil" label="Edit" [text]="true" severity="secondary"></p-button>
+                </div>
+            </ng-template>
+        </p-card>
+        }
+    </div>
+</div>

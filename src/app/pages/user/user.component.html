@@ -1,0 +1,82 @@
+<div class="user-container">
+    <p-card>
+        <ng-template pTemplate="header">
+            <div class="profile-header">
+                <p-avatar [label]="userInitials" size="xlarge" shape="circle"
+                    [style]="{ 'background-color': '#667eea', 'color': '#ffffff', 'font-size': '2rem' }">
+                </p-avatar>
+            </div>
+        </ng-template>
+
+        <ng-template pTemplate="title">
+            <div class="profile-title">
+                {{ userProfile.name }}
+            </div>
+        </ng-template>
+
+        <ng-template pTemplate="subtitle">
+            <div class="profile-role">
+                {{ userProfile.role }}
+            </div>
+        </ng-template>
+
+        <ng-template pTemplate="content">
+            <div class="profile-info">
+                <div class="info-item">
+                    <i class="pi pi-envelope"></i>
+                    <div class="info-details">
+                        <span class="info-label">Email</span>
+                        <span class="info-value">{{ userProfile.email }}</span>
+                    </div>
+                </div>
+
+                <p-divider></p-divider>
+
+                <div class="info-item">
+                    <i class="pi pi-phone"></i>
+                    <div class="info-details">
+                        <span class="info-label">Phone</span>
+                        <span class="info-value">{{ userProfile.phone }}</span>
+                    </div>
+                </div>
+
+                <p-divider></p-divider>
+
+                <div class="info-item">
+                    <i class="pi pi-building"></i>
+                    <div class="info-details">
+                        <span class="info-label">Department</span>
+                        <span class="info-value">{{ userProfile.department }}</span>
+                    </div>
+                </div>
+
+                <p-divider></p-divider>
+
+                <div class="info-item">
+                    <i class="pi pi-calendar"></i>
+                    <div class="info-details">
+                        <span class="info-label">Join Date</span>
+                        <span class="info-value">{{ userProfile.joinDate }}</span>
+                    </div>
+                </div>
+
+                <p-divider></p-divider>
+
+                <div class="info-item">
+                    <i class="pi pi-check-circle"></i>
+                    <div class="info-details">
+                        <span class="info-label">Status</span>
+                        <span class="info-value status-active">{{ userProfile.status }}</span>
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+
+        <ng-template pTemplate="footer">
+            <div class="profile-actions">
+                <p-button label="Edit Profile" icon="pi pi-user-edit" severity="primary"></p-button>
+                <p-button label="Change Password" icon="pi pi-lock" severity="secondary"></p-button>
+            </div>
+        </ng-template>
+    </p-card>
+</div>

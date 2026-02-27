@@ -1,35 +1,40 @@
 <div class="sidebar" [class.collapsed]="collapsed">
-    <!-- Header -->
+    <!-- Header with Project Name -->
     <div class="sidebar-header">
-        <div class="logo">
+        @if (!collapsed) {
+        <div class="project-name">
             <i class="pi pi-shield"></i>
-            @if (!collapsed) {
-            <span class="logo-text">Sistema ERP</span>
-            }
+            <span>{{ projectName }}</span>
         </div>
+        }
+        @if (collapsed) {
+        <i class="pi pi-shield logo-icon"></i>
+        }
         <button class="toggle-btn" (click)="toggleSidebar()" pButton icon="pi pi-bars" [text]="true"></button>
     </div>
 
-    <!-- Menu -->
+    <!-- Menu Buttons -->
     <div class="sidebar-menu">
-        <p-panelMenu [model]="menuItems" [multiple]="false"></p-panelMenu>
+        <button pButton class="menu-button" icon="pi pi-users" [label]="collapsed ? '' : 'Group'" routerLink="/group"
+            routerLinkActive="active-link">
+        </button>
+        <button pButton class="menu-button" icon="pi pi-user" [label]="collapsed ? '' : 'User'" routerLink="/user"
+            routerLinkActive="active-link">
+        </button>
     </div>
 
-    <!-- User Profile -->
+    <!-- Footer with Version -->
     <div class="sidebar-footer">
-        <div class="user-profile">
-            <p-avatar label="JP" styleClass="user-avatar" shape="circle"
-                [style]="{ 'background-color': '#667eea', color: '#ffffff' }"></p-avatar>
-            @if (!collapsed) {
-            <div class="user-info">
-                <span class="user-name">John Pérez</span>
-                <span class="user-role">Administrador</span>
-            </div>
-            }
-        </div>
         @if (!collapsed) {
-        <button pButton icon="pi pi-sign-out" class="logout-btn" [text]="true" (click)="logout()"
-            pTooltip="Cerrar sesión" tooltipPosition="right"></button>
+        <div class="version-info">
+            <span class="version-label">Version</span>
+            <span class="version-number">{{ appVersion }}</span>
+        </div>
+        }
+        @if (collapsed) {
+        <div class="version-info-collapsed">
+            <span class="version-number">v{{ appVersion }}</span>
+        </div>
         }
     </div>
 </div>

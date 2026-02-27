@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MainLayoutComponent } from '../../layouts/MainLayout/main-layout.component';
 import { CardModule } from 'primeng/card';
 import { ChartModule } from 'primeng/chart';
 import { TableModule } from 'primeng/table';
@@ -13,7 +12,6 @@ import { AvatarModule } from 'primeng/avatar';
     standalone: true,
     imports: [
         CommonModule,
-        MainLayoutComponent,
         CardModule,
         ChartModule,
         TableModule,
