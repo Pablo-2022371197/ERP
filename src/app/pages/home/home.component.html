@@ -1,0 +1,147 @@
+<app-main-layout>
+    <div class="dashboard">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Dashboard</h1>
+                <p class="page-subtitle">Bienvenido de vuelta, John 👋</p>
+            </div>
+            <div class="header-actions">
+                <p-button label="Descargar Reporte" icon="pi pi-download" [outlined]="true" />
+                <p-button label="Nueva Orden" icon="pi pi-plus" />
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            @for (stat of stats; track stat.title) {
+            <div class="stat-card">
+                <div class="stat-icon" [style.background-color]="stat.color + '20'">
+                    <i class="pi {{ stat.icon }}" [style.color]="stat.color"></i>
+                </div>
+                <div class="stat-content">
+                    <span class="stat-label">{{ stat.title }}</span>
+                    <div class="stat-bottom">
+                        <span class="stat-value">{{ stat.value }}</span>
+                        <span class="stat-change" [class.positive]="stat.changeType === 'positive'"
+                            [class.negative]="stat.changeType === 'negative'">
+                            <i [class]="stat.changeType === 'positive' ? 'pi pi-arrow-up' : 'pi pi-arrow-down'"></i>
+                            {{ stat.change }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            }
+        </div>
+
+        <!-- Charts Section -->
+        <div class="charts-grid">
+            <!-- Sales Chart -->
+            <p-card class="chart-card">
+                <ng-template pTemplate="header">
+                    <div class="card-header">
+                        <div>
+                            <h3 class="card-title">Ventas Mensuales</h3>
+                            <p class="card-subtitle">Comparación año actual vs anterior</p>
+                        </div>
+                        <p-button icon="pi pi-ellipsis-v" [text]="true" />
+                    </div>
+                </ng-template>
+                <div style="height: 300px">
+                    <p-chart type="line" [data]="salesChartData" [options]="salesChartOptions" />
+                </div>
+            </p-card>
+
+            <!-- Revenue Chart -->
+            <p-card class="chart-card">
+                <ng-template pTemplate="header">
+                    <div class="card-header">
+                        <div>
+                            <h3 class="card-title">Ingresos por Categoría</h3>
+                            <p class="card-subtitle">Distribución de ventas</p>
+                        </div>
+                        <p-button icon="pi pi-ellipsis-v" [text]="true" />
+                    </div>
+                </ng-template>
+                <div style="height: 300px">
+                    <p-chart type="doughnut" [data]="revenueChartData" [options]="revenueChartOptions" />
+                </div>
+            </p-card>
+        </div>
+
+        <!-- Tables Section -->
+        <div class="tables-grid">
+            <!-- Recent Orders -->
+            <p-card class="table-card">
+                <ng-template pTemplate="header">
+                    <div class="card-header">
+                        <div>
+                            <h3 class="card-title">Órdenes Recientes</h3>
+                            <p class="card-subtitle">Últimas transacciones</p>
+                        </div>
+                        <p-button label="Ver Todo" [text]="true" icon="pi pi-arrow-right" iconPos="right" />
+                    </div>
+                </ng-template>
+                <p-table [value]="recentOrders" [tableStyle]="{ 'min-width': '100%' }">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>ID Orden</th>
+                            <th>Cliente</th>
+                            <th>Producto</th>
+                            <th>Monto</th>
+                            <th>Estado</th>
+                            <th>Fecha</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-order>
+                        <tr>
+                            <td>
+                                <span class="order-id">{{ order.id }}</span>
+                            </td>
+                            <td>
+                                <div class="customer-cell">
+                                    <p-avatar [label]="getCustomerInitials(order.customer)" shape="circle"
+                                        styleClass="customer-avatar" />
+                                    <span>{{ order.customer }}</span>
+                                </div>
+                            </td>
+                            <td>{{ order.product }}</td>
+                            <td>
+                                <span class="amount">{{ order.amount }}</span>
+                            </td>
+                            <td>
+                                <p-tag [value]="order.status" [severity]="getStatusSeverity(order.status)" />
+                            </td>
+                            <td>{{ order.date }}</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </p-card>
+
+            <!-- Top Products -->
+            <p-card class="table-card">
+                <ng-template pTemplate="header">
+                    <div class="card-header">
+                        <div>
+                            <h3 class="card-title">Productos Más Vendidos</h3>
+                            <p class="card-subtitle">Top 5 este mes</p>
+                        </div>
+                        <p-button label="Ver Todo" [text]="true" icon="pi pi-arrow-right" iconPos="right" />
+                    </div>
+                </ng-template>
+                <div class="products-list">
+                    @for (product of topProducts; track product.name; let i = $index) {
+                    <div class="product-item">
+                        <div class="product-rank">{{ i + 1 }}</div>
+                        <div class="product-info">
+                            <span class="product-name">{{ product.name }}</span>
+                            <span class="product-sales">{{ product.sales }} ventas</span>
+                        </div>
+                        <div class="product-revenue">{{ product.revenue }}</div>
+                    </div>
+                    }
+                </div>
+            </p-card>
+        </div>
+    </div>
+</app-main-layout>

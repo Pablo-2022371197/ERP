@@ -7,6 +7,11 @@ export const routes: Routes = [
             import('./pages/landing/landing.component').then((m) => m.LandingComponent),
     },
     {
+        path: 'home',
+        loadComponent: () =>
+            import('./pages/home/home.component').then((m) => m.HomeComponent),
+    },
+    {
         path: 'auth',
         children: [
             {

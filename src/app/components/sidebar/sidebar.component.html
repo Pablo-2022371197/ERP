@@ -1,0 +1,35 @@
+<div class="sidebar" [class.collapsed]="collapsed">
+    <!-- Header -->
+    <div class="sidebar-header">
+        <div class="logo">
+            <i class="pi pi-shield"></i>
+            @if (!collapsed) {
+            <span class="logo-text">Sistema ERP</span>
+            }
+        </div>
+        <button class="toggle-btn" (click)="toggleSidebar()" pButton icon="pi pi-bars" [text]="true"></button>
+    </div>
+
+    <!-- Menu -->
+    <div class="sidebar-menu">
+        <p-panelMenu [model]="menuItems" [multiple]="false"></p-panelMenu>
+    </div>
+
+    <!-- User Profile -->
+    <div class="sidebar-footer">
+        <div class="user-profile">
+            <p-avatar label="JP" styleClass="user-avatar" shape="circle"
+                [style]="{ 'background-color': '#667eea', color: '#ffffff' }"></p-avatar>
+            @if (!collapsed) {
+            <div class="user-info">
+                <span class="user-name">John Pérez</span>
+                <span class="user-role">Administrador</span>
+            </div>
+            }
+        </div>
+        @if (!collapsed) {
+        <button pButton icon="pi pi-sign-out" class="logout-btn" [text]="true" (click)="logout()"
+            pTooltip="Cerrar sesión" tooltipPosition="right"></button>
+        }
+    </div>
+</div>

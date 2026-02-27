@@ -1,0 +1,56 @@
+<div class="main-layout">
+    <!-- Sidebar -->
+    <app-sidebar></app-sidebar>
+
+    <!-- Main Content Wrapper -->
+    <div class="main-content-wrapper">
+        <!-- Top Header -->
+        <header class="top-header">
+            <div class="header-left">
+                <button pButton icon="pi pi-bars" class="menu-toggle-btn" [text]="true"
+                    (click)="toggleMobileMenu()"></button>
+                <div class="breadcrumb">
+                    <i class="pi pi-home"></i>
+                    <span class="separator">/</span>
+                    <span class="current-page">Dashboard</span>
+                </div>
+            </div>
+
+            <div class="header-right">
+                <!-- Search -->
+                <div class="search-box">
+                    <i class="pi pi-search"></i>
+                    <input type="text" placeholder="Buscar..." />
+                </div>
+
+                <!-- Notifications -->
+                <button pButton icon="pi pi-bell" class="icon-btn" [text]="true" pBadge value="3"
+                    severity="danger"></button>
+
+                <!-- Messages -->
+                <button pButton icon="pi pi-envelope" class="icon-btn" [text]="true"></button>
+
+                <!-- User Menu -->
+                <div class="user-menu">
+                    <p-avatar label="JP" shape="circle"
+                        [style]="{ 'background-color': '#667eea', color: '#ffffff', cursor: 'pointer' }"></p-avatar>
+                    <div class="user-details">
+                        <span class="user-name">John Pérez</span>
+                        <span class="user-status">En línea</span>
+                    </div>
+                    <i class="pi pi-angle-down"></i>
+                </div>
+            </div>
+        </header>
+
+        <!-- Page Content -->
+        <main class="page-content">
+            <router-outlet></router-outlet>
+        </main>
+    </div>
+</div>
+
+<!-- Mobile Overlay -->
+@if (mobileMenuOpen) {
+<div class="mobile-overlay" (click)="toggleMobileMenu()"></div>
+}

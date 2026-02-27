@@ -36,7 +36,7 @@ export class LoginComponent {
     // Credenciales hardcodeadas
     private readonly VALID_CREDENTIALS = {
         email: 'admin@erp.com',
-        password: 'Admin@2024!'
+        password: 'Admin123!'
     };
 
     constructor(
@@ -67,7 +67,7 @@ export class LoginComponent {
                 // Aquí puedes navegar a la página principal
                 setTimeout(() => {
                     this.router.navigate(['/home']);
-                }, 1500);
+                }, 1000);
             } else {
                 this.messageService.add({
                     severity: 'error',
