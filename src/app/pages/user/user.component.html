@@ -8,14 +8,18 @@
             [class.text-gray-600]="userProfile.status !== 'Active'">
 
             <span class="size-3 rounded-full" [class.bg-green-500]="userProfile.status === 'Active'"
+                [class.bg-green-500]="userProfile.status === 'Active'"
                 [class.bg-gray-500]="userProfile.status !== 'Active'">
             </span>
+            @if(userProfile.status==='Active') {
+            <span class="absolute size-3 rounded-full bg-green-500 animate-ping"></span>
+            }
 
             <span>{{ userProfile.status }}</span>
 
         </div>
 
-        <p-avatar [label]="userInitials" size="xlarge" shape="circle"
+        <p-avatar [label]=" userInitials" size="xlarge" shape="circle"
             [style]="{ 'background-color': '#ffffff', 'color': '#667eea', 'font-size': '2rem' }">
         </p-avatar>
         <h1 class="profile-name">{{ userProfile.name }}</h1>

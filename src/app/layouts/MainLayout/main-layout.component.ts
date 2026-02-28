@@ -7,6 +7,7 @@ import { AvatarModule } from 'primeng/avatar';
 import { BadgeModule } from 'primeng/badge';
 import { MenuModule } from 'primeng/menu';
 import { MenuItem } from 'primeng/api';
+import { OverlayBadge } from "primeng/overlaybadge";
 
 @Component({
     selector: 'app-main-layout',
@@ -18,7 +19,8 @@ import { MenuItem } from 'primeng/api';
         ButtonModule,
         AvatarModule,
         BadgeModule,
-        MenuModule
+        MenuModule,
+        OverlayBadge
     ],
     templateUrl: './main-layout.component.html',
     styleUrls: ['./main-layout.component.css']
