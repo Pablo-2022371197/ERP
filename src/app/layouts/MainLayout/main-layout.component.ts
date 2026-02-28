@@ -27,6 +27,10 @@ export class MainLayoutComponent {
     sidebarCollapsed = false;
     mobileMenuOpen = false;
 
+    onSidebarCollapse(collapsed: boolean) {
+        this.sidebarCollapsed = collapsed;
+    }
+
     userMenuItems: MenuItem[] = [
         {
             label: 'Perfil',

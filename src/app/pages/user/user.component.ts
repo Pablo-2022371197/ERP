@@ -1,14 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CardModule } from 'primeng/card';
 import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
-import { DividerModule } from 'primeng/divider';
 
 @Component({
     selector: 'app-user',
     standalone: true,
-    imports: [CommonModule, CardModule, AvatarModule, ButtonModule, DividerModule],
+    imports: [CommonModule, AvatarModule, ButtonModule],
     templateUrl: './user.component.html',
     styleUrls: ['./user.component.css']
 })

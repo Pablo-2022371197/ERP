@@ -1,9 +1,9 @@
 <div class="main-layout">
     <!-- Sidebar -->
-    <app-sidebar></app-sidebar>
+    <app-sidebar (collapsedChange)="onSidebarCollapse($event)"></app-sidebar>
 
     <!-- Main Content Wrapper -->
-    <div class="main-content-wrapper">
+    <div class="main-content-wrapper" [style.margin-left]="sidebarCollapsed ? '80px' : '280px'">
         <!-- Top Header -->
         <header class="top-header">
             <div class="header-left">

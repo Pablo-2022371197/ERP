@@ -1,40 +1,34 @@
-<div class="sidebar" [class.collapsed]="collapsed">
-    <!-- Header with Project Name -->
+<aside class="sidebar" [class.collapsed]="collapsed">
+
+    <!-- Header -->
     <div class="sidebar-header">
-        @if (!collapsed) {
-        <div class="project-name">
-            <i class="pi pi-shield"></i>
-            <span>{{ projectName }}</span>
+        <div class="logo-section" *ngIf="!collapsed">
+            <i class="pi pi-shield logo-icon"></i>
+            <span class="logo-text">{{ projectName }}</span>
         </div>
-        }
-        @if (collapsed) {
-        <i class="pi pi-shield logo-icon"></i>
-        }
-        <button class="toggle-btn" (click)="toggleSidebar()" pButton icon="pi pi-bars" [text]="true"></button>
-    </div>
-
-    <!-- Menu Buttons -->
-    <div class="sidebar-menu">
-        <button pButton class="menu-button" icon="pi pi-users" [label]="collapsed ? '' : 'Group'" routerLink="/group"
-            routerLinkActive="active-link">
-        </button>
-        <button pButton class="menu-button" icon="pi pi-user" [label]="collapsed ? '' : 'User'" routerLink="/user"
-            routerLinkActive="active-link">
+        <button class="toggle-btn" (click)="toggleSidebar()">
+            <i class="pi pi-bars"></i>
         </button>
     </div>
 
-    <!-- Footer with Version -->
+    <!-- Menu -->
+    <nav class="sidebar-menu">
+        <a routerLink="/group" routerLinkActive="active-menu-item" class="menu-item">
+            <i class="pi pi-users"></i>
+            <span *ngIf="!collapsed">Group</span>
+        </a>
+        <a routerLink="/user" routerLinkActive="active-menu-item" class="menu-item">
+            <i class="pi pi-user"></i>
+            <span *ngIf="!collapsed">User</span>
+        </a>
+    </nav>
+
+    <!-- Footer -->
     <div class="sidebar-footer">
-        @if (!collapsed) {
-        <div class="version-info">
+        <div class="version-info" *ngIf="!collapsed">
             <span class="version-label">Version</span>
             <span class="version-number">{{ appVersion }}</span>
         </div>
-        }
-        @if (collapsed) {
-        <div class="version-info-collapsed">
-            <span class="version-number">v{{ appVersion }}</span>
-        </div>
-        }
+        <span class="version-number-small" *ngIf="collapsed">v{{ appVersion }}</span>
     </div>
-</div>
+</aside>

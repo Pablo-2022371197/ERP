@@ -1,109 +1,157 @@
 .user-container {
-    padding: 2rem;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    min-height: 100vh;
+    padding: 1rem;
+    max-width: 1100px;
+    margin: 0 auto;
 }
 
-::ng-deep .p-card {
-    max-width: 600px;
-    width: 100%;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    border-radius: 16px;
-    overflow: hidden;
-}
-
+/* Profile Header */
 .profile-header {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 3rem 2rem 2rem 2rem;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 16px;
+    padding: 2rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+    margin-bottom: 2rem;
+    position: relative;
 }
 
-.profile-title {
-    text-align: center;
-    font-size: 1.8rem;
+.status-badge {
+    top: 1.25rem;
+    right: 1.25rem;
+    font-weight: 600;
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.profile-name {
+    margin: 1rem 0 0.25rem 0;
+    font-size: 2.2rem;
     font-weight: 700;
-    color: #2c3e50;
-    margin-bottom: 0.5rem;
+    color: #ffffff;
 }
 
 .profile-role {
-    text-align: center;
+    margin: 0;
     font-size: 1.1rem;
-    color: #667eea;
+    color: rgba(255, 255, 255, 0.85);
     font-weight: 500;
 }
 
-.profile-info {
-    padding: 1rem 0;
+/* Info Grid */
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+    margin-bottom: 2rem;
 }
 
-.info-item {
+.info-card {
     display: flex;
     align-items: center;
     gap: 1rem;
-    padding: 0.5rem 0;
+    padding: 1.25rem 1.5rem;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    transition: all 0.2s ease;
 }
 
-.info-item i {
-    font-size: 1.5rem;
-    color: #667eea;
-    min-width: 30px;
+.info-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border-color: #667eea;
 }
 
-.info-details {
+.info-card-full {
+    grid-column: 1 / -1;
+}
+
+.info-icon {
+    width: 44px;
+    height: 44px;
+    background: #eef2ff;
+    border-radius: 10px;
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.info-icon i {
+    font-size: 1.25rem;
+    color: #667eea;
+}
+
+.info-icon-green {
+    background: #ecfdf5;
+}
+
+.info-icon-green i {
+    color: #10b981;
+}
+
+.info-content {
     flex: 1;
+    min-width: 0;
 }
 
 .info-label {
-    font-size: 0.85rem;
-    color: #6c757d;
-    font-weight: 500;
+    display: block;
+    font-size: 0.75rem;
+    color: #9ca3af;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
     margin-bottom: 0.25rem;
 }
 
 .info-value {
+    display: block;
     font-size: 1rem;
-    color: #2c3e50;
-    font-weight: 400;
+    color: #1f2937;
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .status-active {
-    color: #28a745;
-    font-weight: 600;
+    color: #10b981 !important;
+    font-weight: 700 !important;
 }
 
-::ng-deep .p-divider {
-    margin: 0.75rem 0;
-}
-
+/* Actions */
 .profile-actions {
     display: flex;
     gap: 1rem;
-    justify-content: center;
-    flex-wrap: wrap;
 }
 
-::ng-deep .profile-actions .p-button {
-    flex: 1;
-    min-width: 150px;
+:host ::ng-deep .profile-actions .p-button {
+    padding: 0.75rem 2rem;
+    font-weight: 500;
 }
 
+/* Responsive */
 @media (max-width: 768px) {
     .user-container {
         padding: 1rem;
+    }
+
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .info-card-full {
+        grid-column: auto;
     }
 
     .profile-actions {
         flex-direction: column;
     }
 
-    ::ng-deep .profile-actions .p-button {
+    :host ::ng-deep .profile-actions .p-button {
         width: 100%;
     }
 }
