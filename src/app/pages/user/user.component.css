@@ -1,6 +1,5 @@
 .user-container {
     padding: 1rem;
-    max-width: 1100px;
     margin: 0 auto;
 }
 
@@ -90,6 +89,14 @@
 
 .info-icon-green i {
     color: #10b981;
+}
+
+.info-icon-social {
+    background: #f0f9ff;
+}
+
+.info-icon-social i {
+    color: #0ea5e9;
 }
 
 .info-content {

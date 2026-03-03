@@ -24,6 +24,7 @@
         </p-avatar>
         <h1 class="profile-name">{{ userProfile.name }}</h1>
         <p class="profile-role">{{ userProfile.role }}</p>
+        <p class="text-white/70 text-sm mt-1">{{ userProfile.bio }}</p>
     </div>
 
     <!-- Info Grid -->
@@ -45,7 +46,7 @@
                 <i class="pi pi-phone"></i>
             </div>
             <div class="info-content">
-                <span class="info-label">Phone</span>
+                <span class="info-label">Teléfono</span>
                 <span class="info-value">{{ userProfile.phone }}</span>
             </div>
         </div>
@@ -56,7 +57,7 @@
                 <i class="pi pi-building"></i>
             </div>
             <div class="info-content">
-                <span class="info-label">Department</span>
+                <span class="info-label">Departamento</span>
                 <span class="info-value">{{ userProfile.department }}</span>
             </div>
         </div>
@@ -67,15 +68,149 @@
                 <i class="pi pi-calendar"></i>
             </div>
             <div class="info-content">
-                <span class="info-label">Join Date</span>
+                <span class="info-label">Fecha de Ingreso</span>
                 <span class="info-value">{{ userProfile.joinDate }}</span>
+            </div>
+        </div>
+
+        <!-- Address -->
+        <div class="info-card">
+            <div class="info-icon">
+                <i class="pi pi-map-marker"></i>
+            </div>
+            <div class="info-content">
+                <span class="info-label">Dirección</span>
+                <span class="info-value">{{ userProfile.address }}</span>
+            </div>
+        </div>
+
+        <!-- City & Country -->
+        <div class="info-card">
+            <div class="info-icon">
+                <i class="pi pi-globe"></i>
+            </div>
+            <div class="info-content">
+                <span class="info-label">Ciudad / País</span>
+                <span class="info-value">{{ userProfile.city }}, {{ userProfile.country }}</span>
+            </div>
+        </div>
+
+        <!-- LinkedIn -->
+        <div class="info-card">
+            <div class="info-icon info-icon-social">
+                <i class="pi pi-linkedin"></i>
+            </div>
+            <div class="info-content">
+                <span class="info-label">LinkedIn</span>
+                <span class="info-value">{{ userProfile.linkedin }}</span>
+            </div>
+        </div>
+
+        <!-- GitHub -->
+        <div class="info-card">
+            <div class="info-icon info-icon-social">
+                <i class="pi pi-github"></i>
+            </div>
+            <div class="info-content">
+                <span class="info-label">GitHub</span>
+                <span class="info-value">{{ userProfile.github }}</span>
             </div>
         </div>
     </div>
 
     <!-- Actions -->
     <div class="profile-actions">
-        <p-button label="Edit Profile" icon="pi pi-user-edit" severity="primary"></p-button>
-        <p-button label="Change Password" icon="pi pi-lock" severity="secondary"></p-button>
+        <p-button label="Editar Perfil" icon="pi pi-user-edit" severity="primary"
+            (onClick)="openEditDialog()"></p-button>
+        <p-button label="Cambiar Contraseña" icon="pi pi-lock" severity="secondary"></p-button>
     </div>
 </div>
+
+<!-- Edit Profile Dialog -->
+<p-dialog header="Editar Perfil" [(visible)]="displayEditDialog" [modal]="true" [style]="{ width: '700px' }"
+    [draggable]="false" [resizable]="false" styleClass="edit-profile-dialog">
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
+        <!-- Name -->
+        <div class="flex flex-col gap-2">
+            <label for="name" class="font-semibold text-gray-700">Nombre Completo</label>
+            <input pInputText id="name" [(ngModel)]="editProfile.name" class="w-full" />
+        </div>
+
+        <!-- Email -->
+        <div class="flex flex-col gap-2">
+            <label for="email" class="font-semibold text-gray-700">Email</label>
+            <input pInputText id="email" [(ngModel)]="editProfile.email" class="w-full" />
+        </div>
+
+        <!-- Phone -->
+        <div class="flex flex-col gap-2">
+            <label for="phone" class="font-semibold text-gray-700">Teléfono</label>
+            <input pInputText id="phone" [(ngModel)]="editProfile.phone" class="w-full" />
+        </div>
+
+        <!-- Role -->
+        <div class="flex flex-col gap-2">
+            <label for="role" class="font-semibold text-gray-700">Rol</label>
+            <p-select id="role" [(ngModel)]="editProfile.role" [options]="roleOptions" optionLabel="label"
+                optionValue="value" class="w-full"></p-select>
+        </div>
+
+        <!-- Department -->
+        <div class="flex flex-col gap-2">
+            <label for="department" class="font-semibold text-gray-700">Departamento</label>
+            <p-select id="department" [(ngModel)]="editProfile.department" [options]="departmentOptions"
+                optionLabel="label" optionValue="value" class="w-full"></p-select>
+        </div>
+
+        <!-- Status -->
+        <div class="flex flex-col gap-2">
+            <label for="status" class="font-semibold text-gray-700">Estado</label>
+            <p-select id="status" [(ngModel)]="editProfile.status" [options]="statusOptions" optionLabel="label"
+                optionValue="value" class="w-full"></p-select>
+        </div>
+
+        <!-- Address -->
+        <div class="flex flex-col gap-2 md:col-span-2">
+            <label for="address" class="font-semibold text-gray-700">Dirección</label>
+            <input pInputText id="address" [(ngModel)]="editProfile.address" class="w-full" />
+        </div>
+
+        <!-- City -->
+        <div class="flex flex-col gap-2">
+            <label for="city" class="font-semibold text-gray-700">Ciudad</label>
+            <input pInputText id="city" [(ngModel)]="editProfile.city" class="w-full" />
+        </div>
+
+        <!-- Country -->
+        <div class="flex flex-col gap-2">
+            <label for="country" class="font-semibold text-gray-700">País</label>
+            <input pInputText id="country" [(ngModel)]="editProfile.country" class="w-full" />
+        </div>
+
+        <!-- LinkedIn -->
+        <div class="flex flex-col gap-2">
+            <label for="linkedin" class="font-semibold text-gray-700">LinkedIn</label>
+            <input pInputText id="linkedin" [(ngModel)]="editProfile.linkedin" class="w-full" />
+        </div>
+
+        <!-- GitHub -->
+        <div class="flex flex-col gap-2">
+            <label for="github" class="font-semibold text-gray-700">GitHub</label>
+            <input pInputText id="github" [(ngModel)]="editProfile.github" class="w-full" />
+        </div>
+
+        <!-- Bio -->
+        <div class="flex flex-col gap-2 md:col-span-2">
+            <label for="bio" class="font-semibold text-gray-700">Biografía</label>
+            <textarea pTextarea id="bio" [(ngModel)]="editProfile.bio" rows="3" class="w-full"></textarea>
+        </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+        <div class="flex justify-end gap-2">
+            <p-button label="Cancelar" icon="pi pi-times" severity="secondary" (onClick)="cancelEdit()"></p-button>
+            <p-button label="Guardar" icon="pi pi-check" severity="primary" (onClick)="saveProfile()"></p-button>
+        </div>
+    </ng-template>
+</p-dialog>

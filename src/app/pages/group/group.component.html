@@ -14,56 +14,171 @@
         </div>
     </div>
 
-    <!-- Advances Section Title -->
+    <!-- Table Section Title -->
     <div class="section-title">
         <h2>
-            <i class="pi pi-chart-line"></i>
-            Group Advances
+            <i class="pi pi-table"></i>
+            Grupos
         </h2>
-        <p-button icon="pi pi-plus" label="New Group" severity="primary" [rounded]="true"></p-button>
+        <p-button icon="pi pi-plus" label="Nuevo Grupo" severity="primary" [rounded]="true"
+            (onClick)="openNewGroupDialog()"></p-button>
     </div>
 
-    <!-- Group Cards Grid -->
-    <div class="cards-grid">
-        @for (group of groups; track group.name) {
-        <p-card>
-            <ng-template pTemplate="header">
-                <div class="card-header-content">
-                    <div class="card-header-title">
-                        <i class="pi pi-users"></i>
-                        <h3>{{ group.name }}</h3>
-                    </div>
-                    <p-tag [value]="group.status" [severity]="group.status === 'active' ? 'success' : 'warn'"
-                        [rounded]="true"></p-tag>
-                </div>
+    <!-- Groups Table -->
+    <div class="table-container">
+        <p-table [value]="groups" [paginator]="true" [rows]="5" [rowsPerPageOptions]="[5, 10, 25]"
+            [showCurrentPageReport]="true"
+            currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} grupos"
+            [tableStyle]="{ 'min-width': '60rem' }" styleClass="p-datatable-striped p-datatable-gridlines"
+            [globalFilterFields]="['nombre', 'autor', 'nivel', 'descripcion']">
+
+            <ng-template #header>
+                <tr>
+                    <th pSortableColumn="nivel" class="text-center" style="width: 120px;">
+                        <div class="flex items-center justify-center gap-2">
+                            Nivel
+                            <p-sortIcon field="nivel"></p-sortIcon>
+                        </div>
+                    </th>
+                    <th pSortableColumn="autor" style="min-width: 150px;">
+                        <div class="flex items-center gap-2">
+                            Autor
+                            <p-sortIcon field="autor"></p-sortIcon>
+                        </div>
+                    </th>
+                    <th pSortableColumn="nombre" style="min-width: 180px;">
+                        <div class="flex items-center gap-2">
+                            Nombre
+                            <p-sortIcon field="nombre"></p-sortIcon>
+                        </div>
+                    </th>
+                    <th pSortableColumn="integrantes" class="text-center">
+                        <div class="flex items-center justify-center gap-2">
+                            Integrantes
+                            <p-sortIcon field="integrantes"></p-sortIcon>
+                        </div>
+                    </th>
+                    <th pSortableColumn="tickets" class="text-center">
+                        <div class="flex items-center justify-center gap-2">
+                            Tickets
+                            <p-sortIcon field="tickets"></p-sortIcon>
+                        </div>
+                    </th>
+                    <th style="min-width: 250px;">Descripción</th>
+                    <th style="width: 120px;" class="text-center">Acciones</th>
+                </tr>
             </ng-template>
 
-            <ng-template pTemplate="content">
-                <div class="card-stats">
-                    <div class="stat-item">
-                        <p-chip [label]="group.members + ' Members'" icon="pi pi-user"></p-chip>
-                    </div>
-                    <div class="stat-item">
-                        <p-chip [label]="group.projects + ' Projects'" icon="pi pi-briefcase"></p-chip>
-                    </div>
-                </div>
-
-                <div class="progress-section">
-                    <div class="progress-header">
-                        <span class="progress-label">Progress</span>
-                        <p-badge [value]="group.progress + '%'" severity="info"></p-badge>
-                    </div>
-                    <p-progressBar [value]="group.progress" [showValue]="false"></p-progressBar>
-                </div>
+            <ng-template #body let-group>
+                <tr>
+                    <td class="text-center">
+                        <p-tag [value]="group.nivel" [severity]="getNivelSeverity(group.nivel)"
+                            [rounded]="true"></p-tag>
+                    </td>
+                    <td>
+                        <div class="flex items-center gap-2">
+                            <span
+                                class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 font-semibold text-sm">
+                                {{ getInitials(group.autor) }}
+                            </span>
+                            <span class="font-medium text-gray-800">{{ group.autor }}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="font-semibold text-indigo-600">{{ group.nombre }}</span>
+                    </td>
+                    <td class="text-center">
+                        <div class="flex items-center justify-center gap-1">
+                            <i class="pi pi-users text-gray-400"></i>
+                            <span class="font-medium">{{ group.integrantes }}</span>
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        <p-badge [value]="group.tickets" severity="info"></p-badge>
+                    </td>
+                    <td>
+                        <span class="text-gray-600 text-sm line-clamp-2">{{ group.descripcion }}</span>
+                    </td>
+                    <td class="text-center">
+                        <div class="flex items-center justify-center gap-1">
+                            <p-button icon="pi pi-eye" [rounded]="true" [text]="true" severity="info"
+                                size="small"></p-button>
+                            <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary"
+                                size="small"></p-button>
+                            <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger"
+                                size="small"></p-button>
+                        </div>
+                    </td>
+                </tr>
             </ng-template>
 
-            <ng-template pTemplate="footer">
-                <div class="card-actions">
-                    <p-button icon="pi pi-eye" label="View" [text]="true" severity="info"></p-button>
-                    <p-button icon="pi pi-pencil" label="Edit" [text]="true" severity="secondary"></p-button>
-                </div>
+            <ng-template #emptymessage>
+                <tr>
+                    <td colspan="7" class="text-center py-8">
+                        <div class="flex flex-col items-center gap-2 text-gray-400">
+                            <i class="pi pi-inbox text-4xl"></i>
+                            <span>No se encontraron grupos</span>
+                        </div>
+                    </td>
+                </tr>
             </ng-template>
-        </p-card>
-        }
+        </p-table>
     </div>
 </div>
+
+<!-- New Group Dialog -->
+<p-dialog header="Nuevo Grupo" [(visible)]="displayNewGroupDialog" [modal]="true" [style]="{ width: '550px' }"
+    [draggable]="false" [resizable]="false" styleClass="new-group-dialog">
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
+        <!-- Nombre del Grupo -->
+        <div class="flex flex-col gap-2 md:col-span-2">
+            <label for="groupName" class="font-semibold text-gray-700">Nombre del Grupo *</label>
+            <input pInputText id="groupName" [(ngModel)]="newGroup.nombre" placeholder="Ej: Development Team"
+                class="w-full" />
+        </div>
+
+        <!-- Autor -->
+        <div class="flex flex-col gap-2">
+            <label for="groupAutor" class="font-semibold text-gray-700">Autor *</label>
+            <input pInputText id="groupAutor" [(ngModel)]="newGroup.autor" placeholder="Nombre del autor"
+                class="w-full" />
+        </div>
+
+        <!-- Nivel -->
+        <div class="flex flex-col gap-2">
+            <label for="groupNivel" class="font-semibold text-gray-700">Nivel *</label>
+            <p-select id="groupNivel" [(ngModel)]="newGroup.nivel" [options]="nivelOptions" optionLabel="label"
+                optionValue="value" placeholder="Seleccionar nivel" class="w-full"></p-select>
+        </div>
+
+        <!-- Integrantes -->
+        <div class="flex flex-col gap-2">
+            <label for="groupIntegrantes" class="font-semibold text-gray-700">Integrantes</label>
+            <p-inputNumber id="groupIntegrantes" [(ngModel)]="newGroup.integrantes" [min]="0" [showButtons]="false"
+                class="w-full"></p-inputNumber>
+        </div>
+
+        <!-- Tickets -->
+        <div class="flex flex-col gap-2">
+            <label for="groupTickets" class="font-semibold text-gray-700">Tickets</label>
+            <p-inputNumber id="groupTickets" [(ngModel)]="newGroup.tickets" [min]="0" [showButtons]="false"
+                class="w-full"></p-inputNumber>
+        </div>
+
+        <!-- Descripción -->
+        <div class="flex flex-col gap-2 md:col-span-2">
+            <label for="groupDescripcion" class="font-semibold text-gray-700">Descripción</label>
+            <textarea pTextarea id="groupDescripcion" [(ngModel)]="newGroup.descripcion" rows="3"
+                placeholder="Descripción del grupo..." class="w-full"></textarea>
+        </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+        <div class="flex justify-end gap-2">
+            <p-button label="Cancelar" icon="pi pi-times" severity="secondary" (onClick)="cancelNewGroup()"></p-button>
+            <p-button label="Guardar" icon="pi pi-check" severity="primary" (onClick)="saveNewGroup()"
+                [disabled]="!newGroup.nombre || !newGroup.autor || !newGroup.nivel"></p-button>
+        </div>
+    </ng-template>
+</p-dialog>
