@@ -151,8 +151,8 @@ export class HomeComponent implements OnInit {
         };
 
         this.salesChartOptions = {
+            responsive: true,
             maintainAspectRatio: false,
-            aspectRatio: 0.6,
             plugins: {
                 legend: {
                     labels: {
@@ -202,8 +202,8 @@ export class HomeComponent implements OnInit {
         };
 
         this.revenueChartOptions = {
+            responsive: true,
             maintainAspectRatio: false,
-            aspectRatio: 1,
             plugins: {
                 legend: {
                     labels: {

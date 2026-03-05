@@ -15,19 +15,19 @@
     <div class="stats-grid">
         @for (stat of stats; track stat.title) {
         <div class="stat-card">
-            <div class="stat-icon" [style.background-color]="stat.color + '20'">
-                <i class="pi {{ stat.icon }}" [style.color]="stat.color"></i>
-            </div>
-            <div class="stat-content">
-                <span class="stat-label">{{ stat.title }}</span>
-                <div class="stat-bottom">
-                    <span class="stat-value">{{ stat.value }}</span>
-                    <span class="stat-change" [class.positive]="stat.changeType === 'positive'"
-                        [class.negative]="stat.changeType === 'negative'">
-                        <i [class]="stat.changeType === 'positive' ? 'pi pi-arrow-up' : 'pi pi-arrow-down'"></i>
-                        {{ stat.change }}
-                    </span>
+            <div class="stat-header">
+                <div class="stat-icon" [style.background-color]="stat.color + '20'">
+                    <i class="pi {{ stat.icon }}" [style.color]="stat.color"></i>
                 </div>
+                <span class="stat-label">{{ stat.title }}</span>
+            </div>
+            <div class="stat-body">
+                <span class="stat-value">{{ stat.value }}</span>
+                <span class="stat-change" [class.positive]="stat.changeType === 'positive'"
+                    [class.negative]="stat.changeType === 'negative'">
+                    <i [class]="stat.changeType === 'positive' ? 'pi pi-arrow-up' : 'pi pi-arrow-down'"></i>
+                    {{ stat.change }}
+                </span>
             </div>
         </div>
         }
@@ -46,7 +46,8 @@
                     <p-button icon="pi pi-ellipsis-v" [text]="true" />
                 </div>
             </ng-template>
-            <div style="height: 300px">
+            <div class="chart-wrapper">
+                <!-- <div class="w-full h-80"> -->
                 <p-chart type="line" [data]="salesChartData" [options]="salesChartOptions" />
             </div>
         </p-card>
@@ -62,7 +63,9 @@
                     <p-button icon="pi pi-ellipsis-v" [text]="true" />
                 </div>
             </ng-template>
-            <div style="height: 300px">
+
+            <!-- <div class="chart-wrapper"> -->
+            <div class="w-full h-80">
                 <p-chart type="doughnut" [data]="revenueChartData" [options]="revenueChartOptions" />
             </div>
         </p-card>
