@@ -13,6 +13,8 @@ import { DialogModule } from 'primeng/dialog';
 import { SelectModule } from 'primeng/select';
 import { TextareaModule } from 'primeng/textarea';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { IfHasPermissionDirective } from "../../directives/if-has-permission.directive";
+import { PermissionsService } from '../../services/permissions.service';
 
 interface Group {
     id: number;
@@ -41,7 +43,8 @@ interface Group {
         DialogModule,
         SelectModule,
         TextareaModule,
-        InputNumberModule
+        InputNumberModule,
+        IfHasPermissionDirective
     ],
     templateUrl: './group.component.html',
     styleUrls: ['./group.component.css']
@@ -49,6 +52,14 @@ interface Group {
 export class GroupComponent {
     totalGroups = 42;
     displayNewGroupDialog = false;
+
+    constructor(private permissionsService: PermissionsService) { }
+
+    // Método para verificar permisos activos (útil para debugging)
+    logActivePermissions() {
+        console.log('Permisos activos:', this.permissionsService.getPermissions());
+        console.log('¿Tiene groups_add?', this.permissionsService.hasPermission('groups_add'));
+    }
 
     newGroup: Partial<Group> = {
         nivel: '',

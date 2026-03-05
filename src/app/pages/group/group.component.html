@@ -20,8 +20,8 @@
             <i class="pi pi-table"></i>
             Grupos
         </h2>
-        <p-button icon="pi pi-plus" label="Nuevo Grupo" severity="primary" [rounded]="true"
-            (onClick)="openNewGroupDialog()"></p-button>
+        <p-button *ifHasPermission="['groups_add']" icon="pi pi-plus" label="Nuevo Grupo" severity="primary"
+            [rounded]="true" (onClick)="openNewGroupDialog()"></p-button>
     </div>
 
     <!-- Groups Table -->
