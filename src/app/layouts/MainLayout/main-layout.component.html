@@ -10,7 +10,9 @@
                 <button pButton icon="pi pi-bars" class="menu-toggle-btn" [text]="true"
                     (click)="toggleMobileMenu()"></button>
                 <div class="breadcrumb">
-                    <i class="pi pi-home"></i>
+                    <p-button severity="secondary" routerLink="/dashboard">
+                        <i class="pi pi-home"></i>
+                    </p-button>
                     <span class="separator">/</span>
                     <span class="current-page">Dashboard</span>
                 </div>
@@ -25,7 +27,7 @@
 
                 <!-- Notifications -->
                 <p-overlaybadge [value]="2" severity="danger">
-                    <button pButton icon="pi pi-bell" class="icon-btn" [text]="true" [raised]="true" pBadge
+                    <button pButton icon="pi pi-bell" class="icon-btn" [text]="true" [raised]="true"
                         severity="danger"></button>
                 </p-overlaybadge>
 

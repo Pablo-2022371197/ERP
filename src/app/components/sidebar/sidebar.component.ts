@@ -14,7 +14,7 @@ import { RouterModule } from '@angular/router';
 })
 export class SidebarComponent {
     collapsed = false;
-    projectName = 'ERP System';
+    projectName = 'ERP ._.';
     appVersion = '0.0.0';
 
     @Output() collapsedChange = new EventEmitter<boolean>();
