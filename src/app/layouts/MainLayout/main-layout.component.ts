@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, RouterLinkActive } from '@angular/router';
 import { SidebarComponent } from '../../components/sidebar/sidebar.component';
+import { BreadcrumbsComponent } from '../../components/breadcrumbs/breadcrumbs.component';
 import { ButtonModule } from 'primeng/button';
 import { AvatarModule } from 'primeng/avatar';
 import { BadgeModule } from 'primeng/badge';
@@ -16,6 +17,7 @@ import { OverlayBadge } from "primeng/overlaybadge";
         CommonModule,
         RouterOutlet,
         SidebarComponent,
+        BreadcrumbsComponent,
         ButtonModule,
         AvatarModule,
         BadgeModule,

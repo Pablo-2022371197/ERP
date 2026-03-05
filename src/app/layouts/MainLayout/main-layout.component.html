@@ -9,13 +9,7 @@
             <div class="header-left">
                 <button pButton icon="pi pi-bars" class="menu-toggle-btn" [text]="true"
                     (click)="toggleMobileMenu()"></button>
-                <div class="breadcrumb">
-                    <p-button severity="secondary" routerLink="/dashboard">
-                        <i class="pi pi-home"></i>
-                    </p-button>
-                    <span class="separator">/</span>
-                    <span class="current-page">Dashboard</span>
-                </div>
+                <app-breadcrumbs></app-breadcrumbs>
             </div>
 
             <div class="header-right">

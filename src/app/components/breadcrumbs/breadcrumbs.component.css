@@ -1,0 +1,79 @@
+/* Estilos para componentes de PrimeNG usando CSS puro */
+
+:host ::ng-deep .custom-breadcrumb {
+    background: transparent;
+    border: 0;
+    padding: 0;
+}
+
+:host ::ng-deep .custom-breadcrumb .p-breadcrumb-list {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+:host ::ng-deep .custom-breadcrumb .p-menuitem-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.5rem;
+    transition: all 0.2s;
+    color: #4b5563;
+    text-decoration: none;
+}
+
+:host ::ng-deep .custom-breadcrumb .p-menuitem-link:hover {
+    color: #2563eb;
+    background-color: #eff6ff;
+}
+
+:host ::ng-deep .custom-breadcrumb .p-menuitem-link:focus {
+    box-shadow: none;
+    outline: none;
+    box-shadow: 0 0 0 2px #3b82f6;
+    outline-offset: 1px;
+}
+
+:host ::ng-deep .custom-breadcrumb .p-menuitem-icon {
+    font-size: 1.125rem;
+}
+
+:host ::ng-deep .custom-breadcrumb .p-menuitem-text {
+    font-weight: 500;
+    font-size: 0.875rem;
+}
+
+:host ::ng-deep .custom-breadcrumb .p-breadcrumb-chevron {
+    color: #9ca3af;
+    margin: 0 0.25rem;
+}
+
+/* Estilo para el item activo (último elemento) */
+:host ::ng-deep .custom-breadcrumb .p-menuitem:last-child .p-menuitem-link {
+    color: #2563eb;
+    background-color: #eff6ff;
+    font-weight: 600;
+    pointer-events: none;
+}
+
+/* Estilo para el home icon */
+:host ::ng-deep .custom-breadcrumb .p-menuitem:first-child .p-menuitem-link {
+    color: #2563eb;
+}
+
+:host ::ng-deep .custom-breadcrumb .p-menuitem:first-child .p-menuitem-link:hover {
+    background-color: #dbeafe;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    :host ::ng-deep .custom-breadcrumb .p-menuitem-link {
+        padding: 0.25rem 0.5rem;
+    }
+
+    :host ::ng-deep .custom-breadcrumb .p-menuitem-text {
+        font-size: 0.75rem;
+    }
+}
