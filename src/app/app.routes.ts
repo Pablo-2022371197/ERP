@@ -22,6 +22,11 @@ export const routes: Routes = [
                     import('./pages/group/group.component').then((m) => m.GroupComponent),
             },
             {
+                path: 'ticket',
+                loadComponent: () =>
+                    import('./pages/ticket/ticket.component').then((m) => m.TicketComponent),
+            },
+            {
                 path: 'user',
                 loadComponent: () =>
                     import('./pages/user/user.component').then((m) => m.UserComponent),

@@ -7,6 +7,12 @@ export class PermissionsService {
     // Signal para almacenar los permisos del usuario
     private permissions = signal<string[]>([]);
 
+    // ? Por qué se necesita un constructor vacío?
+    // * El constructor vacío es necesario para que Angular pueda inyectar esta clase
+    // * como un servicio. Aunque no estemos realizando ninguna inicialización específica
+    // * en el constructor, Angular requiere que exista para poder crear una instancia 
+    // * del servicio y proporcionarla a los componentes o directivas que lo necesiten. 
+    // * Sin el constructor, Angular no podría instanciar el servicio correctamente.
     constructor() { }
 
     /**
