@@ -1,6 +1,6 @@
 <p-dialog [header]="isEditMode ? 'Editar Ticket' : 'Nuevo Ticket'" [(visible)]="visible" [modal]="true"
     [draggable]="false" [resizable]="false" [style]="{width: '50rem'}" maskStyleClass="backdrop-blur-sm"
-    styleClass="!border-0 !bg-white/90 rounded-lg shadow-xl">
+    styleClass="!border-0 !bg-white/90 rounded-lg shadow-xl" (onHide)="closeDialog()">
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
         <!-- Título -->
@@ -50,7 +50,7 @@
         <div class="flex flex-col gap-2 md:col-span-2">
             <label for="ticketFechaLimite" class="font-semibold text-gray-700">Fecha Límite *</label>
             <p-datepicker id="ticketFechaLimite" [(ngModel)]="currentTicket.fechaLimite" [minDate]="today"
-                dateFormat="dd/mm/yy" placeholder="Seleccionar fecha límite" class="w-full"></p-datepicker>
+                dateFormat="dd/mm/yy" placeholder="Seleccionar fecha límite" class="w-fit"></p-datepicker>
         </div>
 
         <!-- Comentarios -->

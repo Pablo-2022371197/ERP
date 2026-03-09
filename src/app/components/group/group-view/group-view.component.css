@@ -1,0 +1,25 @@
+/* Estilos específicos de la vista del grupo */
+
+.modal-title-section {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.modal-group-title {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: #4f46e5;
+}
+
+:host ::ng-deep .p-dialog {
+    border-radius: 0.75rem;
+}
+
+:host ::ng-deep .p-dialog-content {
+    padding: 0;
+}
+
+:host ::ng-deep .p-tabs-nav {
+    justify-content: flex-start;
+}

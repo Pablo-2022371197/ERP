@@ -97,6 +97,12 @@ export class TicketViewComponent {
         return `${day}/${month}/${year}`;
     }
 
+    closeView() {
+        this.visible = false;
+        this.visibleChange.emit(false);
+        this.onClose.emit();
+    }
+
     formatDateTime(date: Date | undefined): string {
         if (!date) return '';
         const d = new Date(date);

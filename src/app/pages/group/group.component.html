@@ -103,12 +103,12 @@
                     </td>
                     <td class="text-center">
                         <div class="flex items-center justify-center gap-1">
-                            <p-button icon="pi pi-eye" [rounded]="true" [text]="true" severity="info"
-                                size="small"></p-button>
+                            <p-button icon="pi pi-eye" [rounded]="true" [text]="true" severity="info" size="small"
+                                (onClick)="viewGroup(group)"></p-button>
                             <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary"
-                                size="small"></p-button>
-                            <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger"
-                                size="small"></p-button>
+                                size="small" (onClick)="editGroup(group)"></p-button>
+                            <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" size="small"
+                                (onClick)="deleteGroup(group)"></p-button>
                         </div>
                     </td>
                 </tr>
@@ -128,60 +128,12 @@
     </div>
 </div>
 
-<!-- New Group Dialog -->
-<p-dialog header="Nuevo Grupo" [(visible)]="displayNewGroupDialog" [modal]="true" [draggable]="false"
-    [resizable]="false" styleClass="new-group-dialog" maskStyleClass="backdrop-blur-sm"
-    styleClass="!border-0 !bg-white/90 rounded-lg shadow-xl">
+<!-- Group Form Component (Create/Edit) -->
+<app-group-form [(visible)]="displayGroupDialog" [isEditMode]="isEditMode" [group]="editingGroup"
+    [nivelOptions]="nivelOptions" [availableUsers]="availableUsers" (onSave)="onSaveGroup($event)"
+    (onCancel)="onCancelGroupForm()">
+</app-group-form>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
-        <!-- Nombre del Grupo -->
-        <div class="flex flex-col gap-2 md:col-span-2">
-            <label for="groupName" class="font-semibold text-gray-700">Nombre del Grupo *</label>
-            <input pInputText id="groupName" [(ngModel)]="newGroup.nombre" placeholder="Ej: Development Team"
-                class="w-full" />
-        </div>
-
-        <!-- Autor -->
-        <div class="flex flex-col gap-2">
-            <label for="groupAutor" class="font-semibold text-gray-700">Autor *</label>
-            <input pInputText id="groupAutor" [(ngModel)]="newGroup.autor" placeholder="Nombre del autor"
-                class="w-full" />
-        </div>
-
-        <!-- Nivel -->
-        <div class="flex flex-col gap-2">
-            <label for="groupNivel" class="font-semibold text-gray-700">Nivel *</label>
-            <p-select id="groupNivel" [(ngModel)]="newGroup.nivel" [options]="nivelOptions" optionLabel="label"
-                optionValue="value" placeholder="Seleccionar nivel" class="w-full"></p-select>
-        </div>
-
-        <!-- Integrantes -->
-        <div class="flex flex-col gap-2">
-            <label for="groupIntegrantes" class="font-semibold text-gray-700">Integrantes</label>
-            <p-inputNumber id="groupIntegrantes" [(ngModel)]="newGroup.integrantes" [min]="0" [showButtons]="false"
-                class="w-full"></p-inputNumber>
-        </div>
-
-        <!-- Tickets -->
-        <div class="flex flex-col gap-2">
-            <label for="groupTickets" class="font-semibold text-gray-700">Tickets</label>
-            <p-inputNumber id="groupTickets" [(ngModel)]="newGroup.tickets" [min]="0" [showButtons]="false"
-                class="w-full"></p-inputNumber>
-        </div>
-
-        <!-- Descripción -->
-        <div class="flex flex-col gap-2 md:col-span-2">
-            <label for="groupDescripcion" class="font-semibold text-gray-700">Descripción</label>
-            <textarea pTextarea id="groupDescripcion" [(ngModel)]="newGroup.descripcion" rows="3"
-                placeholder="Descripción del grupo..." class="w-full"></textarea>
-        </div>
-    </div>
-
-    <ng-template pTemplate="footer">
-        <div class="flex justify-end gap-2">
-            <p-button label="Cancelar" icon="pi pi-times" severity="secondary" (onClick)="cancelNewGroup()"></p-button>
-            <p-button label="Guardar" icon="pi pi-check" severity="primary" (onClick)="saveNewGroup()"
-                [disabled]="!newGroup.nombre || !newGroup.autor || !newGroup.nivel"></p-button>
-        </div>
-    </ng-template>
-</p-dialog>
+<!-- Group View Component -->
+<app-group-view [(visible)]="displayViewDialog" [group]="viewingGroup" (onClose)="onCloseView()">
+</app-group-view>

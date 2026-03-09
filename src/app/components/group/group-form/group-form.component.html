@@ -1,0 +1,102 @@
+<p-dialog [header]="isEditMode ? 'Editar Grupo' : 'Nuevo Grupo'" [(visible)]="visible" [modal]="true"
+    [draggable]="false" [resizable]="false" [style]="{width: '50rem', maxHeight: '90vh'}"
+    maskStyleClass="backdrop-blur-sm" styleClass="!border-0 !bg-white/90 rounded-lg shadow-xl px-2!"
+    [contentStyle]="{overflow: 'auto'}" (onHide)="closeDialog()">
+
+    <div class="grid! grid-cols-1! md:grid-cols-2! gap-4! p-4!">
+        <!-- Nombre del Grupo -->
+        <div class="flex! flex-col! gap-2! md:col-span-2!">
+            <label for="groupNombre" class="font-semibold! text-gray-700!">Nombre del Grupo *</label>
+            <input pInputText id="groupNombre" [(ngModel)]="currentGroup.nombre" placeholder="Ej: Development Team"
+                class="w-full!" />
+        </div>
+
+        <!-- Descripción -->
+        <div class="flex! flex-col! gap-2! md:col-span-2!">
+            <label for="groupDescripcion" class="font-semibold! text-gray-700!">Descripción</label>
+            <textarea pTextarea id="groupDescripcion" [(ngModel)]="currentGroup.descripcion" rows="3"
+                placeholder="Descripción del grupo..." class="w-full!"></textarea>
+        </div>
+
+        <!-- Nivel -->
+        <div class="flex! flex-col! gap-2!">
+            <label for="groupNivel" class="font-semibold! text-gray-700!">Nivel *</label>
+            <p-select id="groupNivel" [(ngModel)]="currentGroup.nivel" [options]="nivelOptions" optionLabel="label"
+                optionValue="value" placeholder="Seleccionar nivel" class="w-full!" appendTo="body"></p-select>
+        </div>
+
+        <!-- Autor -->
+        <div class="flex! flex-col! gap-2!">
+            <label for="groupAutor" class="font-semibold! text-gray-700!">Autor *</label>
+            <input pInputText id="groupAutor" [(ngModel)]="currentGroup.autor" placeholder="Nombre del autor"
+                class="w-full!" />
+        </div>
+
+        <!-- Miembros (MultiSelect) -->
+        <div class="flex! flex-col! gap-2! md:col-span-2!">
+            <label for="groupMiembros" class="font-semibold! text-gray-700!">Miembros del Grupo</label>
+            <p-multiselect id="groupMiembros" [(ngModel)]="selectedMembers" [options]="getFilteredUsers()"
+                optionLabel="displayName" placeholder="Seleccionar miembros" [filter]="true"
+                filterPlaceholder="Buscar por nombre o email" [showToggleAll]="false" class="w-full!" display="chip"
+                [maxSelectedLabels]="3" appendTo="body" [virtualScroll]="true" [virtualScrollItemSize]="46">
+                <ng-template let-user #item>
+                    <div class="flex! items-center! gap-2! p-2!">
+                        <span
+                            class="flex! items-center! justify-center! w-8! h-8! rounded-full! bg-indigo-100! text-indigo-600! font-semibold! text-xs! shrink-0!">
+                            {{ getInitials(user.nombre) }}
+                        </span>
+                        <div class="flex-1!">
+                            <div class="font-semibold! text-gray-900!">{{ user.nombre }}</div>
+                            <div class="text-xs! text-gray-500!">{{ user.email }}</div>
+                        </div>
+                    </div>
+                </ng-template>
+                <ng-template let-user #chip>
+                    <div class="flex! items-center! gap-1!">
+                        <span
+                            class="flex! items-center! justify-center! w-6! h-6! rounded-full! bg-indigo-100! text-indigo-600! font-semibold! text-xs!">
+                            {{ getInitials(user.nombre) }}
+                        </span>
+                        <span class="text-sm!">{{ user.nombre }}</span>
+                    </div>
+                </ng-template>
+            </p-multiselect>
+        </div>
+
+        <!-- Miembros seleccionados para eliminar (solo en modo edición con miembros guardados) -->
+        @if (isEditMode && currentGroup.miembros && currentGroup.miembros.length > 0) {
+        <div class="flex! flex-col! gap-3! md:col-span-2! mt-2! drop-shadow-sm">
+            <div class="flex! items-center! gap-2!">
+                <i class="pi pi-users text-indigo-600!"></i>
+                <label class="font-semibold! text-gray-700!">Miembros Guardados ({{ currentGroup.miembros.length
+                    }})</label>
+            </div>
+            <div class="space-y-2! max-h-60! overflow-y-auto! border! border-gray-200! rounded-lg! p-3! bg-gray-50!">
+                <div *ngFor="let member of currentGroup.miembros"
+                    class="flex! items-center! justify-between! p-3! bg-white! border! border-gray-200! rounded-lg! hover:shadow-sm! transition-all!">
+                    <div class="flex! items-center! gap-3!">
+                        <span
+                            class="flex! items-center! justify-center! w-10! h-10! rounded-full! bg-indigo-100! text-indigo-600! font-bold! text-sm! shrink-0!">
+                            {{ getInitials(member.nombre) }}
+                        </span>
+                        <div>
+                            <div class="font-semibold! text-gray-900!">{{ member.nombre }}</div>
+                            <div class="text-xs! text-gray-500!">{{ member.email }}</div>
+                        </div>
+                    </div>
+                    <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" size="small"
+                        (onClick)="removeMemberFromSaved(member)" pTooltip="Eliminar del grupo"></p-button>
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+
+    <ng-template pTemplate="footer">
+        <div class="flex! justify-end! gap-2! p-0!">
+            <p-button label="Cancelar" icon="pi pi-times" severity="secondary" (onClick)="cancelForm()"></p-button>
+            <p-button label="Guardar" icon="pi pi-check" severity="primary" (onClick)="saveGroup()"
+                [disabled]="!currentGroup.nombre || !currentGroup.autor || !currentGroup.nivel"></p-button>
+        </div>
+    </ng-template>
+</p-dialog>

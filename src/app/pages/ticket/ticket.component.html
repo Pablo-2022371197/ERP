@@ -84,8 +84,10 @@
                             [rounded]="true"></p-tag>
                     </td>
                     <td class="text-center">
-                        <p-tag [value]="ticket.prioridad" [severity]="getPrioridadSeverity(ticket.prioridad)"
-                            [rounded]="true"></p-tag>
+                        <div class="flex items-center justify-center">
+                            <p-tag [value]="ticket.prioridad" [severity]="getPrioridadSeverity(ticket.prioridad)"
+                                [rounded]="true"></p-tag>
+                        </div>
                     </td>
                     <td>
                         <div class="flex items-center gap-2">

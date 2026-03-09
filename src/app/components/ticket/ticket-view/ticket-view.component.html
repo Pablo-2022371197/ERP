@@ -1,6 +1,6 @@
 <p-dialog header="Detalles del Ticket" [(visible)]="visible" [modal]="true" [draggable]="false" [resizable]="false"
     [style]="{width: '50rem'}" maskStyleClass="backdrop-blur-sm"
-    styleClass="!border-0 !bg-white/90 rounded-lg shadow-xl transition-all">
+    styleClass="!border-0 !bg-white/90 rounded-lg shadow-xl transition-all" (onHide)="closeView()">
 
     <div class="p-4!" *ngIf="ticket">
         <!-- Título destacado -->
