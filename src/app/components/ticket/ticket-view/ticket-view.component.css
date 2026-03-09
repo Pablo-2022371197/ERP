@@ -1,0 +1,11 @@
+/* Modal styles shared from parent component */
+.modal-title-section {
+    margin-bottom: 1.5rem;
+}
+
+.modal-ticket-title {
+    font-size: 1.875rem;
+    font-weight: 700;
+    margin: 0 0 1rem 0;
+    line-height: 1.2;
+}

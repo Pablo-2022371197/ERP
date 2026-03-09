@@ -9,41 +9,13 @@ import { ProgressBarModule } from 'primeng/progressbar';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
-import { DialogModule } from 'primeng/dialog';
-import { SelectModule } from 'primeng/select';
-import { TextareaModule } from 'primeng/textarea';
-import { InputNumberModule } from 'primeng/inputnumber';
-import { DatePickerModule } from 'primeng/datepicker';
-import { TabsModule } from 'primeng/tabs';
 import { IfHasPermissionDirective } from "../../directives/if-has-permission.directive";
 import { PermissionsService } from '../../services/permissions.service';
+import { TicketViewComponent, Ticket as ViewTicket } from '../../components/ticket/ticket-view/ticket-view.component';
+import { TicketFormComponent, Ticket as FormTicket } from '../../components/ticket/ticket-form/ticket-form.component';
 
-interface Comentario {
-    autor: string;
-    texto: string;
-    fecha: Date;
-}
-
-interface HistorialCambio {
-    campo: string;
-    valorAnterior: string;
-    valorNuevo: string;
-    fecha: Date;
-    autor: string;
-}
-
-interface Ticket {
-    id: number;
-    titulo: string;
-    descripcion: string;
-    estado: string;
-    asignadoA: string;
-    prioridad: string;
-    fechaCreacion: Date;
-    fechaLimite: Date;
-    comentarios: Comentario[];
-    historial: HistorialCambio[];
-}
+// Usar tipo combinado de los componentes
+type Ticket = ViewTicket & FormTicket;
 
 @Component({
     selector: 'app-ticket',
@@ -59,31 +31,19 @@ interface Ticket {
         ButtonModule,
         TableModule,
         InputTextModule,
-        DialogModule,
-        SelectModule,
-        TextareaModule,
-        InputNumberModule,
-        DatePickerModule,
-        TabsModule,
-        IfHasPermissionDirective
+        IfHasPermissionDirective,
+        TicketViewComponent,
+        TicketFormComponent
     ],
     templateUrl: './ticket.component.html',
     styleUrls: ['./ticket.component.css']
 })
 export class TicketComponent {
-    totalTickets = 15;
     displayTicketDialog = false;
     displayViewDialog = false;
     isEditMode = false;
-    today = new Date();
-    newComment = '';
     viewingTicket: Ticket | null = null;
-    showHistorial = false;
-
-    currentTicket: Partial<Ticket> = this.getEmptyTicket();
-
-    // Ticket original para comparar cambios
-    private originalTicket: Partial<Ticket> | null = null;
+    editingTicket: Partial<Ticket> | null = null;
 
     constructor(private permissionsService: PermissionsService) { }
 
@@ -267,19 +227,8 @@ export class TicketComponent {
         }
     ];
 
-    private getEmptyTicket(): Partial<Ticket> {
-        return {
-            titulo: '',
-            descripcion: '',
-            estado: '',
-            asignadoA: '',
-            prioridad: '',
-            fechaCreacion: new Date(),
-            fechaLimite: undefined,
-            comentarios: [],
-            historial: []
-        };
-    }
+    totalTickets = this.tickets.length;
+
 
     getEstadoSeverity(estado: string): 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' {
         switch (estado) {
@@ -325,41 +274,20 @@ export class TicketComponent {
         return `${day}/${month}/${year}`;
     }
 
-    formatDateTime(date: Date | undefined): string {
-        if (!date) return '';
-        const d = new Date(date);
-        const day = String(d.getDate()).padStart(2, '0');
-        const month = String(d.getMonth() + 1).padStart(2, '0');
-        const year = d.getFullYear();
-        const hours = String(d.getHours()).padStart(2, '0');
-        const minutes = String(d.getMinutes()).padStart(2, '0');
-        return `${day}/${month}/${year} ${hours}:${minutes}`;
-    }
-
     openNewTicketDialog() {
-        this.currentTicket = this.getEmptyTicket();
-        this.originalTicket = null;
-        this.newComment = '';
         this.isEditMode = false;
+        this.editingTicket = null;
         this.displayTicketDialog = true;
     }
 
     editTicket(ticket: Ticket) {
-        // Crear copia profunda del ticket original para comparación
-        this.originalTicket = JSON.parse(JSON.stringify(ticket));
-        // Crear copia profunda para edición
-        this.currentTicket = JSON.parse(JSON.stringify(ticket));
-        // Convertir fechas de string a Date
-        this.currentTicket.fechaCreacion = new Date(this.currentTicket.fechaCreacion!);
-        this.currentTicket.fechaLimite = new Date(this.currentTicket.fechaLimite!);
-        this.newComment = '';
         this.isEditMode = true;
+        this.editingTicket = ticket;
         this.displayTicketDialog = true;
     }
 
     viewTicket(ticket: Ticket) {
         this.viewingTicket = ticket;
-        this.showHistorial = false;
         this.displayViewDialog = true;
     }
 
@@ -370,146 +298,42 @@ export class TicketComponent {
         }
     }
 
-    onEstadoChange() {
-        // Este método se puede usar para validaciones adicionales cuando cambia el estado
-    }
-
-    addComment() {
-        if (this.newComment && this.newComment.trim()) {
-            if (!this.currentTicket.comentarios) {
-                this.currentTicket.comentarios = [];
+    onSaveTicket(ticketData: Partial<Ticket>) {
+        if (this.isEditMode && this.editingTicket) {
+            // Actualizar ticket existente
+            const index = this.tickets.findIndex(t => t.id === this.editingTicket!.id);
+            if (index !== -1) {
+                this.tickets[index] = { ...this.tickets[index], ...ticketData };
             }
-            this.currentTicket.comentarios.push({
-                autor: 'Usuario Actual', // En producción, obtener del usuario autenticado
-                texto: this.newComment.trim(),
-                fecha: new Date()
-            });
-            this.newComment = '';
+        } else {
+            // Crear nuevo ticket
+            const newId = Math.max(...this.tickets.map(t => t.id), 0) + 1;
+            const newTicket: Ticket = {
+                id: newId,
+                titulo: ticketData.titulo!,
+                descripcion: ticketData.descripcion || '',
+                estado: ticketData.estado!,
+                asignadoA: ticketData.asignadoA!,
+                prioridad: ticketData.prioridad!,
+                fechaCreacion: new Date(),
+                fechaLimite: ticketData.fechaLimite!,
+                comentarios: ticketData.comentarios || [],
+                historial: []
+            };
+            this.tickets = [...this.tickets, newTicket];
+            this.totalTickets++;
         }
-    }
-
-    saveTicket() {
-        if (this.currentTicket.titulo && this.currentTicket.estado &&
-            this.currentTicket.prioridad && this.currentTicket.asignadoA &&
-            this.currentTicket.fechaLimite) {
-
-            if (this.isEditMode) {
-                // Modo edición: detectar cambios y agregar al historial
-                const changes = this.detectChanges();
-                if (changes.length > 0) {
-                    if (!this.currentTicket.historial) {
-                        this.currentTicket.historial = [];
-                    }
-                    this.currentTicket.historial.push(...changes);
-                }
-
-                // Actualizar el ticket en el array
-                const index = this.tickets.findIndex(t => t.id === this.currentTicket.id);
-                if (index !== -1) {
-                    this.tickets[index] = this.currentTicket as Ticket;
-                }
-            } else {
-                // Modo creación: agregar nuevo ticket
-                const newId = Math.max(...this.tickets.map(t => t.id), 0) + 1;
-                const newTicket: Ticket = {
-                    id: newId,
-                    titulo: this.currentTicket.titulo!,
-                    descripcion: this.currentTicket.descripcion || '',
-                    estado: this.currentTicket.estado!,
-                    asignadoA: this.currentTicket.asignadoA!,
-                    prioridad: this.currentTicket.prioridad!,
-                    fechaCreacion: new Date(),
-                    fechaLimite: this.currentTicket.fechaLimite!,
-                    comentarios: this.currentTicket.comentarios || [],
-                    historial: []
-                };
-                this.tickets = [...this.tickets, newTicket];
-                this.totalTickets++;
-            }
-
-            this.displayTicketDialog = false;
-        }
-    }
-
-    private detectChanges(): HistorialCambio[] {
-        const changes: HistorialCambio[] = [];
-        const now = new Date();
-
-        if (!this.originalTicket) return changes;
-
-        const currentUser = 'Usuario Actual'; // En producción, obtener del usuario autenticado
-
-        // Comparar campos importantes
-        if (this.originalTicket.estado !== this.currentTicket.estado) {
-            changes.push({
-                campo: 'Estado',
-                valorAnterior: this.originalTicket.estado!,
-                valorNuevo: this.currentTicket.estado!,
-                fecha: now,
-                autor: currentUser
-            });
-        }
-
-        if (this.originalTicket.prioridad !== this.currentTicket.prioridad) {
-            changes.push({
-                campo: 'Prioridad',
-                valorAnterior: this.originalTicket.prioridad!,
-                valorNuevo: this.currentTicket.prioridad!,
-                fecha: now,
-                autor: currentUser
-            });
-        }
-
-        if (this.originalTicket.asignadoA !== this.currentTicket.asignadoA) {
-            changes.push({
-                campo: 'Asignado a',
-                valorAnterior: this.originalTicket.asignadoA!,
-                valorNuevo: this.currentTicket.asignadoA!,
-                fecha: now,
-                autor: currentUser
-            });
-        }
-
-        if (this.originalTicket.titulo !== this.currentTicket.titulo) {
-            changes.push({
-                campo: 'Título',
-                valorAnterior: this.originalTicket.titulo!,
-                valorNuevo: this.currentTicket.titulo!,
-                fecha: now,
-                autor: currentUser
-            });
-        }
-
-        // Comparar fechas límite
-        const originalDate = this.formatDate(new Date(this.originalTicket.fechaLimite!));
-        const currentDate = this.formatDate(this.currentTicket.fechaLimite!);
-        if (originalDate !== currentDate) {
-            changes.push({
-                campo: 'Fecha Límite',
-                valorAnterior: originalDate,
-                valorNuevo: currentDate,
-                fecha: now,
-                autor: currentUser
-            });
-        }
-
-        return changes;
-    }
-
-    cancelTicket() {
         this.displayTicketDialog = false;
-        this.currentTicket = this.getEmptyTicket();
-        this.originalTicket = null;
-        this.newComment = '';
     }
 
-    closeViewDialog() {
+    onCancelTicketForm() {
+        this.displayTicketDialog = false;
+        this.editingTicket = null;
+    }
+
+    onCloseView() {
         this.displayViewDialog = false;
         this.viewingTicket = null;
-        this.showHistorial = false;
     }
 
-    toggleHistorial() {
-        this.showHistorial = !this.showHistorial;
-    }
 }
