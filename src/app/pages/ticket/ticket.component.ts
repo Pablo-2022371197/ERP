@@ -14,6 +14,7 @@ import { SelectModule } from 'primeng/select';
 import { TextareaModule } from 'primeng/textarea';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DatePickerModule } from 'primeng/datepicker';
+import { TabsModule } from 'primeng/tabs';
 import { IfHasPermissionDirective } from "../../directives/if-has-permission.directive";
 import { PermissionsService } from '../../services/permissions.service';
 
@@ -28,6 +29,7 @@ interface HistorialCambio {
     valorAnterior: string;
     valorNuevo: string;
     fecha: Date;
+    autor: string;
 }
 
 interface Ticket {
@@ -62,6 +64,7 @@ interface Ticket {
         TextareaModule,
         InputNumberModule,
         DatePickerModule,
+        TabsModule,
         IfHasPermissionDirective
     ],
     templateUrl: './ticket.component.html',
@@ -75,6 +78,7 @@ export class TicketComponent {
     today = new Date();
     newComment = '';
     viewingTicket: Ticket | null = null;
+    showHistorial = false;
 
     currentTicket: Partial<Ticket> = this.getEmptyTicket();
 
@@ -177,7 +181,15 @@ export class TicketComponent {
                     campo: 'Estado',
                     valorAnterior: 'En progreso',
                     valorNuevo: 'Finalizado',
-                    fecha: new Date('2024-03-04')
+                    fecha: new Date('2024-03-04T14:30:00'),
+                    autor: 'Pedro Sánchez'
+                },
+                {
+                    campo: 'Prioridad',
+                    valorAnterior: 'Media',
+                    valorNuevo: 'Alta',
+                    fecha: new Date('2024-03-01T09:15:00'),
+                    autor: 'Carlos Mendoza'
                 }
             ]
         },
@@ -313,6 +325,17 @@ export class TicketComponent {
         return `${day}/${month}/${year}`;
     }
 
+    formatDateTime(date: Date | undefined): string {
+        if (!date) return '';
+        const d = new Date(date);
+        const day = String(d.getDate()).padStart(2, '0');
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const year = d.getFullYear();
+        const hours = String(d.getHours()).padStart(2, '0');
+        const minutes = String(d.getMinutes()).padStart(2, '0');
+        return `${day}/${month}/${year} ${hours}:${minutes}`;
+    }
+
     openNewTicketDialog() {
         this.currentTicket = this.getEmptyTicket();
         this.originalTicket = null;
@@ -336,6 +359,7 @@ export class TicketComponent {
 
     viewTicket(ticket: Ticket) {
         this.viewingTicket = ticket;
+        this.showHistorial = false;
         this.displayViewDialog = true;
     }
 
@@ -413,13 +437,16 @@ export class TicketComponent {
 
         if (!this.originalTicket) return changes;
 
+        const currentUser = 'Usuario Actual'; // En producción, obtener del usuario autenticado
+
         // Comparar campos importantes
         if (this.originalTicket.estado !== this.currentTicket.estado) {
             changes.push({
                 campo: 'Estado',
                 valorAnterior: this.originalTicket.estado!,
                 valorNuevo: this.currentTicket.estado!,
-                fecha: now
+                fecha: now,
+                autor: currentUser
             });
         }
 
@@ -428,7 +455,8 @@ export class TicketComponent {
                 campo: 'Prioridad',
                 valorAnterior: this.originalTicket.prioridad!,
                 valorNuevo: this.currentTicket.prioridad!,
-                fecha: now
+                fecha: now,
+                autor: currentUser
             });
         }
 
@@ -437,7 +465,8 @@ export class TicketComponent {
                 campo: 'Asignado a',
                 valorAnterior: this.originalTicket.asignadoA!,
                 valorNuevo: this.currentTicket.asignadoA!,
-                fecha: now
+                fecha: now,
+                autor: currentUser
             });
         }
 
@@ -446,7 +475,8 @@ export class TicketComponent {
                 campo: 'Título',
                 valorAnterior: this.originalTicket.titulo!,
                 valorNuevo: this.currentTicket.titulo!,
-                fecha: now
+                fecha: now,
+                autor: currentUser
             });
         }
 
@@ -458,7 +488,8 @@ export class TicketComponent {
                 campo: 'Fecha Límite',
                 valorAnterior: originalDate,
                 valorNuevo: currentDate,
-                fecha: now
+                fecha: now,
+                autor: currentUser
             });
         }
 
@@ -475,5 +506,10 @@ export class TicketComponent {
     closeViewDialog() {
         this.displayViewDialog = false;
         this.viewingTicket = null;
+        this.showHistorial = false;
+    }
+
+    toggleHistorial() {
+        this.showHistorial = !this.showHistorial;
     }
 }
