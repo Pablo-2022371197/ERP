@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet, RouterLinkActive } from '@angular/router';
+import { RouterOutlet, RouterLinkActive, Router } from '@angular/router';
 import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 import { BreadcrumbsComponent } from '../../components/breadcrumbs/breadcrumbs.component';
 import { ButtonModule } from 'primeng/button';
@@ -9,6 +9,7 @@ import { BadgeModule } from 'primeng/badge';
 import { MenuModule } from 'primeng/menu';
 import { MenuItem } from 'primeng/api';
 import { OverlayBadge } from "primeng/overlaybadge";
+import { AuthService } from '../../services/auth.service';
 
 @Component({
     selector: 'app-main-layout',
@@ -30,6 +31,24 @@ import { OverlayBadge } from "primeng/overlaybadge";
 export class MainLayoutComponent {
     sidebarCollapsed = false;
     mobileMenuOpen = false;
+
+    constructor(
+        public authService: AuthService,
+        private router: Router
+    ) { }
+
+    get currentUserName(): string {
+        return this.authService.getUserName();
+    }
+
+    get currentUserInitials(): string {
+        return this.authService.getUserInitials();
+    }
+
+    get currentUserStatus(): string {
+        const user = this.authService.getCurrentUser();
+        return user ? user.status : '';
+    }
 
     onSidebarCollapse(collapsed: boolean) {
         this.sidebarCollapsed = collapsed;
@@ -86,15 +105,15 @@ export class MainLayoutComponent {
     }
 
     goToProfile() {
-        console.log('Go to profile');
+        this.router.navigate(['/user']);
     }
 
     goToSettings() {
         console.log('Go to settings');
+        // Implementar navegación a configuración si existe
     }
 
     logout() {
-        console.log('Logout');
-        // Aquí implementarías la lógica de logout
+        this.authService.logout();
     }
 }

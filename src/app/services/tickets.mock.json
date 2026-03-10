@@ -1,0 +1,198 @@
+{
+    "tickets": [
+        {
+            "id": 1,
+            "groupId": 1,
+            "titulo": "Implementar sistema de autenticación",
+            "descripcion": "Crear un sistema de login con JWT y validación de roles",
+            "estado": "En progreso",
+            "asignadoA": "Carlos Mendoza",
+            "prioridad": "Alta",
+            "fechaCreacion": "2024-03-01T00:00:00.000Z",
+            "fechaLimite": "2024-03-15T00:00:00.000Z",
+            "comentarios": [
+                {
+                    "autor": "María García",
+                    "texto": "Revisar los estándares de seguridad OAuth 2.0",
+                    "fecha": "2024-03-02T00:00:00.000Z"
+                }
+            ],
+            "historial": []
+        },
+        {
+            "id": 2,
+            "groupId": 2,
+            "titulo": "Diseñar interfaz de usuario para dashboard",
+            "descripcion": "Crear mockups y prototipos para el nuevo dashboard administrativo",
+            "estado": "Revisión",
+            "asignadoA": "Ana Torres",
+            "prioridad": "Media",
+            "fechaCreacion": "2024-02-28T00:00:00.000Z",
+            "fechaLimite": "2024-03-10T00:00:00.000Z",
+            "comentarios": [],
+            "historial": []
+        },
+        {
+            "id": 3,
+            "groupId": 1,
+            "titulo": "Optimizar consultas de base de datos",
+            "descripcion": "Mejorar el rendimiento de las consultas SQL más utilizadas",
+            "estado": "Pendiente",
+            "asignadoA": "Juan López",
+            "prioridad": "Alta",
+            "fechaCreacion": "2024-03-03T00:00:00.000Z",
+            "fechaLimite": "2024-03-20T00:00:00.000Z",
+            "comentarios": [],
+            "historial": []
+        },
+        {
+            "id": 4,
+            "groupId": 1,
+            "titulo": "Crear documentación de API",
+            "descripcion": "Documentar todos los endpoints de la API REST",
+            "estado": "En progreso",
+            "asignadoA": "Carlos Mendoza",
+            "prioridad": "Media",
+            "fechaCreacion": "2024-02-25T00:00:00.000Z",
+            "fechaLimite": "2024-03-12T00:00:00.000Z",
+            "comentarios": [
+                {
+                    "autor": "Pedro Sánchez",
+                    "texto": "Incluir ejemplos de uso para cada endpoint",
+                    "fecha": "2024-02-26T00:00:00.000Z"
+                },
+                {
+                    "autor": "Laura Ramírez",
+                    "texto": "Agregados ejemplos de autenticación",
+                    "fecha": "2024-02-28T00:00:00.000Z"
+                }
+            ],
+            "historial": []
+        },
+        {
+            "id": 5,
+            "groupId": 5,
+            "titulo": "Configurar pipeline CI/CD",
+            "descripcion": "Implementar pipeline de integración continua con GitHub Actions",
+            "estado": "Finalizado",
+            "asignadoA": "Pedro Sánchez",
+            "prioridad": "Alta",
+            "fechaCreacion": "2024-02-20T00:00:00.000Z",
+            "fechaLimite": "2024-03-05T00:00:00.000Z",
+            "comentarios": [],
+            "historial": [
+                {
+                    "campo": "Estado",
+                    "valorAnterior": "En progreso",
+                    "valorNuevo": "Finalizado",
+                    "fecha": "2024-03-04T14:30:00.000Z",
+                    "autor": "Pedro Sánchez"
+                },
+                {
+                    "campo": "Prioridad",
+                    "valorAnterior": "Media",
+                    "valorNuevo": "Alta",
+                    "fecha": "2024-03-01T09:15:00.000Z",
+                    "autor": "Carlos Mendoza"
+                }
+            ]
+        },
+        {
+            "id": 6,
+            "groupId": 1,
+            "titulo": "Corregir bug en módulo de pagos",
+            "descripcion": "Resolver error al procesar pagos con tarjetas internacionales",
+            "estado": "Revisión",
+            "asignadoA": "Carlos Mendoza",
+            "prioridad": "Alta",
+            "fechaCreacion": "2024-03-04T00:00:00.000Z",
+            "fechaLimite": "2024-03-08T00:00:00.000Z",
+            "comentarios": [
+                {
+                    "autor": "Roberto Díaz",
+                    "texto": "Verificar con la pasarela de pagos las validaciones",
+                    "fecha": "2024-03-04T00:00:00.000Z"
+                }
+            ],
+            "historial": []
+        },
+        {
+            "id": 7,
+            "groupId": 3,
+            "titulo": "Actualizar dependencias del proyecto",
+            "descripcion": "Actualizar todas las librerías a sus últimas versiones estables",
+            "estado": "Pendiente",
+            "asignadoA": "Sofia Castro",
+            "prioridad": "Baja",
+            "fechaCreacion": "2024-03-05T00:00:00.000Z",
+            "fechaLimite": "2024-03-25T00:00:00.000Z",
+            "comentarios": [],
+            "historial": []
+        },
+        {
+            "id": 8,
+            "groupId": 4,
+            "titulo": "Implementar notificaciones push",
+            "descripcion": "Agregar sistema de notificaciones en tiempo real para usuarios",
+            "estado": "En progreso",
+            "asignadoA": "Diego Moreno",
+            "prioridad": "Media",
+            "fechaCreacion": "2024-03-02T00:00:00.000Z",
+            "fechaLimite": "2024-03-18T00:00:00.000Z",
+            "comentarios": [],
+            "historial": []
+        },
+        {
+            "id": 9,
+            "groupId": 1,
+            "titulo": "Crear tests unitarios para servicios",
+            "descripcion": "Implementar tests con Jest para todos los servicios del backend",
+            "estado": "Pendiente",
+            "asignadoA": "Carlos Mendoza",
+            "prioridad": "Media",
+            "fechaCreacion": "2024-03-01T00:00:00.000Z",
+            "fechaLimite": "2024-03-16T00:00:00.000Z",
+            "comentarios": [],
+            "historial": []
+        },
+        {
+            "id": 10,
+            "groupId": 2,
+            "titulo": "Rediseñar página de inicio",
+            "descripcion": "Mejorar el diseño de la landing page con nuevos componentes",
+            "estado": "En progreso",
+            "asignadoA": "Ana Torres",
+            "prioridad": "Alta",
+            "fechaCreacion": "2024-02-27T00:00:00.000Z",
+            "fechaLimite": "2024-03-11T00:00:00.000Z",
+            "comentarios": [],
+            "historial": []
+        },
+        {
+            "id": 11,
+            "groupId": 5,
+            "titulo": "Configurar monitoreo de servidores",
+            "descripcion": "Implementar monitoreo con Prometheus y Grafana",
+            "estado": "Finalizado",
+            "asignadoA": "Carlos Mendoza",
+            "prioridad": "Media",
+            "fechaCreacion": "2024-02-18T00:00:00.000Z",
+            "fechaLimite": "2024-03-02T00:00:00.000Z",
+            "comentarios": [],
+            "historial": []
+        },
+        {
+            "id": 12,
+            "groupId": 4,
+            "titulo": "Automatizar tests de regresión",
+            "descripcion": "Crear suite de tests automatizados con Selenium",
+            "estado": "Revisión",
+            "asignadoA": "Ana Torres",
+            "prioridad": "Alta",
+            "fechaCreacion": "2024-03-06T00:00:00.000Z",
+            "fechaLimite": "2024-03-14T00:00:00.000Z",
+            "comentarios": [],
+            "historial": []
+        }
+    ]
+}

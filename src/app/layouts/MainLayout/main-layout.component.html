@@ -29,14 +29,17 @@
                 <button pButton icon="pi pi-envelope" class="icon-btn" [text]="true" [raised]="true"></button>
 
                 <!-- User Menu -->
-                <div class="user-menu">
-                    <p-avatar label="JP" shape="circle"
+                <div class="user-menu" (click)="userMenu.toggle($event)" style="cursor: pointer;">
+                    <p-avatar [label]="currentUserInitials" shape="circle"
                         [style]="{ 'background-color': '#667eea', color: '#ffffff', cursor: 'pointer' }"></p-avatar>
                     <div class="user-details">
-                        <span class="user-name">John Pérez</span>
-                        <span class="user-status">En línea</span>
+                        <span class="user-name">{{ currentUserName }}</span>
+                        <span class="user-status">{{ currentUserStatus }}</span>
                     </div>
                     <i class="pi pi-angle-down"></i>
+                </div>
+                <div class="-px-20!">
+                    <p-menu #userMenu [model]="userMenuItems" [popup]="true"></p-menu>
                 </div>
             </div>
         </header>

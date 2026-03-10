@@ -1,0 +1,153 @@
+{
+    "credentials": [
+        {
+            "email": "admin@erp.com",
+            "password": "Admin123!",
+            "userId": 1
+        },
+        {
+            "email": "maria.garcia@example.com",
+            "password": "Maria123!",
+            "userId": 2
+        },
+        {
+            "email": "ana.torres@example.com",
+            "password": "Ana123!",
+            "userId": 3
+        }
+    ],
+    "users": [
+        {
+            "id": 1,
+            "name": "John Pérez",
+            "email": "admin@erp.com",
+            "role": "Administrador",
+            "department": "Tecnología",
+            "phone": "+593 99 123 4567",
+            "joinDate": "January 15, 2024",
+            "status": "Active",
+            "address": "Av. Principal 123, Edificio Centro",
+            "city": "Quito",
+            "country": "Ecuador",
+            "bio": "Desarrollador Full Stack con más de 5 años de experiencia en tecnologías web y móviles.",
+            "linkedin": "linkedin.com/in/johnperez",
+            "github": "github.com/johnperez",
+            "permissions": [
+                "groups_view",
+                "group_view",
+                "groups_edit",
+                "group_delete",
+                "groups_delete",
+                "groups_add",
+                "group_add",
+                "users_view",
+                "user_view",
+                "users_edit",
+                "user_edit",
+                "user_delete",
+                "user_add",
+                "tickets_view",
+                "ticket_view",
+                "tickets_edit",
+                "ticket_edit",
+                "ticket_delete",
+                "ticket_add",
+                "tickets_add"
+            ]
+        },
+        {
+            "id": 2,
+            "name": "María García",
+            "email": "maria.garcia@example.com",
+            "role": "Usuario",
+            "department": "Recursos Humanos",
+            "phone": "+593 99 234 5678",
+            "joinDate": "February 20, 2024",
+            "status": "Active",
+            "address": "Calle Secundaria 456",
+            "city": "Guayaquil",
+            "country": "Ecuador",
+            "bio": "Especialista en gestión de talento humano y desarrollo organizacional.",
+            "linkedin": "linkedin.com/in/mariagarcia",
+            "github": "github.com/mgarcia",
+            "permissions": [
+                "tickets_view",
+                "ticket_view"
+            ]
+        },
+        {
+            "id": 3,
+            "name": "Ana Torres",
+            "email": "ana.torres@example.com",
+            "role": "Moderador",
+            "department": "Marketing",
+            "phone": "+593 99 345 6789",
+            "joinDate": "March 01, 2024",
+            "status": "Active",
+            "address": "Av. Central 789",
+            "city": "Cuenca",
+            "country": "Ecuador",
+            "bio": "Experta en marketing digital y estrategias de contenido.",
+            "linkedin": "linkedin.com/in/anatorres",
+            "github": "github.com/atorres",
+            "permissions": [
+                "tickets_view",
+                "ticket_view"
+            ]
+        }
+    ],
+    "statusOptions": [
+        {
+            "label": "Activo",
+            "value": "Active"
+        },
+        {
+            "label": "Inactivo",
+            "value": "Inactive"
+        },
+        {
+            "label": "Vacaciones",
+            "value": "Vacation"
+        }
+    ],
+    "departmentOptions": [
+        {
+            "label": "Tecnología",
+            "value": "Tecnología"
+        },
+        {
+            "label": "Recursos Humanos",
+            "value": "Recursos Humanos"
+        },
+        {
+            "label": "Finanzas",
+            "value": "Finanzas"
+        },
+        {
+            "label": "Marketing",
+            "value": "Marketing"
+        },
+        {
+            "label": "Operaciones",
+            "value": "Operaciones"
+        }
+    ],
+    "roleOptions": [
+        {
+            "label": "Administrador",
+            "value": "Administrador"
+        },
+        {
+            "label": "Usuario",
+            "value": "Usuario"
+        },
+        {
+            "label": "Moderador",
+            "value": "Moderador"
+        },
+        {
+            "label": "Invitado",
+            "value": "Invitado"
+        }
+    ]
+}
