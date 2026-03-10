@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
@@ -7,6 +7,7 @@ import { TagModule } from 'primeng/tag';
 import { BadgeModule } from 'primeng/badge';
 import { TabsModule } from 'primeng/tabs';
 import { TextareaModule } from 'primeng/textarea';
+import { AuthService } from '../../../services/auth.service';
 
 interface Comentario {
     autor: string;
@@ -58,8 +59,12 @@ export class TicketViewComponent {
     @Output() onClose = new EventEmitter<void>();
     @Output() commentAdded = new EventEmitter<{ ticket: Ticket, comment: Comentario }>();
 
+    private authService = inject(AuthService);
     newCommentText = '';
-    currentUser = 'Carlos Mendoza'; // Usuario actual (esto debería venir de un servicio de autenticación)
+
+    get currentUser(): string {
+        return this.authService.getUserName() || 'Usuario Desconocido';
+    }
 
     getEstadoSeverity(estado: string): 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' {
         switch (estado) {
