@@ -2,12 +2,13 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
+import { IfHasPermissionDirective } from '../../../directives/if-has-permission.directive';
 import { Ticket } from '../../../services/ticket.service';
 
 @Component({
     selector: 'app-ticket-list',
     standalone: true,
-    imports: [CommonModule, TableModule, TagModule],
+    imports: [CommonModule, TableModule, TagModule, IfHasPermissionDirective],
     templateUrl: './ticket-list.component.html',
     styleUrls: ['./ticket-list.component.css']
 })

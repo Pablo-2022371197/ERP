@@ -35,7 +35,8 @@
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-ticket>
-            <tr class="hover:bg-gray-100! cursor-pointer! text-sm" (click)="viewTicket(ticket)">
+            <tr *ifHasPermission="'ticket_view'" class="hover:bg-gray-100! cursor-pointer! text-sm"
+                (click)="viewTicket(ticket)">
                 <td>
                     <span class="font-semibold text-slate-600">{{ ticket.titulo }}</span>
                 </td>

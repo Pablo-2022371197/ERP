@@ -2,12 +2,13 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BadgeModule } from 'primeng/badge';
 import { TagModule } from 'primeng/tag';
+import { IfHasPermissionDirective } from '../../../directives/if-has-permission.directive';
 import { Ticket } from '../../../services/ticket.service';
 
 @Component({
     selector: 'app-kanban-board',
     standalone: true,
-    imports: [CommonModule, BadgeModule, TagModule],
+    imports: [CommonModule, BadgeModule, TagModule, IfHasPermissionDirective],
     templateUrl: './kanban-board.component.html',
     styleUrls: ['./kanban-board.component.css']
 })

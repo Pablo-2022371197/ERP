@@ -33,4 +33,8 @@
             }
         </div>
     </div>
+
+    <!-- Ticket View Dialog -->
+    <app-ticket-view [(visible)]="showTicketDialog" [ticket]="selectedTicket" (onClose)="closeTicketDialog()">
+    </app-ticket-view>
 </div>

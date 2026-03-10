@@ -1,12 +1,13 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TagModule } from 'primeng/tag';
+import { IfHasPermissionDirective } from '../../../directives/if-has-permission.directive';
 import { Ticket } from '../../../services/ticket.service';
 
 @Component({
     selector: 'app-recent-tickets-sidebar',
     standalone: true,
-    imports: [CommonModule, TagModule],
+    imports: [CommonModule, TagModule, IfHasPermissionDirective],
     templateUrl: './recent-tickets-sidebar.component.html',
     styleUrls: ['./recent-tickets-sidebar.component.css']
 })
