@@ -1,17 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { CardModule } from 'primeng/card';
-import { TableModule } from 'primeng/table';
-import { ButtonModule } from 'primeng/button';
-import { TagModule } from 'primeng/tag';
-import { BadgeModule } from 'primeng/badge';
-import { SelectModule } from 'primeng/select';
-import { InputTextModule } from 'primeng/inputtext';
-import { ToggleSwitchModule } from 'primeng/toggleswitch';
-import { TooltipModule } from 'primeng/tooltip';
-import { IfHasPermissionDirective } from '../../directives/if-has-permission.directive';
+import { DashboardHeaderComponent } from '../../components/dashboard/dashboard-header/dashboard-header.component';
+import { RecentTicketsSidebarComponent } from '../../components/dashboard/recent-tickets-sidebar/recent-tickets-sidebar.component';
+import { TicketFiltersComponent, FilterOptions } from '../../components/dashboard/ticket-filters/ticket-filters.component';
+import { KanbanBoardComponent } from '../../components/dashboard/kanban-board/kanban-board.component';
+import { TicketListComponent } from '../../components/dashboard/ticket-list/ticket-list.component';
 import { GroupService, Group } from '../../services/group.service';
 import { TicketService, Ticket } from '../../services/ticket.service';
 
@@ -20,17 +14,11 @@ import { TicketService, Ticket } from '../../services/ticket.service';
     standalone: true,
     imports: [
         CommonModule,
-        FormsModule,
-        CardModule,
-        TableModule,
-        ButtonModule,
-        TagModule,
-        BadgeModule,
-        SelectModule,
-        InputTextModule,
-        ToggleSwitchModule,
-        TooltipModule,
-        IfHasPermissionDirective
+        DashboardHeaderComponent,
+        RecentTicketsSidebarComponent,
+        TicketFiltersComponent,
+        KanbanBoardComponent,
+        TicketListComponent
     ],
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.css']
@@ -53,33 +41,10 @@ export class HomeComponent implements OnInit {
     ticketsByStatus: { [key: string]: number } = {};
 
     // Filtros y ordenamiento
-    filterOptions = {
-        estado: null as string | null,
-        prioridad: null as string | null,
-        ordenarPor: 'fechaCreacion' as 'fechaCreacion' | 'fechaLimite' | 'prioridad' | 'estado'
+    filterOptions: FilterOptions = {
+        estado: null,
+        prioridad: null
     };
-
-    estadoOptions = [
-        { label: 'Todos', value: null },
-        { label: 'Pendiente', value: 'Pendiente' },
-        { label: 'En progreso', value: 'En progreso' },
-        { label: 'Revisión', value: 'Revisión' },
-        { label: 'Finalizado', value: 'Finalizado' }
-    ];
-
-    prioridadOptions = [
-        { label: 'Todas', value: null },
-        { label: 'Alta', value: 'Alta' },
-        { label: 'Media', value: 'Media' },
-        { label: 'Baja', value: 'Baja' }
-    ];
-
-    ordenarOptions = [
-        { label: 'Fecha de Creación', value: 'fechaCreacion' },
-        { label: 'Fecha Límite', value: 'fechaLimite' },
-        { label: 'Prioridad', value: 'prioridad' },
-        { label: 'Estado', value: 'estado' }
-    ];
 
     // Vista: true = Kanban, false = Lista
     isKanbanView = false;
@@ -129,6 +94,42 @@ export class HomeComponent implements OnInit {
         });
     }
 
+    onGroupChange(group: Group | null) {
+        if (group) {
+            this.onGroupSelect(group);
+        } else {
+            this.selectedGroup = null;
+            this.displayedTickets = this.allUserTickets;
+            this.totalTickets = this.allUserTickets.length;
+            this.calculateTicketsByStatus(this.allUserTickets);
+            // Aplicar filtros existentes
+            this.applyFilters();
+        }
+    }
+
+    onViewModeChange(isKanban: boolean) {
+        this.isKanbanView = isKanban;
+    }
+
+    onFilterChange(filters: FilterOptions) {
+        this.filterOptions = filters;
+        this.applyFilters();
+    }
+
+    onClearFilters() {
+        this.filterOptions = {
+            estado: null,
+            prioridad: null
+        };
+
+        if (this.selectedGroup) {
+            this.onGroupSelect(this.selectedGroup);
+        } else {
+            this.displayedTickets = this.allUserTickets;
+            this.calculateTicketsByStatus(this.allUserTickets);
+        }
+    }
+
     calculateTicketsByStatus(tickets: Ticket[]) {
         this.ticketsByStatus = this.ticketService.countTicketsByStatus(tickets);
     }
@@ -146,122 +147,13 @@ export class HomeComponent implements OnInit {
             filtered = filtered.filter(t => t.prioridad === this.filterOptions.prioridad);
         }
 
-        // Ordenar
-        filtered = this.sortTickets(filtered, this.filterOptions.ordenarPor);
-
         this.displayedTickets = filtered;
         this.calculateTicketsByStatus(filtered);
-    }
-
-    sortTickets(tickets: Ticket[], sortBy: string): Ticket[] {
-        return tickets.sort((a, b) => {
-            switch (sortBy) {
-                case 'fechaCreacion':
-                    return b.fechaCreacion.getTime() - a.fechaCreacion.getTime();
-                case 'fechaLimite':
-                    return a.fechaLimite.getTime() - b.fechaLimite.getTime();
-                case 'prioridad':
-                    const prioridadOrder = { 'Alta': 0, 'Media': 1, 'Baja': 2 };
-                    return prioridadOrder[a.prioridad] - prioridadOrder[b.prioridad];
-                case 'estado':
-                    const estadoOrder = { 'Pendiente': 0, 'En progreso': 1, 'Revisión': 2, 'Finalizado': 3 };
-                    return estadoOrder[a.estado] - estadoOrder[b.estado];
-                default:
-                    return 0;
-            }
-        });
-    }
-
-    onFilterChange() {
-        this.applyFilters();
-    }
-
-    onViewChange() {
-        // La vista cambia automáticamente por el binding
-    }
-
-    clearFilters() {
-        this.filterOptions = {
-            estado: null,
-            prioridad: null,
-            ordenarPor: 'fechaCreacion'
-        };
-
-        if (this.selectedGroup) {
-            this.onGroupSelect(this.selectedGroup);
-        } else {
-            this.displayedTickets = this.allUserTickets;
-            this.calculateTicketsByStatus(this.allUserTickets);
-        }
-    }
-
-    getTicketsByEstado(estado: string): Ticket[] {
-        return this.displayedTickets.filter(t => t.estado === estado);
-    }
-
-    getEstadoSeverity(estado: string): 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' {
-        switch (estado) {
-            case 'Finalizado':
-                return 'success';
-            case 'En progreso':
-                return 'info';
-            case 'Revisión':
-                return 'warn';
-            case 'Pendiente':
-                return 'secondary';
-            default:
-                return 'contrast';
-        }
-    }
-
-    getPrioridadSeverity(prioridad: string): 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' {
-        switch (prioridad) {
-            case 'Alta':
-                return 'danger';
-            case 'Media':
-                return 'warn';
-            case 'Baja':
-                return 'info';
-            default:
-                return 'secondary';
-        }
-    }
-
-    formatDate(date: Date): string {
-        const d = new Date(date);
-        const day = String(d.getDate()).padStart(2, '0');
-        const month = String(d.getMonth() + 1).padStart(2, '0');
-        const year = d.getFullYear();
-        return `${day}/${month}/${year}`;
-    }
-
-    getInitials(name: string): string {
-        return name
-            .split(' ')
-            .map(n => n[0])
-            .join('');
-    }
-
-    onGroupChange(group: Group | null) {
-        if (group) {
-            this.onGroupSelect(group);
-        } else {
-            this.selectedGroup = null;
-            this.displayedTickets = this.allUserTickets;
-            this.totalTickets = this.allUserTickets.length;
-            this.calculateTicketsByStatus(this.allUserTickets);
-            // Aplicar filtros existentes
-            this.applyFilters();
-        }
     }
 
     viewTicket(ticket: Ticket) {
         // Navegar a la página de tickets con el ID del ticket para ver detalles
         this.router.navigate(['/ticket'], { queryParams: { view: ticket.id } });
-    }
-
-    navigateToTickets() {
-        this.router.navigate(['/ticket']);
     }
 
     createTicket() {

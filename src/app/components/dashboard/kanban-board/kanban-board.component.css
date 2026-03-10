@@ -1,0 +1,59 @@
+/* Kanban Cards */
+.ticket-card {
+    transition: all 0.2s ease;
+}
+
+.ticket-card:hover {
+    transform: translateY(-2px);
+}
+
+/* Kanban Board Styles */
+.kanban-board {
+    min-height: 600px;
+}
+
+.kanban-column {
+    min-height: 500px;
+}
+
+.kanban-column .ticket-card {
+    transition: all 0.2s ease;
+}
+
+.kanban-column .ticket-card:hover {
+    transform: translateY(-2px);
+}
+
+/* Line Clamp Utilities */
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+:host ::ng-deep {
+    .p-badge {
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    .p-tag {
+        font-size: 0.75rem;
+        font-weight: 500;
+        padding: 0.25rem 0.625rem;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .kanban-board {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .kanban-board {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,0 +1,57 @@
+/* Ticket Filters Styles */
+
+:host ::ng-deep {
+
+    /* Select Dropdown */
+    .p-select {
+        border: 1px solid #d1d5db;
+        border-radius: 0.5rem;
+    }
+
+    .p-select:hover {
+        border-color: #9ca3af;
+    }
+
+    .p-select-overlay .p-select-option {
+        padding: 0.75rem 1rem;
+    }
+
+    .p-select-overlay .p-select-option:hover {
+        background-color: #eef2ff;
+    }
+
+    .p-toggleswitch {
+        width: 3rem;
+        height: 1.5rem;
+    }
+
+    .p-toggleswitch .p-toggleswitch-slider {
+        background-color: #d1d5db;
+    }
+
+    .p-toggleswitch.p-toggleswitch-checked .p-toggleswitch-slider {
+        background-color: #6366f1;
+    }
+
+    .p-badge {
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    /* Button overrides */
+    .p-button.p-button-text {
+        padding: 0.5rem;
+    }
+
+    .p-button.p-button-rounded {
+        border-radius: 50%;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .flex.gap-3.items-end {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}

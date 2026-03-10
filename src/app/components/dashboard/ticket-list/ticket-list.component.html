@@ -1,0 +1,71 @@
+<div class="bg-white! rounded-lg! shadow-sm! border! border-gray-200! min-w-200">
+    <p-table [value]="tickets" class="p-datatable-striped p-datatable-gridlines">
+        <ng-template pTemplate="header">
+            <tr>
+                <th pSortableColumn="titulo">
+                    <div class="flex items-center gap-2 text-sm">
+                        Título
+                        <p-sortIcon field="titulo"></p-sortIcon>
+                    </div>
+                </th>
+                <th pSortableColumn="estado" class="text-center">
+                    <div class="flex content-center justify-center gap-2 max-w-20 text-sm">
+                        Estado
+                        <p-sortIcon field="estado"></p-sortIcon>
+                    </div>
+                </th>
+                <th pSortableColumn="prioridad" class="text-center">
+                    <div class="flex items-center justify-center gap-2 min-w-10 max-w-18 text-sm">
+                        Prioridad
+                        <p-sortIcon field="prioridad"></p-sortIcon>
+                    </div>
+                </th>
+                <th pSortableColumn="asignadoA">
+                    <div class="flex items-center gap-2 text-sm">
+                        Asignado a
+                        <p-sortIcon field="asignadoA"></p-sortIcon>
+                    </div>
+                </th>
+                <th pSortableColumn="fechaLimite" class="text-center">
+                    <div class="flex items-center justify-center gap-2 max-w-20 text-sm">
+                        Fecha Límite
+                        <p-sortIcon field="fechaLimite"></p-sortIcon>
+                    </div>
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-ticket>
+            <tr class="hover:bg-gray-100! cursor-pointer! text-sm" (click)="viewTicket(ticket)">
+                <td>
+                    <span class="font-semibold text-slate-600">{{ ticket.titulo }}</span>
+                </td>
+                <td class="text-center">
+                    <p-tag [value]="ticket.estado" [severity]="getEstadoSeverity(ticket.estado)"
+                        [style]="{ 'font-size': '0.75rem' }"></p-tag>
+                </td>
+                <td class="text-center">
+                    <div class="flex items-center justify-center">
+                        <p-tag [value]="ticket.prioridad" [severity]="getPrioridadSeverity(ticket.prioridad)"
+                            [style]="{ 'font-size': '0.75rem' }"></p-tag>
+                    </div>
+                </td>
+                <td>
+                    <span class="font-medium text-gray-800">{{ ticket.asignadoA }}</span>
+                </td>
+                <td class="text-center">
+                    <span class="text-gray-600 text-sm">{{ formatDate(ticket.fechaLimite) }}</span>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="5" class="text-center py-8">
+                    <div class="flex flex-col items-center gap-2 text-gray-400">
+                        <i class="pi pi-inbox text-4xl"></i>
+                        <span>No hay tickets para mostrar</span>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

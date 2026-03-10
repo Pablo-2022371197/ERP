@@ -1,0 +1,33 @@
+<div class="col-span-3! w-full">
+    <div class="bg-white! rounded-lg! shadow-sm! p-4! border! border-gray-200!">
+        <h3 class="text-lg! font-semibold! text-gray-800! mb-4! flex! items-center! gap-2!">
+            <i class="pi pi-clock text-indigo-600!"></i>
+            Tickets Recientes
+        </h3>
+        @if (recentTickets.length > 0) {
+        <div class="space-y-3! max-h-3/4 overflow-y-auto! pr-1!">
+            @for (ticket of recentTickets; track ticket.id) {
+            <div class="ticket-item p-3! rounded-lg! border! border-gray-200! hover:border-indigo-400! hover:bg-indigo-50! cursor-pointer! transition-all!"
+                (click)="viewTicket(ticket)">
+                <h5 class="font-semibold! text-gray-800! text-xs! line-clamp-2! mb-2!">{{ ticket.titulo }}</h5>
+                <div class="flex! gap-2! mb-2!">
+                    <p-tag [value]="ticket.estado" [severity]="getEstadoSeverity(ticket.estado)"
+                        [style]="{ 'font-size': '0.65rem' }"></p-tag>
+                    <p-tag [value]="ticket.prioridad" [severity]="getPrioridadSeverity(ticket.prioridad)"
+                        [style]="{ 'font-size': '0.65rem' }"></p-tag>
+                </div>
+                <p class="text-xs! text-gray-500!">
+                    <i class="pi pi-calendar mr-1!"></i>
+                    {{ formatDate(ticket.fechaLimite) }}
+                </p>
+            </div>
+            }
+        </div>
+        } @else {
+        <div class="flex! flex-col! items-center! justify-center! py-8! text-gray-400!">
+            <i class="pi pi-inbox text-3xl! mb-2!"></i>
+            <span class="text-sm!">No hay tickets asignados</span>
+        </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,63 @@
+<div class="bg-white! rounded-lg! shadow-sm! p-5! mb-4! border! border-gray-200!">
+    <div class="flex! justify-between! items-start! mb-4!">
+        <h3 class="text-lg! font-semibold! text-gray-800!">
+            @if (selectedGroup) {
+            Tickets de {{ selectedGroup.nombre }}
+            } @else {
+            Todos mis Tickets
+            }
+        </h3>
+        <div class="flex! items-center! gap-3!">
+            <span class="text-sm! font-medium! text-gray-600!">Lista</span>
+            <p-toggleswitch [(ngModel)]="isKanbanView" (ngModelChange)="onViewToggle()"></p-toggleswitch>
+            <span class="text-sm! font-medium! text-gray-600!">Kanban</span>
+        </div>
+    </div>
+
+    <!-- Group Selector -->
+    <div class="mb-4!">
+        <label class="block! text-sm! font-medium! text-gray-700! mb-2!">
+            <i class="pi pi-users text-indigo-600! mr-1!"></i>
+            Filtrar por Grupo
+        </label>
+        <p-select [(ngModel)]="selectedGroup" [options]="userGroups" optionLabel="nombre" placeholder="Todos los grupos"
+            (onChange)="onGroupChange($event.value)" [showClear]="true" class="w-full">
+            <ng-template #selectedItem let-group>
+                @if(group) {
+                <div class="flex! items-center! gap-2!">
+                    <span class="font-medium!">{{ group.nombre }}</span>
+                    <p-badge [value]="group.tickets + ' tickets'" severity="secondary"></p-badge>
+                </div>
+                }
+            </ng-template>
+            <ng-template #item let-group>
+                <div class="flex! justify-between! items-center! w-full!">
+                    <div class="flex! items-center! gap-2!">
+                        <span class="font-medium!">{{ group.nombre }}</span>
+                    </div>
+                    <p-badge [value]="group.tickets" severity="secondary"></p-badge>
+                </div>
+            </ng-template>
+        </p-select>
+    </div>
+
+    <!-- Filters Row -->
+    <div class="flex! gap-3! items-end!">
+        <div class="flex-1!">
+            <label class="block! text-sm! font-medium! text-gray-700! mb-2!">Estado</label>
+            <p-select [(ngModel)]="filterOptions.estado" [options]="estadoOptions" optionLabel="label"
+                optionValue="value" placeholder="Todos" (onChange)="onFilterChange()" styleClass="w-full">
+            </p-select>
+        </div>
+        <div class="flex-1!">
+            <label class="block! text-sm! font-medium! text-gray-700! mb-2!">Prioridad</label>
+            <p-select [(ngModel)]="filterOptions.prioridad" [options]="prioridadOptions" optionLabel="label"
+                optionValue="value" placeholder="Todas" (onChange)="onFilterChange()" styleClass="w-full">
+            </p-select>
+        </div>
+        <p-button icon="pi pi-filter-slash" [text]="true" [rounded]="true" severity="secondary"
+            pTooltip="Limpiar filtros" tooltipPosition="top" (onClick)="clearFilters()"></p-button>
+        <p-button *ifHasPermission="'tickets_add'" label="Crear Ticket" icon="pi pi-plus" (onClick)="createTicket()"
+            severity="success"></p-button>
+    </div>
+</div>
