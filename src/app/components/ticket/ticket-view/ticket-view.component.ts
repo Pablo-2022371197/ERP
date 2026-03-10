@@ -1,10 +1,12 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { BadgeModule } from 'primeng/badge';
 import { TabsModule } from 'primeng/tabs';
+import { TextareaModule } from 'primeng/textarea';
 
 interface Comentario {
     autor: string;
@@ -38,11 +40,13 @@ export interface Ticket {
     standalone: true,
     imports: [
         CommonModule,
+        FormsModule,
         DialogModule,
         ButtonModule,
         TagModule,
         BadgeModule,
-        TabsModule
+        TabsModule,
+        TextareaModule
     ],
     templateUrl: './ticket-view.component.html',
     styleUrls: ['./ticket-view.component.css']
@@ -52,6 +56,10 @@ export class TicketViewComponent {
     @Input() ticket: Ticket | null = null;
     @Output() visibleChange = new EventEmitter<boolean>();
     @Output() onClose = new EventEmitter<void>();
+    @Output() commentAdded = new EventEmitter<{ ticket: Ticket, comment: Comentario }>();
+
+    newCommentText = '';
+    currentUser = 'Carlos Mendoza'; // Usuario actual (esto debería venir de un servicio de autenticación)
 
     getEstadoSeverity(estado: string): 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' {
         switch (estado) {
@@ -139,5 +147,32 @@ export class TicketViewComponent {
         this.visible = false;
         this.visibleChange.emit(false);
         this.onClose.emit();
+    }
+
+    addComment() {
+        if (!this.newCommentText.trim() || !this.ticket) {
+            return;
+        }
+
+        const newComment: Comentario = {
+            autor: this.currentUser,
+            texto: this.newCommentText.trim(),
+            fecha: new Date()
+        };
+
+        // Agregar el comentario al ticket actual
+        if (!this.ticket.comentarios) {
+            this.ticket.comentarios = [];
+        }
+        this.ticket.comentarios.push(newComment);
+
+        // Emitir el evento para que el padre pueda guardar el cambio
+        this.commentAdded.emit({
+            ticket: this.ticket,
+            comment: newComment
+        });
+
+        // Limpiar el campo de texto
+        this.newCommentText = '';
     }
 }
