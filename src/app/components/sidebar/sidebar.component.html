@@ -13,6 +13,10 @@
 
     <!-- Menu -->
     <nav class="sidebar-menu">
+        <a routerLink="/home" routerLinkActive="active-menu-item" class="menu-item">
+            <i class="pi pi-home"></i>
+            <span *ngIf="!collapsed">Home</span>
+        </a>
         <a routerLink="/group" routerLinkActive="active-menu-item" class="menu-item">
             <i class="pi pi-users"></i>
             <span *ngIf="!collapsed">Group</span>

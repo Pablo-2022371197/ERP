@@ -3,7 +3,16 @@
     min-height: 100vh;
 }
 
-/* Recent Tickets Horizontal Row */
+/* Recent Tickets Sidebar */
+.ticket-item {
+    transition: all 0.2s ease;
+}
+
+.ticket-item:hover {
+    transform: translateX(2px);
+}
+
+/* Kanban Cards */
 .ticket-card {
     transition: all 0.2s ease;
 }
@@ -153,15 +162,14 @@
 }
 
 /* Responsive Design */
-@media (max-width: 1280px) {
-    .grid.grid-cols-5 {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
-
 @media (max-width: 1024px) {
-    .grid.grid-cols-5 {
-        grid-template-columns: repeat(2, 1fr);
+    .grid.grid-cols-12 {
+        grid-template-columns: 1fr;
+    }
+
+    .col-span-3,
+    .col-span-9 {
+        grid-column: span 12;
     }
 
     .kanban-board {
@@ -170,10 +178,6 @@
 }
 
 @media (max-width: 768px) {
-    .grid.grid-cols-5 {
-        grid-template-columns: 1fr;
-    }
-
     .kanban-board {
         grid-template-columns: 1fr;
     }
