@@ -92,4 +92,55 @@ export class TicketService {
             return acc;
         }, {} as { [key: string]: number });
     }
+
+    // Crear un nuevo ticket
+    createTicket(ticketData: Partial<Ticket>): Observable<Ticket> {
+        const newId = Math.max(...this.mockTickets.map(t => t.id), 0) + 1;
+        const newTicket: Ticket = {
+            id: newId,
+            groupId: ticketData.groupId || 1, // Asignar a un grupo por defecto si no se especifica
+            titulo: ticketData.titulo || '',
+            descripcion: ticketData.descripcion || '',
+            estado: ticketData.estado || 'Pendiente',
+            asignadoA: ticketData.asignadoA || '',
+            prioridad: ticketData.prioridad || 'Media',
+            fechaCreacion: ticketData.fechaCreacion || new Date(),
+            fechaLimite: ticketData.fechaLimite || new Date(),
+            comentarios: ticketData.comentarios || [],
+            historial: ticketData.historial || []
+        };
+
+        this.mockTickets.push(newTicket);
+        return of(newTicket);
+    }
+
+    // Actualizar un ticket existente
+    updateTicket(ticketData: Partial<Ticket>): Observable<Ticket | null> {
+        const index = this.mockTickets.findIndex(t => t.id === ticketData.id);
+        if (index !== -1) {
+            this.mockTickets[index] = {
+                ...this.mockTickets[index],
+                ...ticketData,
+                // Asegurarse de que las fechas sean objetos Date
+                fechaCreacion: ticketData.fechaCreacion instanceof Date
+                    ? ticketData.fechaCreacion
+                    : new Date(ticketData.fechaCreacion || this.mockTickets[index].fechaCreacion),
+                fechaLimite: ticketData.fechaLimite instanceof Date
+                    ? ticketData.fechaLimite
+                    : new Date(ticketData.fechaLimite || this.mockTickets[index].fechaLimite)
+            };
+            return of(this.mockTickets[index]);
+        }
+        return of(null);
+    }
+
+    // Eliminar un ticket
+    deleteTicket(ticketId: number): Observable<boolean> {
+        const index = this.mockTickets.findIndex(t => t.id === ticketId);
+        if (index !== -1) {
+            this.mockTickets.splice(index, 1);
+            return of(true);
+        }
+        return of(false);
+    }
 }

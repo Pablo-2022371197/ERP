@@ -201,18 +201,38 @@ export class HomeComponent implements OnInit {
     saveTicket(ticket: Partial<TicketForm>) {
         if (this.isEditMode) {
             // Actualizar ticket existente
-            console.log('Actualizando ticket:', ticket);
-            // Aquí iría la lógica para actualizar el ticket
-            // this.ticketService.updateTicket(ticket).subscribe(...);
+            this.ticketService.updateTicket(ticket as Partial<Ticket>).subscribe({
+                next: (updatedTicket) => {
+                    if (updatedTicket) {
+                        console.log('Ticket actualizado:', updatedTicket);
+                        this.showTicketFormDialog = false;
+                        // Recargar datos después de guardar
+                        this.loadUserData();
+                    }
+                },
+                error: (error) => {
+                    console.error('Error al actualizar ticket:', error);
+                }
+            });
         } else {
-            // Crear nuevo ticket
-            console.log('Creando nuevo ticket:', ticket);
-            // Aquí iría la lógica para crear el ticket
-            // this.ticketService.createTicket(ticket).subscribe(...);
+            // Crear nuevo ticket - asignar al primer grupo del usuario si hay grupo seleccionado
+            const ticketData = {
+                ...ticket,
+                groupId: this.selectedGroup?.id || (this.userGroups.length > 0 ? this.userGroups[0].id : 1)
+            } as Partial<Ticket>;
+
+            this.ticketService.createTicket(ticketData).subscribe({
+                next: (newTicket) => {
+                    console.log('Ticket creado:', newTicket);
+                    this.showTicketFormDialog = false;
+                    // Recargar datos después de guardar
+                    this.loadUserData();
+                },
+                error: (error) => {
+                    console.error('Error al crear ticket:', error);
+                }
+            });
         }
-        this.showTicketFormDialog = false;
-        // Recargar datos después de guardar
-        this.loadUserData();
     }
 
     cancelTicketForm() {
