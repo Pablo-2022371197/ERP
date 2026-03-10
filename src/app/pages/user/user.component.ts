@@ -7,6 +7,9 @@ import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { TextareaModule } from 'primeng/textarea';
+import { IfHasPermissionDirective } from '../../directives/if-has-permission.directive';
+import { AuthService } from '../../services/auth.service';
+import usersData from '../../services/users.mock.json';
 
 interface UserProfile {
     name: string;
@@ -35,7 +38,8 @@ interface UserProfile {
         DialogModule,
         InputTextModule,
         SelectModule,
-        TextareaModule
+        TextareaModule,
+        IfHasPermissionDirective
     ],
     templateUrl: './user.component.html',
     styleUrls: ['./user.component.css']
@@ -43,43 +47,37 @@ interface UserProfile {
 export class UserComponent {
     displayEditDialog = false;
     editProfile: UserProfile = {} as UserProfile;
+    userProfile: UserProfile = {} as UserProfile;
 
-    userProfile: UserProfile = {
-        name: 'John Pérez',
-        email: 'john.perez@example.com',
-        role: 'Administrador',
-        department: 'Tecnología',
-        phone: '+593 99 123 4567',
-        joinDate: 'January 15, 2024',
-        status: 'Active',
-        address: 'Av. Principal 123, Edificio Centro',
-        city: 'Quito',
-        country: 'Ecuador',
-        bio: 'Desarrollador Full Stack con más de 5 años de experiencia en tecnologías web y móviles.',
-        linkedin: 'linkedin.com/in/johnperez',
-        github: 'github.com/johnperez'
-    };
+    // Cargar las opciones desde el JSON
+    statusOptions = usersData.statusOptions;
+    departmentOptions = usersData.departmentOptions;
+    roleOptions = usersData.roleOptions;
 
-    statusOptions = [
-        { label: 'Activo', value: 'Active' },
-        { label: 'Inactivo', value: 'Inactive' },
-        { label: 'Vacaciones', value: 'Vacation' }
-    ];
+    constructor(private authService: AuthService) {
+        this.loadUserProfile();
+    }
 
-    departmentOptions = [
-        { label: 'Tecnología', value: 'Tecnología' },
-        { label: 'Recursos Humanos', value: 'Recursos Humanos' },
-        { label: 'Finanzas', value: 'Finanzas' },
-        { label: 'Marketing', value: 'Marketing' },
-        { label: 'Operaciones', value: 'Operaciones' }
-    ];
-
-    roleOptions = [
-        { label: 'Administrador', value: 'Administrador' },
-        { label: 'Usuario', value: 'Usuario' },
-        { label: 'Moderador', value: 'Moderador' },
-        { label: 'Invitado', value: 'Invitado' }
-    ];
+    private loadUserProfile(): void {
+        const currentUser = this.authService.getCurrentUser();
+        if (currentUser) {
+            this.userProfile = {
+                name: currentUser.name,
+                email: currentUser.email,
+                role: currentUser.role,
+                department: currentUser.department,
+                phone: currentUser.phone,
+                joinDate: currentUser.joinDate,
+                status: currentUser.status,
+                address: currentUser.address,
+                city: currentUser.city,
+                country: currentUser.country,
+                bio: currentUser.bio,
+                linkedin: currentUser.linkedin,
+                github: currentUser.github
+            };
+        }
+    }
 
     get userInitials(): string {
         return this.userProfile.name
@@ -95,6 +93,27 @@ export class UserComponent {
 
     saveProfile() {
         this.userProfile = { ...this.editProfile };
+
+        // Actualizar la sesión con los nuevos datos
+        const currentUser = this.authService.getCurrentUser();
+        if (currentUser) {
+            this.authService.login({
+                ...currentUser,
+                name: this.userProfile.name,
+                email: this.userProfile.email,
+                role: this.userProfile.role,
+                department: this.userProfile.department,
+                phone: this.userProfile.phone,
+                status: this.userProfile.status,
+                address: this.userProfile.address,
+                city: this.userProfile.city,
+                country: this.userProfile.country,
+                bio: this.userProfile.bio,
+                linkedin: this.userProfile.linkedin,
+                github: this.userProfile.github
+            });
+        }
+
         this.displayEditDialog = false;
     }
 

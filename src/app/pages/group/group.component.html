@@ -103,12 +103,12 @@
                     </td>
                     <td class="text-center">
                         <div class="flex items-center justify-center gap-1">
-                            <p-button icon="pi pi-eye" [rounded]="true" [text]="true" severity="info" size="small"
-                                (onClick)="viewGroup(group)"></p-button>
-                            <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary"
-                                size="small" (onClick)="editGroup(group)"></p-button>
-                            <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" size="small"
-                                (onClick)="deleteGroup(group)"></p-button>
+                            <p-button *ifHasPermission="'group_view'" icon="pi pi-eye" [rounded]="true" [text]="true"
+                                severity="info" size="small" (onClick)="viewGroup(group)"></p-button>
+                            <p-button *ifHasPermission="'groups_edit'" icon="pi pi-pencil" [rounded]="true"
+                                [text]="true" severity="secondary" size="small" (onClick)="editGroup(group)"></p-button>
+                            <p-button *ifHasPermission="'groups_delete'" icon="pi pi-trash" [rounded]="true"
+                                [text]="true" severity="danger" size="small" (onClick)="deleteGroup(group)"></p-button>
                         </div>
                     </td>
                 </tr>

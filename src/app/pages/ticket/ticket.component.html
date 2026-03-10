@@ -106,12 +106,12 @@
                     </td>
                     <td class="text-center">
                         <div class="flex items-center justify-center gap-1">
-                            <p-button icon="pi pi-eye" [rounded]="true" [text]="true" severity="info"
-                                (onClick)="viewTicket(ticket)"></p-button>
-                            <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary"
-                                (onClick)="editTicket(ticket)"></p-button>
-                            <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger"
-                                (onClick)="deleteTicket(ticket)"></p-button>
+                            <p-button *ifHasPermission="'ticket_view'" icon="pi pi-eye" [rounded]="true" [text]="true"
+                                severity="info" (onClick)="viewTicket(ticket)"></p-button>
+                            <p-button *ifHasPermission="'tickets_edit'" icon="pi pi-pencil" [rounded]="true"
+                                [text]="true" severity="secondary" (onClick)="editTicket(ticket)"></p-button>
+                            <p-button *ifHasPermission="'ticket_delete'" icon="pi pi-trash" [rounded]="true"
+                                [text]="true" severity="danger" (onClick)="deleteTicket(ticket)"></p-button>
                         </div>
                     </td>
                 </tr>

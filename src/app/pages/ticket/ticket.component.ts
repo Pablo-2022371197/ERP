@@ -11,6 +11,7 @@ import { TableModule } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
 import { IfHasPermissionDirective } from "../../directives/if-has-permission.directive";
 import { PermissionsService } from '../../services/permissions.service';
+import { TicketService, Ticket as ServiceTicket } from '../../services/ticket.service';
 import { TicketViewComponent, Ticket as ViewTicket } from '../../components/ticket/ticket-view/ticket-view.component';
 import { TicketFormComponent, Ticket as FormTicket } from '../../components/ticket/ticket-form/ticket-form.component';
 
@@ -45,7 +46,19 @@ export class TicketComponent {
     viewingTicket: Ticket | null = null;
     editingTicket: Partial<Ticket> | null = null;
 
-    constructor(private permissionsService: PermissionsService) { }
+    constructor(
+        private permissionsService: PermissionsService,
+        private ticketService: TicketService
+    ) {
+        this.loadTickets();
+    }
+
+    loadTickets() {
+        this.ticketService.getAllTickets().subscribe(tickets => {
+            this.tickets = tickets;
+            this.totalTickets = tickets.length;
+        });
+    }
 
     estadoOptions = [
         { label: 'Pendiente', value: 'Pendiente' },
@@ -60,174 +73,9 @@ export class TicketComponent {
         { label: 'Baja', value: 'Baja' }
     ];
 
-    tickets: Ticket[] = [
-        {
-            id: 1,
-            titulo: 'Implementar sistema de autenticación',
-            descripcion: 'Crear un sistema de login con JWT y validación de roles',
-            estado: 'En progreso',
-            asignadoA: 'Carlos Mendoza',
-            prioridad: 'Alta',
-            fechaCreacion: new Date('2024-03-01'),
-            fechaLimite: new Date('2024-03-15'),
-            comentarios: [
-                {
-                    autor: 'María García',
-                    texto: 'Revisar los estándares de seguridad OAuth 2.0',
-                    fecha: new Date('2024-03-02')
-                }
-            ],
-            historial: []
-        },
-        {
-            id: 2,
-            titulo: 'Diseñar interfaz de usuario para dashboard',
-            descripcion: 'Crear mockups y prototipos para el nuevo dashboard administrativo',
-            estado: 'Revisión',
-            asignadoA: 'Ana Torres',
-            prioridad: 'Media',
-            fechaCreacion: new Date('2024-02-28'),
-            fechaLimite: new Date('2024-03-10'),
-            comentarios: [],
-            historial: []
-        },
-        {
-            id: 3,
-            titulo: 'Optimizar consultas de base de datos',
-            descripcion: 'Mejorar el rendimiento de las consultas SQL más utilizadas',
-            estado: 'Pendiente',
-            asignadoA: 'Juan López',
-            prioridad: 'Alta',
-            fechaCreacion: new Date('2024-03-03'),
-            fechaLimite: new Date('2024-03-20'),
-            comentarios: [],
-            historial: []
-        },
-        {
-            id: 4,
-            titulo: 'Crear documentación de API',
-            descripcion: 'Documentar todos los endpoints de la API REST',
-            estado: 'En progreso',
-            asignadoA: 'Laura Ramírez',
-            prioridad: 'Media',
-            fechaCreacion: new Date('2024-02-25'),
-            fechaLimite: new Date('2024-03-12'),
-            comentarios: [
-                {
-                    autor: 'Pedro Sánchez',
-                    texto: 'Incluir ejemplos de uso para cada endpoint',
-                    fecha: new Date('2024-02-26')
-                },
-                {
-                    autor: 'Laura Ramírez',
-                    texto: 'Agregados ejemplos de autenticación',
-                    fecha: new Date('2024-02-28')
-                }
-            ],
-            historial: []
-        },
-        {
-            id: 5,
-            titulo: 'Configurar pipeline CI/CD',
-            descripcion: 'Implementar pipeline de integración continua con GitHub Actions',
-            estado: 'Finalizado',
-            asignadoA: 'Pedro Sánchez',
-            prioridad: 'Alta',
-            fechaCreacion: new Date('2024-02-20'),
-            fechaLimite: new Date('2024-03-05'),
-            comentarios: [],
-            historial: [
-                {
-                    campo: 'Estado',
-                    valorAnterior: 'En progreso',
-                    valorNuevo: 'Finalizado',
-                    fecha: new Date('2024-03-04T14:30:00'),
-                    autor: 'Pedro Sánchez'
-                },
-                {
-                    campo: 'Prioridad',
-                    valorAnterior: 'Media',
-                    valorNuevo: 'Alta',
-                    fecha: new Date('2024-03-01T09:15:00'),
-                    autor: 'Carlos Mendoza'
-                }
-            ]
-        },
-        {
-            id: 6,
-            titulo: 'Corregir bug en módulo de pagos',
-            descripcion: 'Resolver error al procesar pagos con tarjetas internacionales',
-            estado: 'Revisión',
-            asignadoA: 'Roberto Díaz',
-            prioridad: 'Alta',
-            fechaCreacion: new Date('2024-03-04'),
-            fechaLimite: new Date('2024-03-08'),
-            comentarios: [
-                {
-                    autor: 'Carmen Ruiz',
-                    texto: 'Verificar con la pasarela de pagos las validaciones',
-                    fecha: new Date('2024-03-04')
-                }
-            ],
-            historial: []
-        },
-        {
-            id: 7,
-            titulo: 'Actualizar dependencias del proyecto',
-            descripcion: 'Actualizar todas las librerías a sus últimas versiones estables',
-            estado: 'Pendiente',
-            asignadoA: 'Sofia Castro',
-            prioridad: 'Baja',
-            fechaCreacion: new Date('2024-03-05'),
-            fechaLimite: new Date('2024-03-25'),
-            comentarios: [],
-            historial: []
-        },
-        {
-            id: 8,
-            titulo: 'Implementar notificaciones push',
-            descripcion: 'Agregar sistema de notificaciones en tiempo real para usuarios',
-            estado: 'En progreso',
-            asignadoA: 'Diego Moreno',
-            prioridad: 'Media',
-            fechaCreacion: new Date('2024-03-02'),
-            fechaLimite: new Date('2024-03-18'),
-            comentarios: [],
-            historial: []
-        },
-        {
-            id: 9,
-            titulo: 'Crear tests unitarios para servicios',
-            descripcion: 'Implementar suite de tests con cobertura del 80%',
-            estado: 'Pendiente',
-            asignadoA: 'Carmen Ruiz',
-            prioridad: 'Media',
-            fechaCreacion: new Date('2024-03-01'),
-            fechaLimite: new Date('2024-03-22'),
-            comentarios: [],
-            historial: []
-        },
-        {
-            id: 10,
-            titulo: 'Migrar base de datos a PostgreSQL',
-            descripcion: 'Planificar y ejecutar migración desde MySQL a PostgreSQL',
-            estado: 'Pendiente',
-            asignadoA: 'Carlos Mendoza',
-            prioridad: 'Baja',
-            fechaCreacion: new Date('2024-02-22'),
-            fechaLimite: new Date('2024-04-01'),
-            comentarios: [
-                {
-                    autor: 'Juan López',
-                    texto: 'Preparar script de migración y backup',
-                    fecha: new Date('2024-02-23')
-                }
-            ],
-            historial: []
-        }
-    ];
+    tickets: Ticket[] = [];
 
-    totalTickets = this.tickets.length;
+    totalTickets = 0;
 
 
     getEstadoSeverity(estado: string): 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' {

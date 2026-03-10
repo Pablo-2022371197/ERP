@@ -116,8 +116,8 @@
 
                 <!-- Create Ticket Button -->
                 <div class="mt-4! flex! justify-end!">
-                    <p-button label="Crear Ticket" icon="pi pi-plus" (onClick)="createTicket()"
-                        severity="success"></p-button>
+                    <p-button *ifHasPermission="'tickets_add'" label="Crear Ticket" icon="pi pi-plus"
+                        (onClick)="createTicket()" severity="success"></p-button>
                 </div>
             </div>
 

@@ -10,6 +10,7 @@ import { BadgeModule } from 'primeng/badge';
 import { SelectModule } from 'primeng/select';
 import { InputTextModule } from 'primeng/inputtext';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
+import { IfHasPermissionDirective } from '../../directives/if-has-permission.directive';
 import { GroupService, Group } from '../../services/group.service';
 import { TicketService, Ticket } from '../../services/ticket.service';
 
@@ -26,7 +27,8 @@ import { TicketService, Ticket } from '../../services/ticket.service';
         BadgeModule,
         SelectModule,
         InputTextModule,
-        ToggleSwitchModule
+        ToggleSwitchModule,
+        IfHasPermissionDirective
     ],
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.css']
