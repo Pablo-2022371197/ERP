@@ -162,6 +162,33 @@ export class HomeComponent implements OnInit {
         this.ticketsByStatus = this.ticketService.countTicketsByStatus(tickets);
     }
 
+    reloadCurrentView() {
+        // Recargar tickets recientes
+        this.ticketService.getRecentTicketsByUser(this.currentUser, 5).subscribe(tickets => {
+            this.recentTickets = tickets;
+        });
+
+        // Si hay un grupo seleccionado, recargar solo ese grupo
+        if (this.selectedGroup) {
+            this.ticketService.getTicketsByGroupId(this.selectedGroup.id).subscribe(tickets => {
+                this.currentGroupTickets = tickets;
+                this.totalTickets = tickets.length;
+                // Aplicar filtros existentes para mantener el estado de la vista
+                this.applyFilters();
+            });
+        } else {
+            // Si no hay grupo seleccionado, recargar todos los tickets del usuario
+            const groupIds = this.userGroups.map(g => g.id);
+            this.ticketService.getTicketsByGroupIds(groupIds).subscribe(tickets => {
+                this.allUserTickets = tickets;
+                this.currentGroupTickets = tickets;
+                this.totalTickets = tickets.length;
+                // Aplicar filtros existentes para mantener el estado de la vista
+                this.applyFilters();
+            });
+        }
+    }
+
     applyFilters() {
         // Filtrar desde los tickets del grupo actual (sin filtros previos)
         let filtered = [...this.currentGroupTickets];
@@ -238,5 +265,41 @@ export class HomeComponent implements OnInit {
     cancelTicketForm() {
         this.showTicketFormDialog = false;
         this.ticketToEdit = null;
+    }
+
+    onTicketStatusChange(event: { ticket: Ticket, newStatus: string }) {
+        const updatedTicket = {
+            ...event.ticket,
+            estado: event.newStatus as 'Pendiente' | 'En progreso' | 'Revisión' | 'Finalizado'
+        };
+
+        this.ticketService.updateTicket(updatedTicket).subscribe({
+            next: (updated) => {
+                if (updated) {
+                    console.log('Estado del ticket actualizado:', updated);
+                    // Recargar vista actual manteniendo filtros
+                    this.reloadCurrentView();
+                }
+            },
+            error: (error) => {
+                console.error('Error al actualizar el estado del ticket:', error);
+            }
+        });
+    }
+
+    onCommentAdded(event: { ticket: TicketView, comment: any }) {
+        // Actualizar el ticket con el nuevo comentario
+        this.ticketService.updateTicket(event.ticket as Partial<Ticket>).subscribe({
+            next: (updated) => {
+                if (updated) {
+                    console.log('Comentario agregado al ticket:', updated);
+                    // Recargar vista actual manteniendo filtros
+                    this.reloadCurrentView();
+                }
+            },
+            error: (error) => {
+                console.error('Error al agregar comentario:', error);
+            }
+        });
     }
 }

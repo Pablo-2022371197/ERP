@@ -1,6 +1,7 @@
 <div class="kanban-board grid! grid-cols-4! gap-4!">
     <!-- Pendiente Column -->
-    <div class="kanban-column bg-gray-100! rounded-lg! p-4! border! border-gray-300!">
+    <div class="kanban-column bg-gray-100! rounded-lg! p-4! border! border-gray-300!" pDroppable="ticket"
+        (onDrop)="onDrop('Pendiente')">
         <div class="flex! justify-between! items-center! mb-4!">
             <h4 class="font-semibold! text-gray-700!">Pendiente</h4>
             <p-badge [value]="ticketsByStatus['Pendiente'] || 0" severity="contrast"></p-badge>
@@ -9,6 +10,7 @@
             @for (ticket of getTicketsByEstado('Pendiente'); track ticket.id) {
             <div *ifHasPermission="'ticket_view'"
                 class="ticket-card bg-white! p-4! rounded-lg! shadow-sm! border! border-gray-200! hover:shadow-md! transition-all cursor-pointer!"
+                pDraggable="ticket" (onDragStart)="onDragStart(ticket)" (onDragEnd)="onDragEnd()"
                 (click)="viewTicket(ticket)">
                 <h5 class="font-medium! text-sm! text-gray-800! mb-2! line-clamp-2!">{{ ticket.titulo }}
                 </h5>
@@ -32,7 +34,8 @@
     </div>
 
     <!-- En Progreso Column -->
-    <div class="kanban-column bg-blue-50! rounded-lg! p-4! border! border-blue-300!">
+    <div class="kanban-column bg-blue-50! rounded-lg! p-4! border! border-blue-300!" pDroppable="ticket"
+        (onDrop)="onDrop('En progreso')">
         <div class="flex! justify-between! items-center! mb-4!">
             <h4 class="font-semibold! text-blue-700!">En Progreso</h4>
             <p-badge [value]="ticketsByStatus['En progreso'] || 0" severity="info"></p-badge>
@@ -41,6 +44,7 @@
             @for (ticket of getTicketsByEstado('En progreso'); track ticket.id) {
             <div *ifHasPermission="'ticket_view'"
                 class="ticket-card bg-white! p-4! rounded-lg! shadow-sm! border! border-blue-200! hover:shadow-md! transition-all cursor-pointer!"
+                pDraggable="ticket" (onDragStart)="onDragStart(ticket)" (onDragEnd)="onDragEnd()"
                 (click)="viewTicket(ticket)">
                 <h5 class="font-medium! text-sm! text-gray-800! mb-2! line-clamp-2!">{{ ticket.titulo }}
                 </h5>
@@ -64,7 +68,8 @@
     </div>
 
     <!-- Revisión Column -->
-    <div class="kanban-column bg-yellow-50! rounded-lg! p-4! border! border-yellow-300!">
+    <div class="kanban-column bg-yellow-50! rounded-lg! p-4! border! border-yellow-300!" pDroppable="ticket"
+        (onDrop)="onDrop('Revisión')">
         <div class="flex! justify-between! items-center! mb-4!">
             <h4 class="font-semibold! text-yellow-700!">Revisión</h4>
             <p-badge [value]="ticketsByStatus['Revisión'] || 0" severity="warn"></p-badge>
@@ -73,6 +78,7 @@
             @for (ticket of getTicketsByEstado('Revisión'); track ticket.id) {
             <div *ifHasPermission="'ticket_view'"
                 class="ticket-card bg-white! p-4! rounded-lg! shadow-sm! border! border-yellow-200! hover:shadow-md! transition-all cursor-pointer!"
+                pDraggable="ticket" (onDragStart)="onDragStart(ticket)" (onDragEnd)="onDragEnd()"
                 (click)="viewTicket(ticket)">
                 <h5 class="font-medium! text-sm! text-gray-800! mb-2! line-clamp-2!">{{ ticket.titulo }}
                 </h5>
@@ -96,7 +102,8 @@
     </div>
 
     <!-- Finalizado Column -->
-    <div class="kanban-column bg-green-50! rounded-lg! p-4! border! border-green-300!">
+    <div class="kanban-column bg-green-50! rounded-lg! p-4! border! border-green-300!" pDroppable="ticket"
+        (onDrop)="onDrop('Finalizado')">
         <div class="flex! justify-between! items-center! mb-4!">
             <h4 class="font-semibold! text-green-700!">Finalizado</h4>
             <p-badge [value]="ticketsByStatus['Finalizado'] || 0" severity="success"></p-badge>
@@ -105,6 +112,7 @@
             @for (ticket of getTicketsByEstado('Finalizado'); track ticket.id) {
             <div *ifHasPermission="'ticket_view'"
                 class="ticket-card bg-white! p-4! rounded-lg! shadow-sm! border! border-green-200! hover:shadow-md! transition-all cursor-pointer!"
+                pDraggable="ticket" (onDragStart)="onDragStart(ticket)" (onDragEnd)="onDragEnd()"
                 (click)="viewTicket(ticket)">
                 <h5 class="font-medium! text-sm! text-gray-800! mb-2! line-clamp-2!">{{ ticket.titulo }}
                 </h5>

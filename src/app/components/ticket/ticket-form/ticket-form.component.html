@@ -53,28 +53,6 @@
                 dateFormat="dd/mm/yy" placeholder="Seleccionar fecha límite" class="w-fit"></p-datepicker>
         </div>
 
-        <!-- Comentarios -->
-        <div class="flex flex-col gap-2 md:col-span-2">
-            <label for="ticketComentarios" class="font-semibold text-gray-700">Comentarios</label>
-            <textarea pTextarea id="ticketComentarios" [(ngModel)]="newComment" rows="2"
-                placeholder="Agregar un comentario..." class="w-full"></textarea>
-            <p-button label="Agregar Comentario" icon="pi pi-comment" size="small" severity="info" [outlined]="true"
-                (onClick)="addComment()" [disabled]="!newComment.trim()"></p-button>
-
-            <!-- Lista de comentarios -->
-            @if (currentTicket.comentarios && currentTicket.comentarios.length > 0) {
-            <div class="mt-2 space-y-2 max-h-40 overflow-y-auto">
-                <div *ngFor="let comentario of currentTicket.comentarios"
-                    class="p-3 bg-gray-50 rounded-lg border border-gray-200">
-                    <div class="flex justify-between items-start mb-1">
-                        <span class="font-semibold text-sm text-gray-700">{{ comentario.autor }}</span>
-                        <span class="text-xs text-gray-500">{{ formatDate(comentario.fecha) }}</span>
-                    </div>
-                    <p class="text-sm text-gray-600">{{ comentario.texto }}</p>
-                </div>
-            </div>
-            }
-        </div>
 
         <!-- Historial de cambios (solo visible en edición) -->
         @if(isEditMode && currentTicket.historial && currentTicket.historial.length > 0){

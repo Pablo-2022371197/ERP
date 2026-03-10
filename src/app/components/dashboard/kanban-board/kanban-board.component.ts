@@ -2,13 +2,14 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BadgeModule } from 'primeng/badge';
 import { TagModule } from 'primeng/tag';
+import { DragDropModule } from 'primeng/dragdrop';
 import { IfHasPermissionDirective } from '../../../directives/if-has-permission.directive';
 import { Ticket } from '../../../services/ticket.service';
 
 @Component({
     selector: 'app-kanban-board',
     standalone: true,
-    imports: [CommonModule, BadgeModule, TagModule, IfHasPermissionDirective],
+    imports: [CommonModule, BadgeModule, TagModule, DragDropModule, IfHasPermissionDirective],
     templateUrl: './kanban-board.component.html',
     styleUrls: ['./kanban-board.component.css']
 })
@@ -16,6 +17,9 @@ export class KanbanBoardComponent {
     @Input() tickets: Ticket[] = [];
     @Input() ticketsByStatus: { [key: string]: number } = {};
     @Output() ticketClick = new EventEmitter<Ticket>();
+    @Output() ticketStatusChange = new EventEmitter<{ ticket: Ticket, newStatus: string }>();
+
+    draggedTicket: Ticket | null = null;
 
     getTicketsByEstado(estado: string): Ticket[] {
         return this.tickets.filter(t => t.estado === estado);
@@ -44,5 +48,23 @@ export class KanbanBoardComponent {
         const month = String(d.getMonth() + 1).padStart(2, '0');
         const year = d.getFullYear();
         return `${day}/${month}/${year}`;
+    }
+
+    onDragStart(ticket: Ticket) {
+        this.draggedTicket = ticket;
+    }
+
+    onDragEnd() {
+        this.draggedTicket = null;
+    }
+
+    onDrop(newStatus: string) {
+        if (this.draggedTicket && this.draggedTicket.estado !== newStatus) {
+            this.ticketStatusChange.emit({
+                ticket: this.draggedTicket,
+                newStatus: newStatus
+            });
+        }
+        this.draggedTicket = null;
     }
 }

@@ -7,6 +7,25 @@
     transform: translateY(-2px);
 }
 
+/* Drag and Drop Styles */
+.ticket-card[pDraggable] {
+    cursor: move;
+}
+
+.ticket-card:active {
+    opacity: 0.5;
+}
+
+.kanban-column[pDroppable] {
+    transition: all 0.3s ease;
+}
+
+.kanban-column[pDroppable].p-draggable-dragover {
+    border: 2px dashed #3b82f6 !important;
+    background-color: rgba(59, 130, 246, 0.1) !important;
+    transform: scale(1.02);
+}
+
 /* Kanban Board Styles */
 .kanban-board {
     min-height: 600px;

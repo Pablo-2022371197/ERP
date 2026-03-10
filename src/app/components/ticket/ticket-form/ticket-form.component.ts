@@ -64,7 +64,6 @@ export class TicketFormComponent implements OnChanges {
 
     currentTicket: Partial<Ticket> = this.getEmptyTicket();
     originalTicket: Partial<Ticket> | null = null;
-    newComment = '';
     today = new Date();
 
     ngOnChanges(changes: SimpleChanges) {
@@ -84,7 +83,6 @@ export class TicketFormComponent implements OnChanges {
                 this.currentTicket = this.getEmptyTicket();
                 this.originalTicket = null;
             }
-            this.newComment = '';
         }
     }
 
@@ -120,20 +118,6 @@ export class TicketFormComponent implements OnChanges {
         const hours = String(d.getHours()).padStart(2, '0');
         const minutes = String(d.getMinutes()).padStart(2, '0');
         return `${day}/${month}/${year} ${hours}:${minutes}`;
-    }
-
-    addComment() {
-        if (this.newComment && this.newComment.trim()) {
-            if (!this.currentTicket.comentarios) {
-                this.currentTicket.comentarios = [];
-            }
-            this.currentTicket.comentarios.push({
-                autor: 'Usuario Actual',
-                texto: this.newComment.trim(),
-                fecha: new Date()
-            });
-            this.newComment = '';
-        }
     }
 
     saveTicket() {
@@ -233,7 +217,6 @@ export class TicketFormComponent implements OnChanges {
         this.visibleChange.emit(false);
         this.currentTicket = this.getEmptyTicket();
         this.originalTicket = null;
-        this.newComment = '';
         this.onCancel.emit();
     }
 

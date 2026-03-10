@@ -22,7 +22,7 @@
             <!-- Kanban View -->
             @if (isKanbanView) {
             <app-kanban-board [tickets]="displayedTickets" [ticketsByStatus]="ticketsByStatus"
-                (ticketClick)="viewTicket($event)">
+                (ticketClick)="viewTicket($event)" (ticketStatusChange)="onTicketStatusChange($event)">
             </app-kanban-board>
             }
 
@@ -35,7 +35,8 @@
     </div>
 
     <!-- Ticket View Dialog -->
-    <app-ticket-view [(visible)]="showTicketDialog" [ticket]="selectedTicket" (onClose)="closeTicketDialog()">
+    <app-ticket-view [(visible)]="showTicketDialog" [ticket]="selectedTicket" (onClose)="closeTicketDialog()"
+        (commentAdded)="onCommentAdded($event)">
     </app-ticket-view>
 
     <!-- Ticket Form Dialog -->
