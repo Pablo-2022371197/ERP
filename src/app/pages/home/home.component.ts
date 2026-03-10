@@ -7,6 +7,7 @@ import { TicketFiltersComponent, FilterOptions } from '../../components/dashboar
 import { KanbanBoardComponent } from '../../components/dashboard/kanban-board/kanban-board.component';
 import { TicketListComponent } from '../../components/dashboard/ticket-list/ticket-list.component';
 import { TicketViewComponent, Ticket as TicketView } from '../../components/ticket/ticket-view/ticket-view.component';
+import { TicketFormComponent, Ticket as TicketForm } from '../../components/ticket/ticket-form/ticket-form.component';
 import { GroupService, Group } from '../../services/group.service';
 import { TicketService, Ticket } from '../../services/ticket.service';
 
@@ -20,7 +21,8 @@ import { TicketService, Ticket } from '../../services/ticket.service';
         TicketFiltersComponent,
         KanbanBoardComponent,
         TicketListComponent,
-        TicketViewComponent
+        TicketViewComponent,
+        TicketFormComponent
     ],
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.css']
@@ -55,6 +57,25 @@ export class HomeComponent implements OnInit {
     // Ticket View Dialog
     showTicketDialog = false;
     selectedTicket: TicketView | null = null;
+
+    // Ticket Form Dialog
+    showTicketFormDialog = false;
+    isEditMode = false;
+    ticketToEdit: Partial<TicketForm> | null = null;
+
+    // Opciones para el formulario
+    estadoOptions = [
+        { label: 'Pendiente', value: 'Pendiente' },
+        { label: 'En progreso', value: 'En progreso' },
+        { label: 'Revisión', value: 'Revisión' },
+        { label: 'Finalizado', value: 'Finalizado' }
+    ];
+
+    prioridadOptions = [
+        { label: 'Alta', value: 'Alta' },
+        { label: 'Media', value: 'Media' },
+        { label: 'Baja', value: 'Baja' }
+    ];
 
     constructor(
         private groupService: GroupService,
@@ -171,7 +192,31 @@ export class HomeComponent implements OnInit {
     }
 
     createTicket() {
-        // Navegar a la página de tickets con un parámetro para abrir el formulario
-        this.router.navigate(['/ticket'], { queryParams: { action: 'create' } });
+        // Abrir diálogo de creación de ticket
+        this.isEditMode = false;
+        this.ticketToEdit = null;
+        this.showTicketFormDialog = true;
+    }
+
+    saveTicket(ticket: Partial<TicketForm>) {
+        if (this.isEditMode) {
+            // Actualizar ticket existente
+            console.log('Actualizando ticket:', ticket);
+            // Aquí iría la lógica para actualizar el ticket
+            // this.ticketService.updateTicket(ticket).subscribe(...);
+        } else {
+            // Crear nuevo ticket
+            console.log('Creando nuevo ticket:', ticket);
+            // Aquí iría la lógica para crear el ticket
+            // this.ticketService.createTicket(ticket).subscribe(...);
+        }
+        this.showTicketFormDialog = false;
+        // Recargar datos después de guardar
+        this.loadUserData();
+    }
+
+    cancelTicketForm() {
+        this.showTicketFormDialog = false;
+        this.ticketToEdit = null;
     }
 }

@@ -37,4 +37,10 @@
     <!-- Ticket View Dialog -->
     <app-ticket-view [(visible)]="showTicketDialog" [ticket]="selectedTicket" (onClose)="closeTicketDialog()">
     </app-ticket-view>
+
+    <!-- Ticket Form Dialog -->
+    <app-ticket-form [(visible)]="showTicketFormDialog" [isEditMode]="isEditMode" [ticket]="ticketToEdit"
+        [estadoOptions]="estadoOptions" [prioridadOptions]="prioridadOptions" (onSave)="saveTicket($event)"
+        (onCancel)="cancelTicketForm()">
+    </app-ticket-form>
 </div>

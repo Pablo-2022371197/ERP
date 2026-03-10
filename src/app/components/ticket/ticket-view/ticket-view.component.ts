@@ -114,6 +114,27 @@ export class TicketViewComponent {
         return `${day}/${month}/${year} ${hours}:${minutes}`;
     }
 
+    getDaysRemaining(fechaLimite: Date | undefined): string {
+        if (!fechaLimite) return '';
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const limite = new Date(fechaLimite);
+        limite.setHours(0, 0, 0, 0);
+
+        const diffTime = limite.getTime() - today.getTime();
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        if (diffDays < 0) {
+            return `(${Math.abs(diffDays)} ${Math.abs(diffDays) === 1 ? 'día' : 'días'} vencido)`;
+        } else if (diffDays === 0) {
+            return '(Vence hoy)';
+        } else if (diffDays === 1) {
+            return '(1 día restante)';
+        } else {
+            return `(${diffDays} días restantes)`;
+        }
+    }
+
     closeDialog() {
         this.visible = false;
         this.visibleChange.emit(false);

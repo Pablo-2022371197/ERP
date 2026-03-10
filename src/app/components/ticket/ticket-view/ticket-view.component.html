@@ -90,6 +90,9 @@
                                     <span class="font-semibold! text-gray-900! text-base!">{{
                                         formatDate(ticket.fechaLimite) }}</span>
                                 </div>
+                                <div class="text-xs! font-medium! text-rose-700! mt-1!">
+                                    {{ getDaysRemaining(ticket.fechaLimite) }}
+                                </div>
                             </div>
                         </div>
 
