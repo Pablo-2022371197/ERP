@@ -1,148 +1,288 @@
-<div class="dashboard">
-    <!-- Page Header -->
-    <div class="page-header">
-        <div>
-            <h1 class="page-title">Dashboard</h1>
-            <p class="page-subtitle">Bienvenido de vuelta, John </p>
-        </div>
-        <div class="header-actions">
-            <p-button label="Descargar Reporte" icon="pi pi-download" [outlined]="true" />
-            <p-button label="Nueva Orden" icon="pi pi-plus" />
+<div class="dashboard-container px-6! py-8!">
+    <!-- Header Section -->
+    <div class="mb-8!">
+        <div class="flex! justify-between! items-center! mb-4!">
+            <div>
+                <h1 class="text-3xl! font-bold! text-gray-800! mb-2!">Dashboard</h1>
+                <p class="text-gray-600!">Bienvenido de vuelta, {{ currentUser }}</p>
+            </div>
+            <div class="bg-indigo-50! rounded-xl! px-6! py-4! border! border-indigo-200!">
+                <p class="text-sm! text-indigo-600! font-medium! mb-1!">Total de Tickets</p>
+                <p class="text-3xl! font-bold! text-indigo-700!">{{ totalTickets }}</p>
+            </div>
         </div>
     </div>
 
-    <!-- Stats Cards -->
-    <div class="stats-grid">
-        @for (stat of stats; track stat.title) {
-        <div class="stat-card">
-            <div class="stat-header">
-                <div class="stat-icon" [style.background-color]="stat.color + '20'">
-                    <i class="pi {{ stat.icon }}" [style.color]="stat.color"></i>
+    <!-- Main Content Grid -->
+    <div class="grid! grid-cols-12! gap-6!">
+        <!-- Left Sidebar - Groups & Recent Tickets -->
+        <div class="col-span-3! space-y-6!">
+            <!-- User Groups -->
+            <p-card header="Mis Grupos" class="groups-card">
+                <div class="space-y-2!">
+                    @for (group of userGroups; track group.id) {
+                    <div class="group-item p-3! rounded-lg! border! border-gray-200! hover:border-indigo-400! hover:bg-indigo-50! cursor-pointer! transition-all!"
+                        [class.selected]="selectedGroup?.id === group.id" (click)="onGroupSelect(group)">
+                        <div class="flex! justify-between! items-start! mb-2!">
+                            <h4 class="font-semibold! text-gray-800! text-sm!">{{ group.nombre }}</h4>
+                            <p-badge [value]="group.tickets" [severity]="'info'"></p-badge>
+                        </div>
+                        <p class="text-xs! text-gray-600! mb-2!">{{ group.descripcion }}</p>
+                        <div class="flex! items-center! gap-2! text-xs! text-gray-500!">
+                            <i class="pi pi-users"></i>
+                            <span>{{ group.integrantes }} miembros</span>
+                        </div>
+                    </div>
+                    } @empty {
+                    <p class="text-gray-500! text-sm! text-center! py-4!">No hay grupos disponibles</p>
+                    }
                 </div>
-                <span class="stat-label">{{ stat.title }}</span>
-            </div>
-            <div class="stat-body">
-                <span class="stat-value">{{ stat.value }}</span>
-                <span class="stat-change" [class.positive]="stat.changeType === 'positive'"
-                    [class.negative]="stat.changeType === 'negative'">
-                    <i [class]="stat.changeType === 'positive' ? 'pi pi-arrow-up' : 'pi pi-arrow-down'"></i>
-                    {{ stat.change }}
-                </span>
-            </div>
+            </p-card>
+
+            <!-- Recent Tickets Assigned to User -->
+            <p-card header="Tickets Recientes Asignados" class="recent-tickets-card">
+                <div class="space-y-2!">
+                    @for (ticket of recentTickets; track ticket.id) {
+                    <div
+                        class="ticket-item p-3! rounded-lg! border! border-gray-200! hover:border-gray-300! cursor-pointer! transition-all!">
+                        <div class="flex! justify-between! items-start! mb-2!">
+                            <h5 class="font-medium! text-gray-800! text-xs! line-clamp-2!">{{ ticket.titulo }}</h5>
+                        </div>
+                        <div class="flex! gap-2! mb-2!">
+                            <p-tag [value]="ticket.estado" [severity]="getEstadoSeverity(ticket.estado)"
+                                [style]="{ 'font-size': '0.65rem' }"></p-tag>
+                            <p-tag [value]="ticket.prioridad" [severity]="getPrioridadSeverity(ticket.prioridad)"
+                                [style]="{ 'font-size': '0.65rem' }"></p-tag>
+                        </div>
+                        <p class="text-xs! text-gray-500!">
+                            <i class="pi pi-calendar mr-1!"></i>
+                            {{ formatDate(ticket.fechaLimite) }}
+                        </p>
+                    </div>
+                    } @empty {
+                    <p class="text-gray-500! text-sm! text-center! py-4!">No hay tickets asignados</p>
+                    }
+                </div>
+            </p-card>
         </div>
-        }
-    </div>
 
-    <!-- Charts Section -->
-    <div class="charts-grid">
-        <!-- Sales Chart -->
-        <p-card class="chart-card">
-            <ng-template pTemplate="header">
-                <div class="card-header">
-                    <div>
-                        <h3 class="card-title">Ventas Mensuales</h3>
-                        <p class="card-subtitle">Comparación año actual vs anterior</p>
+        <!-- Main Content - Tickets Section -->
+        <div class="col-span-9!">
+            <!-- Filters and View Toggle -->
+            <div class="bg-white! rounded-lg! shadow-sm! p-4! mb-4! border! border-gray-200!">
+                <div class="flex! justify-between! items-center! mb-4!">
+                    <h3 class="text-lg! font-semibold! text-gray-800!">
+                        @if (selectedGroup) {
+                        Tickets de {{ selectedGroup.nombre }}
+                        } @else {
+                        Todos mis Tickets
+                        }
+                    </h3>
+                    <div class="flex! items-center! gap-3!">
+                        <span class=" text-gray-600! mr-2!">Vista:</span>
+                        <span class="font-bold! text-sm! text-gray-600!">Lista</span>
+                        <p-toggleswitch [(ngModel)]="isKanbanView" (ngModelChange)="onViewChange()"></p-toggleswitch>
+                        <span class="font-bold! text-sm! text-gray-600!">Kanban</span>
                     </div>
-                    <p-button icon="pi pi-ellipsis-v" [text]="true" />
                 </div>
-            </ng-template>
-            <div class="chart-wrapper">
-                <!-- <div class="w-full h-80"> -->
-                <p-chart type="line" [data]="salesChartData" [options]="salesChartOptions" />
+
+                <!-- Filters Row -->
+                <div class="grid! grid-cols-4! gap-4!">
+                    <div>
+                        <label class="block! text-sm! font-medium! text-gray-700! mb-2!">Estado</label>
+                        <p-select [(ngModel)]="filterOptions.estado" [options]="estadoOptions" optionLabel="label"
+                            optionValue="value" placeholder="Todos los estados" (ngModelChange)="onFilterChange()"
+                            [style]="{'width': '100%'}">
+                        </p-select>
+                    </div>
+                    <div>
+                        <label class="block! text-sm! font-medium! text-gray-700! mb-2!">Prioridad</label>
+                        <p-select [(ngModel)]="filterOptions.prioridad" [options]="prioridadOptions" optionLabel="label"
+                            optionValue="value" placeholder="Todas las prioridades" (ngModelChange)="onFilterChange()"
+                            [style]="{'width': '100%'}">
+                        </p-select>
+                    </div>
+                    <div>
+                        <label class="block! text-sm! font-medium! text-gray-700! mb-2!">Ordenar por</label>
+                        <p-select [(ngModel)]="filterOptions.ordenarPor" [options]="ordenarOptions" optionLabel="label"
+                            optionValue="value" (ngModelChange)="onFilterChange()" [style]="{'width': '100%'}">
+                        </p-select>
+                    </div>
+                    <div class="flex! items-end! gap-2!">
+                        <p-button label="Limpiar Filtros" icon="pi pi-filter-slash" [outlined]="true"
+                            (onClick)="clearFilters()" [style]="{'width': '100%'}"></p-button>
+                    </div>
+                </div>
+
+                <!-- Create Ticket Button -->
+                <div class="mt-4! flex! justify-end!">
+                    <p-button label="Crear Ticket" icon="pi pi-plus" (onClick)="createTicket()"
+                        severity="success"></p-button>
+                </div>
             </div>
-        </p-card>
 
-        <!-- Revenue Chart -->
-        <p-card class="chart-card">
-            <ng-template pTemplate="header">
-                <div class="card-header">
-                    <div>
-                        <h3 class="card-title">Ingresos por Categoría</h3>
-                        <p class="card-subtitle">Distribución de ventas</p>
+            <!-- Kanban View -->
+            @if (isKanbanView) {
+            <div class="kanban-board grid! grid-cols-4! gap-4!">
+                <!-- Pendiente Column -->
+                <div class="kanban-column bg-gray-50! rounded-lg! p-4! border! border-gray-200!">
+                    <div class="flex! justify-between! items-center! mb-4!">
+                        <h4 class="font-semibold! text-gray-700!">Pendiente</h4>
+                        <p-badge [value]="ticketsByStatus['Pendiente'] || 0" severity="secondary"></p-badge>
                     </div>
-                    <p-button icon="pi pi-ellipsis-v" [text]="true" />
-                </div>
-            </ng-template>
-
-            <!-- <div class="chart-wrapper"> -->
-            <div class="w-full h-80">
-                <p-chart type="doughnut" [data]="revenueChartData" [options]="revenueChartOptions" />
-            </div>
-        </p-card>
-    </div>
-
-    <!-- Tables Section -->
-    <div class="tables-grid">
-        <!-- Recent Orders -->
-        <p-card class="table-card">
-            <ng-template pTemplate="header">
-                <div class="card-header">
-                    <div>
-                        <h3 class="card-title">Órdenes Recientes</h3>
-                        <p class="card-subtitle">Últimas transacciones</p>
-                    </div>
-                    <p-button label="Ver Todo" [text]="true" icon="pi pi-arrow-right" iconPos="right" />
-                </div>
-            </ng-template>
-            <p-table [value]="recentOrders" [tableStyle]="{ 'min-width': '100%' }">
-                <ng-template pTemplate="header">
-                    <tr>
-                        <th>ID Orden</th>
-                        <th>Cliente</th>
-                        <th>Producto</th>
-                        <th>Monto</th>
-                        <th>Estado</th>
-                        <th>Fecha</th>
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="body" let-order>
-                    <tr>
-                        <td>
-                            <span class="order-id">{{ order.id }}</span>
-                        </td>
-                        <td>
-                            <div class="customer-cell">
-                                <p-avatar [label]="getCustomerInitials(order.customer)" shape="circle"
-                                    styleClass="customer-avatar" />
-                                <span>{{ order.customer }}</span>
+                    <div class="space-y-3! max-h-150! overflow-y-auto!">
+                        @for (ticket of getTicketsByEstado('Pendiente'); track ticket.id) {
+                        <div
+                            class="ticket-card bg-white! p-4! rounded-lg! shadow-sm! border! border-gray-200! hover:shadow-md! transition-shadow! cursor-pointer!">
+                            <h5 class="font-semibold! text-sm! text-gray-800! mb-2! line-clamp-2!">{{ ticket.titulo }}
+                            </h5>
+                            <p class="text-xs! text-gray-600! mb-3! line-clamp-2!">{{ ticket.descripcion }}</p>
+                            <div class="flex! flex-col! gap-2!">
+                                <p-tag [value]="ticket.prioridad" [severity]="getPrioridadSeverity(ticket.prioridad)"
+                                    [style]="{ 'font-size': '0.7rem' }"></p-tag>
+                                <div class="text-xs! text-gray-500!">
+                                    <i class="pi pi-user mr-1!"></i>
+                                    {{ ticket.asignadoA }}
+                                </div>
+                                <div class="text-xs! text-gray-500!">
+                                    <i class="pi pi-calendar mr-1!"></i>
+                                    {{ formatDate(ticket.fechaLimite) }}
+                                </div>
                             </div>
-                        </td>
-                        <td>{{ order.product }}</td>
-                        <td>
-                            <span class="amount">{{ order.amount }}</span>
-                        </td>
-                        <td>
-                            <p-tag [value]="order.status" [severity]="getStatusSeverity(order.status)" />
-                        </td>
-                        <td>{{ order.date }}</td>
-                    </tr>
-                </ng-template>
-            </p-table>
-        </p-card>
+                        </div>
+                        }
+                    </div>
+                </div>
 
-        <!-- Top Products -->
-        <p-card class="table-card">
-            <ng-template pTemplate="header">
-                <div class="card-header">
-                    <div>
-                        <h3 class="card-title">Productos Más Vendidos</h3>
-                        <p class="card-subtitle">Top 5 este mes</p>
+                <!-- En Progreso Column -->
+                <div class="kanban-column bg-blue-50! rounded-lg! p-4! border! border-blue-200!">
+                    <div class="flex! justify-between! items-center! mb-4!">
+                        <h4 class="font-semibold! text-blue-700!">En Progreso</h4>
+                        <p-badge [value]="ticketsByStatus['En progreso'] || 0" severity="info"></p-badge>
                     </div>
-                    <p-button label="Ver Todo" [text]="true" icon="pi pi-arrow-right" iconPos="right" />
-                </div>
-            </ng-template>
-            <div class="products-list">
-                @for (product of topProducts; track product.name; let i = $index) {
-                <div class="product-item">
-                    <div class="product-rank">{{ i + 1 }}</div>
-                    <div class="product-info">
-                        <span class="product-name">{{ product.name }}</span>
-                        <span class="product-sales">{{ product.sales }} ventas</span>
+                    <div class="space-y-3! max-h-150! overflow-y-auto!">
+                        @for (ticket of getTicketsByEstado('En progreso'); track ticket.id) {
+                        <div
+                            class="ticket-card bg-white! p-4! rounded-lg! shadow-sm! border! border-blue-200! hover:shadow-md! transition-shadow! cursor-pointer!">
+                            <h5 class="font-semibold! text-sm! text-gray-800! mb-2! line-clamp-2!">{{ ticket.titulo }}
+                            </h5>
+                            <p class="text-xs! text-gray-600! mb-3! line-clamp-2!">{{ ticket.descripcion }}</p>
+                            <div class="flex! flex-col! gap-2!">
+                                <p-tag [value]="ticket.prioridad" [severity]="getPrioridadSeverity(ticket.prioridad)"
+                                    [style]="{ 'font-size': '0.7rem' }"></p-tag>
+                                <div class="text-xs! text-gray-500!">
+                                    <i class="pi pi-user mr-1!"></i>
+                                    {{ ticket.asignadoA }}
+                                </div>
+                                <div class="text-xs! text-gray-500!">
+                                    <i class="pi pi-calendar mr-1!"></i>
+                                    {{ formatDate(ticket.fechaLimite) }}
+                                </div>
+                            </div>
+                        </div>
+                        }
                     </div>
-                    <div class="product-revenue">{{ product.revenue }}</div>
                 </div>
-                }
+
+                <!-- Revisión Column -->
+                <div class="kanban-column bg-yellow-50! rounded-lg! p-4! border! border-yellow-200!">
+                    <div class="flex! justify-between! items-center! mb-4!">
+                        <h4 class="font-semibold! text-yellow-700!">Revisión</h4>
+                        <p-badge [value]="ticketsByStatus['Revisión'] || 0" severity="warn"></p-badge>
+                    </div>
+                    <div class="space-y-3! max-h-150! overflow-y-auto!">
+                        @for (ticket of getTicketsByEstado('Revisión'); track ticket.id) {
+                        <div
+                            class="ticket-card bg-white! p-4! rounded-lg! shadow-sm! border! border-yellow-200! hover:shadow-md! transition-shadow! cursor-pointer!">
+                            <h5 class="font-semibold! text-sm! text-gray-800! mb-2! line-clamp-2!">{{ ticket.titulo }}
+                            </h5>
+                            <p class="text-xs! text-gray-600! mb-3! line-clamp-2!">{{ ticket.descripcion }}</p>
+                            <div class="flex! flex-col! gap-2!">
+                                <p-tag [value]="ticket.prioridad" [severity]="getPrioridadSeverity(ticket.prioridad)"
+                                    [style]="{ 'font-size': '0.7rem' }"></p-tag>
+                                <div class="text-xs! text-gray-500!">
+                                    <i class="pi pi-user mr-1!"></i>
+                                    {{ ticket.asignadoA }}
+                                </div>
+                                <div class="text-xs! text-gray-500!">
+                                    <i class="pi pi-calendar mr-1!"></i>
+                                    {{ formatDate(ticket.fechaLimite) }}
+                                </div>
+                            </div>
+                        </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- Finalizado Column -->
+                <div class="kanban-column bg-green-50! rounded-lg! p-4! border! border-green-200!">
+                    <div class="flex! justify-between! items-center! mb-4!">
+                        <h4 class="font-semibold! text-green-700!">Finalizado</h4>
+                        <p-badge [value]="ticketsByStatus['Finalizado'] || 0" severity="success"></p-badge>
+                    </div>
+                    <div class="space-y-3! max-h-150! overflow-y-auto!">
+                        @for (ticket of getTicketsByEstado('Finalizado'); track ticket.id) {
+                        <div
+                            class="ticket-card bg-white! p-4! rounded-lg! shadow-sm! border! border-green-200! hover:shadow-md! transition-shadow! cursor-pointer!">
+                            <h5 class="font-semibold! text-sm! text-gray-800! mb-2! line-clamp-2!">{{ ticket.titulo }}
+                            </h5>
+                            <p class="text-xs! text-gray-600! mb-3! line-clamp-2!">{{ ticket.descripcion }}</p>
+                            <div class="flex! flex-col! gap-2!">
+                                <p-tag [value]="ticket.prioridad" [severity]="getPrioridadSeverity(ticket.prioridad)"
+                                    [style]="{ 'font-size': '0.7rem' }"></p-tag>
+                                <div class="text-xs! text-gray-500!">
+                                    <i class="pi pi-user mr-1!"></i>
+                                    {{ ticket.asignadoA }}
+                                </div>
+                                <div class="text-xs! text-gray-500!">
+                                    <i class="pi pi-calendar mr-1!"></i>
+                                    {{ formatDate(ticket.fechaLimite) }}
+                                </div>
+                            </div>
+                        </div>
+                        }
+                    </div>
+                </div>
             </div>
-        </p-card>
+            }
+
+            <!-- List View -->
+            @if (!isKanbanView) {
+            <div class="bg-white! rounded-lg! shadow-sm! border! border-gray-200!">
+                <p-table [value]="displayedTickets" [tableStyle]="{ 'min-width': '100%' }" styleClass="p-datatable-sm">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th class="font-semibold! text-gray-700!">Título</th>
+                            <th class="font-semibold! text-gray-700!">Estado</th>
+                            <th class="font-semibold! text-gray-700!">Prioridad</th>
+                            <th class="font-semibold! text-gray-700!">Asignado A</th>
+                            <th class="font-semibold! text-gray-700!">Fecha Límite</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-ticket>
+                        <tr class="hover:bg-gray-50! cursor-pointer!">
+                            <td class="font-medium! text-gray-800!">{{ ticket.titulo }}</td>
+                            <td>
+                                <p-tag [value]="ticket.estado" [severity]="getEstadoSeverity(ticket.estado)"></p-tag>
+                            </td>
+                            <td>
+                                <p-tag [value]="ticket.prioridad"
+                                    [severity]="getPrioridadSeverity(ticket.prioridad)"></p-tag>
+                            </td>
+                            <td class="text-gray-600!">{{ ticket.asignadoA }}</td>
+                            <td class="text-gray-600!">{{ formatDate(ticket.fechaLimite) }}</td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="5" class="text-center! py-8! text-gray-500!">
+                                No hay tickets disponibles
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+            }
+        </div>
     </div>
 </div>

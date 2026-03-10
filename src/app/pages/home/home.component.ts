@@ -1,233 +1,242 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { CardModule } from 'primeng/card';
-import { ChartModule } from 'primeng/chart';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
-import { AvatarModule } from 'primeng/avatar';
+import { BadgeModule } from 'primeng/badge';
+import { SelectModule } from 'primeng/select';
+import { InputTextModule } from 'primeng/inputtext';
+import { ToggleSwitchModule } from 'primeng/toggleswitch';
+import { GroupService, Group } from '../../services/group.service';
+import { TicketService, Ticket } from '../../services/ticket.service';
 
 @Component({
     selector: 'app-home',
     standalone: true,
     imports: [
         CommonModule,
+        FormsModule,
         CardModule,
-        ChartModule,
         TableModule,
         ButtonModule,
         TagModule,
-        AvatarModule
+        BadgeModule,
+        SelectModule,
+        InputTextModule,
+        ToggleSwitchModule
     ],
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-    // Stats Cards
-    stats = [
-        {
-            title: 'Ventas del Mes',
-            value: '$45,231',
-            change: '+12.5%',
-            changeType: 'positive',
-            icon: 'pi-shopping-cart',
-            color: '#667eea'
-        },
-        {
-            title: 'Nuevos Clientes',
-            value: '234',
-            change: '+8.2%',
-            changeType: 'positive',
-            icon: 'pi-users',
-            color: '#10b981'
-        },
-        {
-            title: 'Productos Vendidos',
-            value: '1,843',
-            change: '+4.3%',
-            changeType: 'positive',
-            icon: 'pi-box',
-            color: '#f59e0b'
-        },
-        {
-            title: 'Ingresos Totales',
-            value: '$128,459',
-            change: '-2.1%',
-            changeType: 'negative',
-            icon: 'pi-dollar',
-            color: '#ef4444'
-        }
+    // Usuario actual (simulado)
+    currentUser = 'Carlos Mendoza';
+
+    // Grupos del usuario
+    userGroups: Group[] = [];
+    selectedGroup: Group | null = null;
+
+    // Tickets
+    allUserTickets: Ticket[] = [];
+    displayedTickets: Ticket[] = [];
+    recentTickets: Ticket[] = [];
+
+    // Contadores
+    totalTickets = 0;
+    ticketsByStatus: { [key: string]: number } = {};
+
+    // Filtros y ordenamiento
+    filterOptions = {
+        estado: null as string | null,
+        prioridad: null as string | null,
+        ordenarPor: 'fechaCreacion' as 'fechaCreacion' | 'fechaLimite' | 'prioridad' | 'estado'
+    };
+
+    estadoOptions = [
+        { label: 'Todos', value: null },
+        { label: 'Pendiente', value: 'Pendiente' },
+        { label: 'En progreso', value: 'En progreso' },
+        { label: 'Revisión', value: 'Revisión' },
+        { label: 'Finalizado', value: 'Finalizado' }
     ];
 
-    // Sales Chart Data
-    salesChartData: any;
-    salesChartOptions: any;
-
-    // Revenue Chart Data
-    revenueChartData: any;
-    revenueChartOptions: any;
-
-    // Recent Orders
-    recentOrders = [
-        {
-            id: '#ORD-1234',
-            customer: 'María García',
-            product: 'Laptop Dell',
-            amount: '$1,299',
-            status: 'Completado',
-            date: '2026-02-25'
-        },
-        {
-            id: '#ORD-1235',
-            customer: 'Carlos Rodríguez',
-            product: 'Mouse Logitech',
-            amount: '$49',
-            status: 'Pendiente',
-            date: '2026-02-25'
-        },
-        {
-            id: '#ORD-1236',
-            customer: 'Ana Martínez',
-            product: 'Teclado Mecánico',
-            amount: '$159',
-            status: 'Procesando',
-            date: '2026-02-24'
-        },
-        {
-            id: '#ORD-1237',
-            customer: 'Luis Fernández',
-            product: 'Monitor Samsung',
-            amount: '$349',
-            status: 'Completado',
-            date: '2026-02-24'
-        },
-        {
-            id: '#ORD-1238',
-            customer: 'Patricia López',
-            product: 'Webcam HD',
-            amount: '$89',
-            status: 'Cancelado',
-            date: '2026-02-23'
-        }
+    prioridadOptions = [
+        { label: 'Todas', value: null },
+        { label: 'Alta', value: 'Alta' },
+        { label: 'Media', value: 'Media' },
+        { label: 'Baja', value: 'Baja' }
     ];
 
-    // Top Products
-    topProducts = [
-        { name: 'Laptop Dell XPS', sales: 145, revenue: '$188,355' },
-        { name: 'iPhone 15 Pro', sales: 98, revenue: '$156,800' },
-        { name: 'Mouse Logitech MX', sales: 234, revenue: '$11,466' },
-        { name: 'Teclado Mecánico', sales: 187, revenue: '$29,733' },
-        { name: 'Monitor Samsung 27"', sales: 76, revenue: '$26,524' }
+    ordenarOptions = [
+        { label: 'Fecha de Creación', value: 'fechaCreacion' },
+        { label: 'Fecha Límite', value: 'fechaLimite' },
+        { label: 'Prioridad', value: 'prioridad' },
+        { label: 'Estado', value: 'estado' }
     ];
+
+    // Vista: true = Kanban, false = Lista
+    isKanbanView = false;
+
+    constructor(
+        private groupService: GroupService,
+        private ticketService: TicketService,
+        private router: Router
+    ) { }
 
     ngOnInit() {
-        this.initCharts();
+        this.loadUserData();
     }
 
-    initCharts() {
-        const documentStyle = getComputedStyle(document.documentElement);
+    loadUserData() {
+        // Cargar grupos del usuario
+        this.groupService.getUserGroups().subscribe(groups => {
+            this.userGroups = groups;
 
-        // Sales Chart
-        this.salesChartData = {
-            labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-            datasets: [
-                {
-                    label: 'Ventas 2026',
-                    data: [65, 59, 80, 81, 56, 55, 70, 85, 90, 78, 95, 88],
-                    fill: true,
-                    borderColor: '#667eea',
-                    backgroundColor: 'rgba(102, 126, 234, 0.1)',
-                    tension: 0.4
-                },
-                {
-                    label: 'Ventas 2025',
-                    data: [45, 49, 70, 71, 46, 45, 60, 75, 78, 68, 82, 75],
-                    fill: true,
-                    borderColor: '#10b981',
-                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                    tension: 0.4
-                }
-            ]
-        };
+            // Obtener los IDs de los grupos del usuario
+            const groupIds = groups.map(g => g.id);
 
-        this.salesChartOptions = {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    labels: {
-                        color: '#495057',
-                        font: {
-                            family: 'Inter'
-                        }
-                    }
-                }
-            },
-            scales: {
-                x: {
-                    ticks: {
-                        color: '#495057',
-                        font: {
-                            family: 'Inter'
-                        }
-                    },
-                    grid: {
-                        color: '#ebedef'
-                    }
-                },
-                y: {
-                    ticks: {
-                        color: '#495057',
-                        font: {
-                            family: 'Inter'
-                        }
-                    },
-                    grid: {
-                        color: '#ebedef'
-                    }
-                }
+            // Cargar todos los tickets de los grupos del usuario
+            this.ticketService.getTicketsByGroupIds(groupIds).subscribe(tickets => {
+                this.allUserTickets = tickets;
+                this.displayedTickets = tickets;
+                this.totalTickets = tickets.length;
+                this.calculateTicketsByStatus(tickets);
+            });
+
+            // Cargar tickets recientes asignados al usuario
+            this.ticketService.getRecentTicketsByUser(this.currentUser, 5).subscribe(tickets => {
+                this.recentTickets = tickets;
+            });
+        });
+    }
+
+    onGroupSelect(group: Group) {
+        this.selectedGroup = group;
+
+        // Cargar tickets del grupo seleccionado
+        this.ticketService.getTicketsByGroupId(group.id).subscribe(tickets => {
+            this.displayedTickets = tickets;
+            this.totalTickets = tickets.length;
+            this.calculateTicketsByStatus(tickets);
+            this.applyFilters();
+        });
+    }
+
+    calculateTicketsByStatus(tickets: Ticket[]) {
+        this.ticketsByStatus = this.ticketService.countTicketsByStatus(tickets);
+    }
+
+    applyFilters() {
+        let filtered = [...this.displayedTickets];
+
+        // Filtrar por estado
+        if (this.filterOptions.estado) {
+            filtered = filtered.filter(t => t.estado === this.filterOptions.estado);
+        }
+
+        // Filtrar por prioridad
+        if (this.filterOptions.prioridad) {
+            filtered = filtered.filter(t => t.prioridad === this.filterOptions.prioridad);
+        }
+
+        // Ordenar
+        filtered = this.sortTickets(filtered, this.filterOptions.ordenarPor);
+
+        this.displayedTickets = filtered;
+        this.calculateTicketsByStatus(filtered);
+    }
+
+    sortTickets(tickets: Ticket[], sortBy: string): Ticket[] {
+        return tickets.sort((a, b) => {
+            switch (sortBy) {
+                case 'fechaCreacion':
+                    return b.fechaCreacion.getTime() - a.fechaCreacion.getTime();
+                case 'fechaLimite':
+                    return a.fechaLimite.getTime() - b.fechaLimite.getTime();
+                case 'prioridad':
+                    const prioridadOrder = { 'Alta': 0, 'Media': 1, 'Baja': 2 };
+                    return prioridadOrder[a.prioridad] - prioridadOrder[b.prioridad];
+                case 'estado':
+                    const estadoOrder = { 'Pendiente': 0, 'En progreso': 1, 'Revisión': 2, 'Finalizado': 3 };
+                    return estadoOrder[a.estado] - estadoOrder[b.estado];
+                default:
+                    return 0;
             }
-        };
-
-        // Revenue Chart
-        this.revenueChartData = {
-            labels: ['Electrónica', 'Ropa', 'Alimentos', 'Hogar', 'Deportes'],
-            datasets: [
-                {
-                    data: [35, 25, 20, 15, 5],
-                    backgroundColor: ['#667eea', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'],
-                    hoverBackgroundColor: ['#5568d3', '#0ea572', '#dc8b0a', '#dc2626', '#7c3aed']
-                }
-            ]
-        };
-
-        this.revenueChartOptions = {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    labels: {
-                        color: '#495057',
-                        font: {
-                            family: 'Inter'
-                        }
-                    }
-                }
-            }
-        };
+        });
     }
 
-    getStatusSeverity(status: string): 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' {
-        const severityMap: { [key: string]: 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' } = {
-            Completado: 'success',
-            Pendiente: 'warn',
-            Procesando: 'info',
-            Cancelado: 'danger'
-        };
-        return severityMap[status] || 'info';
+    onFilterChange() {
+        this.applyFilters();
     }
 
-    getCustomerInitials(name: string): string {
-        return name.split(' ').map(n => n[0]).join('').toUpperCase();
+    onViewChange() {
+        // La vista cambia automáticamente por el binding
+    }
+
+    clearFilters() {
+        this.filterOptions = {
+            estado: null,
+            prioridad: null,
+            ordenarPor: 'fechaCreacion'
+        };
+
+        if (this.selectedGroup) {
+            this.onGroupSelect(this.selectedGroup);
+        } else {
+            this.displayedTickets = this.allUserTickets;
+            this.calculateTicketsByStatus(this.allUserTickets);
+        }
+    }
+
+    getTicketsByEstado(estado: string): Ticket[] {
+        return this.displayedTickets.filter(t => t.estado === estado);
+    }
+
+    getEstadoSeverity(estado: string): 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' {
+        switch (estado) {
+            case 'Finalizado':
+                return 'success';
+            case 'En progreso':
+                return 'info';
+            case 'Revisión':
+                return 'warn';
+            case 'Pendiente':
+                return 'secondary';
+            default:
+                return 'contrast';
+        }
+    }
+
+    getPrioridadSeverity(prioridad: string): 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' {
+        switch (prioridad) {
+            case 'Alta':
+                return 'danger';
+            case 'Media':
+                return 'warn';
+            case 'Baja':
+                return 'info';
+            default:
+                return 'secondary';
+        }
+    }
+
+    formatDate(date: Date): string {
+        const d = new Date(date);
+        const day = String(d.getDate()).padStart(2, '0');
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const year = d.getFullYear();
+        return `${day}/${month}/${year}`;
+    }
+
+    navigateToTickets() {
+        this.router.navigate(['/ticket']);
+    }
+
+    createTicket() {
+        // Navegar a la página de tickets con un parámetro para abrir el formulario
+        this.router.navigate(['/ticket'], { queryParams: { action: 'create' } });
     }
 }
