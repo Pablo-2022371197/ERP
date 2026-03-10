@@ -3,15 +3,13 @@
     min-height: 100vh;
 }
 
-/* Groups Card Styles */
-.groups-card .group-item.selected {
-    background-color: #eef2ff !important;
-    border-color: #6366f1 !important;
+/* Recent Tickets Horizontal Row */
+.ticket-card {
+    transition: all 0.2s ease;
 }
 
-/* Recent Tickets Card Styles */
-.recent-tickets-card .ticket-item:hover {
-    background-color: #f9fafb;
+.ticket-card:hover {
+    transform: translateY(-2px);
 }
 
 /* Kanban Board Styles */
@@ -72,11 +70,12 @@
         padding: 1.25rem;
     }
 
+    /* Enhanced Table Styles */
     .p-datatable .p-datatable-thead>tr>th {
         background-color: #f9fafb;
         color: #374151;
         font-weight: 600;
-        padding: 1rem;
+        padding: 0.875rem 0.875rem;
         border-bottom: 2px solid #e5e7eb;
     }
 
@@ -89,10 +88,19 @@
     }
 
     .p-datatable .p-datatable-tbody>tr>td {
-        padding: 0.875rem 1rem;
+        padding: 0.875rem 0.875rem;
         border-bottom: 1px solid #e5e7eb;
     }
 
+    .p-datatable-striped .p-datatable-tbody>tr:nth-child(even) {
+        background-color: #f9fafb;
+    }
+
+    .p-datatable-striped .p-datatable-tbody>tr:nth-child(even):hover {
+        background-color: #f3f4f6;
+    }
+
+    /* Select Dropdown */
     .p-select {
         border: 1px solid #d1d5db;
         border-radius: 0.5rem;
@@ -100,6 +108,14 @@
 
     .p-select:hover {
         border-color: #9ca3af;
+    }
+
+    .p-select-overlay .p-select-option {
+        padding: 0.75rem 1rem;
+    }
+
+    .p-select-overlay .p-select-option:hover {
+        background-color: #eef2ff;
     }
 
     .p-toggleswitch {
@@ -125,17 +141,27 @@
         font-weight: 500;
         padding: 0.25rem 0.625rem;
     }
+
+    /* Button overrides */
+    .p-button.p-button-text {
+        padding: 0.5rem;
+    }
+
+    .p-button.p-button-rounded {
+        border-radius: 50%;
+    }
 }
 
 /* Responsive Design */
-@media (max-width: 1024px) {
-    .grid.grid-cols-12 {
-        grid-template-columns: 1fr;
+@media (max-width: 1280px) {
+    .grid.grid-cols-5 {
+        grid-template-columns: repeat(3, 1fr);
     }
+}
 
-    .col-span-3,
-    .col-span-9 {
-        grid-column: span 12;
+@media (max-width: 1024px) {
+    .grid.grid-cols-5 {
+        grid-template-columns: repeat(2, 1fr);
     }
 
     .kanban-board {
@@ -144,11 +170,16 @@
 }
 
 @media (max-width: 768px) {
+    .grid.grid-cols-5 {
+        grid-template-columns: 1fr;
+    }
+
     .kanban-board {
         grid-template-columns: 1fr;
     }
 
-    .grid.grid-cols-4 {
-        grid-template-columns: 1fr;
+    .flex.gap-3.items-end {
+        flex-direction: column;
+        align-items: stretch;
     }
 }

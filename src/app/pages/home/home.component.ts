@@ -10,6 +10,7 @@ import { BadgeModule } from 'primeng/badge';
 import { SelectModule } from 'primeng/select';
 import { InputTextModule } from 'primeng/inputtext';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
+import { TooltipModule } from 'primeng/tooltip';
 import { IfHasPermissionDirective } from '../../directives/if-has-permission.directive';
 import { GroupService, Group } from '../../services/group.service';
 import { TicketService, Ticket } from '../../services/ticket.service';
@@ -28,6 +29,7 @@ import { TicketService, Ticket } from '../../services/ticket.service';
         SelectModule,
         InputTextModule,
         ToggleSwitchModule,
+        TooltipModule,
         IfHasPermissionDirective
     ],
     templateUrl: './home.component.html',
@@ -231,6 +233,31 @@ export class HomeComponent implements OnInit {
         const month = String(d.getMonth() + 1).padStart(2, '0');
         const year = d.getFullYear();
         return `${day}/${month}/${year}`;
+    }
+
+    getInitials(name: string): string {
+        return name
+            .split(' ')
+            .map(n => n[0])
+            .join('');
+    }
+
+    onGroupChange(group: Group | null) {
+        if (group) {
+            this.onGroupSelect(group);
+        } else {
+            this.selectedGroup = null;
+            this.displayedTickets = this.allUserTickets;
+            this.totalTickets = this.allUserTickets.length;
+            this.calculateTicketsByStatus(this.allUserTickets);
+            // Aplicar filtros existentes
+            this.applyFilters();
+        }
+    }
+
+    viewTicket(ticket: Ticket) {
+        // Navegar a la página de tickets con el ID del ticket para ver detalles
+        this.router.navigate(['/ticket'], { queryParams: { view: ticket.id } });
     }
 
     navigateToTickets() {
