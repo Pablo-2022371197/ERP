@@ -89,21 +89,24 @@ export class HomeComponent implements OnInit {
         return this.authService.getUserName();
     }
 
+    get currentUserUsername(): string {
+        return this.authService.getUserUsername();
+    }
 
     ngOnInit() {
         this.loadUserData();
     }
 
     loadUserData() {
-        // Cargar grupos del usuario
-        this.groupService.getUserGroups().subscribe(groups => {
+        const currentUserEmail = this.authService.getUserEmail();
+        const currentUserUsername = this.currentUserUsername;
+
+        // Cargar grupos del usuario basándose en su email
+        this.groupService.getUserGroupsByEmail(currentUserEmail).subscribe(groups => {
             this.userGroups = groups;
 
-            // Obtener los IDs de los grupos del usuario
-            const groupIds = groups.map(g => g.id);
-
-            // Cargar todos los tickets de los grupos del usuario
-            this.ticketService.getTicketsByGroupIds(groupIds).subscribe(tickets => {
+            // Cargar TODOS los tickets (administrador ve todos)
+            this.ticketService.getAllTickets().subscribe(tickets => {
                 this.allUserTickets = tickets;
                 this.currentGroupTickets = tickets;
                 this.displayedTickets = tickets;
@@ -111,7 +114,7 @@ export class HomeComponent implements OnInit {
                 this.calculateTicketsByStatus(tickets);
             });
 
-            // Cargar tickets recientes asignados al usuario
+            // Cargar tickets recientes asignados al usuario (por nombre completo)
             this.ticketService.getRecentTicketsByUser(this.currentUserName, 5).subscribe(tickets => {
                 this.recentTickets = tickets;
             });
@@ -173,8 +176,10 @@ export class HomeComponent implements OnInit {
     }
 
     reloadCurrentView() {
-        // Recargar tickets recientes
-        this.ticketService.getRecentTicketsByUser(this.currentUserName, 5).subscribe(tickets => {
+        const currentUserName = this.currentUserName;
+
+        // Recargar tickets recientes (por nombre completo)
+        this.ticketService.getRecentTicketsByUser(currentUserName, 5).subscribe(tickets => {
             this.recentTickets = tickets;
         });
 
@@ -187,9 +192,8 @@ export class HomeComponent implements OnInit {
                 this.applyFilters();
             });
         } else {
-            // Si no hay grupo seleccionado, recargar todos los tickets del usuario
-            const groupIds = this.userGroups.map(g => g.id);
-            this.ticketService.getTicketsByGroupIds(groupIds).subscribe(tickets => {
+            // Si no hay grupo seleccionado, recargar TODOS los tickets
+            this.ticketService.getAllTickets().subscribe(tickets => {
                 this.allUserTickets = tickets;
                 this.currentGroupTickets = tickets;
                 this.totalTickets = tickets.length;

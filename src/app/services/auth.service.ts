@@ -68,6 +68,16 @@ export class AuthService {
         return user ? user.name : '';
     }
 
+    getUserUsername(): string {
+        const user = this.currentUserSignal();
+        return user ? user.username : '';
+    }
+
+    getUserEmail(): string {
+        const user = this.currentUserSignal();
+        return user ? user.email : '';
+    }
+
     getUserInitials(): string {
         const user = this.currentUserSignal();
         if (!user) return '';

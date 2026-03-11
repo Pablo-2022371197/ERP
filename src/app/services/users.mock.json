@@ -72,6 +72,7 @@
             "github": "github.com/mgarcia",
             "permissions": [
                 "tickets_view",
+                "tickets_add",
                 "ticket_view",
                 "user_edit"
             ]
@@ -93,7 +94,8 @@
             "github": "github.com/atorres",
             "permissions": [
                 "tickets_view",
-                "ticket_view"
+                "ticket_view",
+                "user_edit"
             ]
         }
     ],

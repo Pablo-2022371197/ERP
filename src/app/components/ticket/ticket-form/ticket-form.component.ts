@@ -7,6 +7,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { TextareaModule } from 'primeng/textarea';
 import { SelectModule } from 'primeng/select';
 import { DatePickerModule } from 'primeng/datepicker';
+import { GroupService, User } from '../../../services/group.service';
+import { AuthService } from '../../../services/auth.service';
 
 interface Comentario {
     autor: string;
@@ -66,6 +68,16 @@ export class TicketFormComponent implements OnChanges {
     originalTicket: Partial<Ticket> | null = null;
     today = new Date();
 
+    // Usuarios disponibles para asignar
+    availableUsers: User[] = [];
+
+    constructor(
+        private groupService: GroupService,
+        private authService: AuthService
+    ) {
+        this.loadAvailableUsers();
+    }
+
     ngOnChanges(changes: SimpleChanges) {
         if (changes['ticket'] && this.ticket) {
             if (this.isEditMode) {
@@ -84,6 +96,21 @@ export class TicketFormComponent implements OnChanges {
                 this.originalTicket = null;
             }
         }
+    }
+
+    // Cargar usuarios disponibles desde el servicio de grupos
+    private loadAvailableUsers(): void {
+        this.groupService.getAllAvailableUsers().subscribe(users => {
+            this.availableUsers = users;
+        });
+    }
+
+    getInitials(name: string): string {
+        return name
+            .split(' ')
+            .map(n => n[0])
+            .join('')
+            .toUpperCase();
     }
 
     private getEmptyTicket(): Partial<Ticket> {
@@ -144,7 +171,7 @@ export class TicketFormComponent implements OnChanges {
     private detectChanges(): HistorialCambio[] {
         const changes: HistorialCambio[] = [];
         const now = new Date();
-        const currentUser = 'Usuario Actual';
+        const currentUser = this.authService.getUserName();
 
         if (!this.originalTicket) return changes;
 

@@ -34,11 +34,45 @@ export interface Ticket {
     providedIn: 'root'
 })
 export class TicketService {
-    private mockTickets: Ticket[];
+    private readonly STORAGE_KEY = 'erp_tickets';
+    private tickets: Ticket[] = [];
 
     constructor() {
-        // Convertir las fechas de string a Date al cargar los datos
-        this.mockTickets = ticketsData.tickets.map(ticket => ({
+        this.loadTickets();
+    }
+
+    // Cargar tickets desde localStorage o mock
+    private loadTickets(): void {
+        const storedTickets = localStorage.getItem(this.STORAGE_KEY);
+        if (storedTickets) {
+            try {
+                const parsedTickets = JSON.parse(storedTickets);
+                this.tickets = parsedTickets.map((ticket: any) => ({
+                    ...ticket,
+                    fechaCreacion: new Date(ticket.fechaCreacion),
+                    fechaLimite: new Date(ticket.fechaLimite),
+                    comentarios: ticket.comentarios.map((comentario: any) => ({
+                        ...comentario,
+                        fecha: new Date(comentario.fecha)
+                    })),
+                    historial: ticket.historial.map((cambio: any) => ({
+                        ...cambio,
+                        fecha: new Date(cambio.fecha)
+                    }))
+                }));
+            } catch (error) {
+                console.error('Error al cargar tickets desde localStorage:', error);
+                this.loadFromMock();
+            }
+        } else {
+            // Primera vez, cargar desde mock
+            this.loadFromMock();
+        }
+    }
+
+    // Cargar desde mock y guardar en localStorage
+    private loadFromMock(): void {
+        this.tickets = ticketsData.tickets.map(ticket => ({
             ...ticket,
             fechaCreacion: new Date(ticket.fechaCreacion),
             fechaLimite: new Date(ticket.fechaLimite),
@@ -51,38 +85,54 @@ export class TicketService {
                 fecha: new Date(cambio.fecha)
             }))
         })) as Ticket[];
+        this.saveToLocalStorage();
+    }
+
+    // Guardar tickets en localStorage
+    private saveToLocalStorage(): void {
+        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.tickets));
     }
 
     // Obtener todos los tickets
     getAllTickets(): Observable<Ticket[]> {
-        return of(this.mockTickets);
+        return of([...this.tickets]);
     }
 
     // Obtener tickets de un grupo específico
     getTicketsByGroupId(groupId: number): Observable<Ticket[]> {
-        const tickets = this.mockTickets.filter(t => t.groupId === groupId);
-        return of(tickets);
+        const tickets = this.tickets.filter(t => t.groupId === groupId);
+        return of([...tickets]);
     }
 
-    // Obtener tickets asignados a un usuario
+    // Obtener tickets asignados a un usuario (por nombre de usuario)
+    // Busca tanto por username como por nombre completo para compatibilidad
     getTicketsByUser(username: string): Observable<Ticket[]> {
-        const tickets = this.mockTickets.filter(t => t.asignadoA === username);
-        return of(tickets);
+        const tickets = this.tickets.filter(t => {
+            // Buscar por username exacto o por nombre que contenga el username
+            return t.asignadoA === username ||
+                t.asignadoA.toLowerCase().includes(username.toLowerCase());
+        });
+        return of([...tickets]);
     }
 
     // Obtener tickets de múltiples grupos (para mostrar todos los tickets del usuario)
     getTicketsByGroupIds(groupIds: number[]): Observable<Ticket[]> {
-        const tickets = this.mockTickets.filter(t => groupIds.includes(t.groupId));
-        return of(tickets);
+        const tickets = this.tickets.filter(t => groupIds.includes(t.groupId));
+        return of([...tickets]);
     }
 
     // Obtener tickets recientes asignados al usuario
+    // Busca tanto por username como por nombre completo
     getRecentTicketsByUser(username: string, limit: number = 5): Observable<Ticket[]> {
-        const userTickets = this.mockTickets
-            .filter(t => t.asignadoA === username)
+        const userTickets = this.tickets
+            .filter(t => {
+                // Buscar por username exacto o por nombre que contenga el username
+                return t.asignadoA === username ||
+                    t.asignadoA.toLowerCase().includes(username.toLowerCase());
+            })
             .sort((a, b) => b.fechaCreacion.getTime() - a.fechaCreacion.getTime())
             .slice(0, limit);
-        return of(userTickets);
+        return of([...userTickets]);
     }
 
     // Contar tickets por estado
@@ -95,10 +145,10 @@ export class TicketService {
 
     // Crear un nuevo ticket
     createTicket(ticketData: Partial<Ticket>): Observable<Ticket> {
-        const newId = Math.max(...this.mockTickets.map(t => t.id), 0) + 1;
+        const newId = Math.max(...this.tickets.map(t => t.id), 0) + 1;
         const newTicket: Ticket = {
             id: newId,
-            groupId: ticketData.groupId || 1, // Asignar a un grupo por defecto si no se especifica
+            groupId: ticketData.groupId || 1,
             titulo: ticketData.titulo || '',
             descripcion: ticketData.descripcion || '',
             estado: ticketData.estado || 'Pendiente',
@@ -110,35 +160,38 @@ export class TicketService {
             historial: ticketData.historial || []
         };
 
-        this.mockTickets.push(newTicket);
-        return of(newTicket);
+        this.tickets = [...this.tickets, newTicket];
+        this.saveToLocalStorage();
+        return of({ ...newTicket });
     }
 
     // Actualizar un ticket existente
     updateTicket(ticketData: Partial<Ticket>): Observable<Ticket | null> {
-        const index = this.mockTickets.findIndex(t => t.id === ticketData.id);
+        const index = this.tickets.findIndex(t => t.id === ticketData.id);
         if (index !== -1) {
-            this.mockTickets[index] = {
-                ...this.mockTickets[index],
+            this.tickets[index] = {
+                ...this.tickets[index],
                 ...ticketData,
-                // Asegurarse de que las fechas sean objetos Date
+                id: this.tickets[index].id, // Asegurar que el ID no cambie
                 fechaCreacion: ticketData.fechaCreacion instanceof Date
                     ? ticketData.fechaCreacion
-                    : new Date(ticketData.fechaCreacion || this.mockTickets[index].fechaCreacion),
+                    : new Date(ticketData.fechaCreacion || this.tickets[index].fechaCreacion),
                 fechaLimite: ticketData.fechaLimite instanceof Date
                     ? ticketData.fechaLimite
-                    : new Date(ticketData.fechaLimite || this.mockTickets[index].fechaLimite)
+                    : new Date(ticketData.fechaLimite || this.tickets[index].fechaLimite)
             };
-            return of(this.mockTickets[index]);
+            this.saveToLocalStorage();
+            return of({ ...this.tickets[index] });
         }
         return of(null);
     }
 
     // Eliminar un ticket
     deleteTicket(ticketId: number): Observable<boolean> {
-        const index = this.mockTickets.findIndex(t => t.id === ticketId);
-        if (index !== -1) {
-            this.mockTickets.splice(index, 1);
+        const initialLength = this.tickets.length;
+        this.tickets = this.tickets.filter(t => t.id !== ticketId);
+        if (this.tickets.length < initialLength) {
+            this.saveToLocalStorage();
             return of(true);
         }
         return of(false);

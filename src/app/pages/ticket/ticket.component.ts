@@ -141,37 +141,34 @@ export class TicketComponent {
 
     deleteTicket(ticket: Ticket) {
         if (confirm(`¿Estás seguro de que deseas eliminar el ticket "${ticket.titulo}"?`)) {
-            this.tickets = this.tickets.filter(t => t.id !== ticket.id);
-            this.totalTickets--;
+            this.ticketService.deleteTicket(ticket.id).subscribe(success => {
+                if (success) {
+                    this.loadTickets(); // Recargar desde el servicio
+                }
+            });
         }
     }
 
     onSaveTicket(ticketData: Partial<Ticket>) {
         if (this.isEditMode && this.editingTicket) {
-            // Actualizar ticket existente
-            const index = this.tickets.findIndex(t => t.id === this.editingTicket!.id);
-            if (index !== -1) {
-                this.tickets[index] = { ...this.tickets[index], ...ticketData };
-            }
+            // Actualizar ticket existente usando el servicio
+            const updatedData = {
+                ...ticketData,
+                id: this.editingTicket.id
+            } as Partial<ServiceTicket>;
+            this.ticketService.updateTicket(updatedData).subscribe(updatedTicket => {
+                if (updatedTicket) {
+                    this.loadTickets(); // Recargar desde el servicio
+                }
+            });
         } else {
-            // Crear nuevo ticket
-            const newId = Math.max(...this.tickets.map(t => t.id), 0) + 1;
-            const newTicket: Ticket = {
-                id: newId,
-                titulo: ticketData.titulo!,
-                descripcion: ticketData.descripcion || '',
-                estado: ticketData.estado!,
-                asignadoA: ticketData.asignadoA!,
-                prioridad: ticketData.prioridad!,
-                fechaCreacion: new Date(),
-                fechaLimite: ticketData.fechaLimite!,
-                comentarios: ticketData.comentarios || [],
-                historial: []
-            };
-            this.tickets = [...this.tickets, newTicket];
-            this.totalTickets++;
+            // Crear nuevo ticket usando el servicio
+            this.ticketService.createTicket(ticketData as Partial<ServiceTicket>).subscribe(newTicket => {
+                this.loadTickets(); // Recargar desde el servicio
+            });
         }
         this.displayTicketDialog = false;
+        this.editingTicket = null;
     }
 
     onCancelTicketForm() {

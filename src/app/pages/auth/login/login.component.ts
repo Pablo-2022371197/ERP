@@ -78,7 +78,7 @@ export class LoginComponent {
 
                     // Guardar la sesión del usuario con AuthService
                     this.authService.login({
-                        username: userProfile.email.split('@')[0], // Extraer username del email
+                        username: userProfile.name,
                         email: userProfile.email,
                         name: userProfile.name,
                         role: userProfile.role,

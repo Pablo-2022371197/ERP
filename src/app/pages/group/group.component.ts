@@ -137,27 +137,25 @@ export class GroupComponent {
 
     deleteGroup(group: Group) {
         if (confirm(`¿Estás seguro de que deseas eliminar el grupo "${group.nombre}"?`)) {
-            this.groups = this.groups.filter(g => g.id !== group.id);
-            this.totalGroups--;
+            this.groupService.deleteGroup(group.id).subscribe(success => {
+                if (success) {
+                    this.loadGroups(); // Recargar desde el servicio
+                }
+            });
         }
     }
 
     onSaveGroup(groupData: Partial<Group>) {
         if (this.isEditMode && this.editingGroup) {
-            // Actualizar grupo existente
-            const index = this.groups.findIndex(g => g.id === this.editingGroup!.id);
-            if (index !== -1) {
-                this.groups[index] = {
-                    ...this.groups[index],
-                    ...groupData,
-                    integrantes: groupData.miembros?.length || 0
-                };
-            }
+            // Actualizar grupo existente usando el servicio
+            this.groupService.updateGroup(this.editingGroup.id!, groupData).subscribe(updatedGroup => {
+                if (updatedGroup) {
+                    this.loadGroups(); // Recargar desde el servicio
+                }
+            });
         } else {
-            // Crear nuevo grupo
-            const newId = Math.max(...this.groups.map(g => g.id), 0) + 1;
-            const newGroup: Group = {
-                id: newId,
+            // Crear nuevo grupo usando el servicio
+            const newGroupData = {
                 nombre: groupData.nombre!,
                 descripcion: groupData.descripcion || '',
                 nivel: groupData.nivel!,
@@ -166,8 +164,9 @@ export class GroupComponent {
                 integrantes: groupData.miembros?.length || 0,
                 miembros: groupData.miembros || []
             };
-            this.groups = [...this.groups, newGroup];
-            this.totalGroups++;
+            this.groupService.createGroup(newGroupData).subscribe(newGroup => {
+                this.loadGroups(); // Recargar desde el servicio
+            });
         }
         this.displayGroupDialog = false;
         this.editingGroup = null;

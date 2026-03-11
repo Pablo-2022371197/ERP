@@ -23,7 +23,7 @@ import { AuthService } from '../../services/auth.service';
         AvatarModule,
         BadgeModule,
         MenuModule,
-        OverlayBadge
+        // OverlayBadge
     ],
     templateUrl: './main-layout.component.html',
     styleUrls: ['./main-layout.component.css']
