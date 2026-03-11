@@ -10,6 +10,7 @@ import { TicketViewComponent, Ticket as TicketView } from '../../components/tick
 import { TicketFormComponent, Ticket as TicketForm } from '../../components/ticket/ticket-form/ticket-form.component';
 import { GroupService, Group } from '../../services/group.service';
 import { TicketService, Ticket } from '../../services/ticket.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
     selector: 'app-home',
@@ -28,8 +29,7 @@ import { TicketService, Ticket } from '../../services/ticket.service';
     styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-    // Usuario actual (simulado)
-    currentUser = 'Carlos Mendoza';
+
 
     // Grupos del usuario
     userGroups: Group[] = [];
@@ -80,8 +80,15 @@ export class HomeComponent implements OnInit {
     constructor(
         private groupService: GroupService,
         private ticketService: TicketService,
-        private router: Router
+        private router: Router,
+        public authService: AuthService,
+
     ) { }
+
+    get currentUserName(): string {
+        return this.authService.getUserName();
+    }
+
 
     ngOnInit() {
         this.loadUserData();
@@ -105,10 +112,13 @@ export class HomeComponent implements OnInit {
             });
 
             // Cargar tickets recientes asignados al usuario
-            this.ticketService.getRecentTicketsByUser(this.currentUser, 5).subscribe(tickets => {
+            this.ticketService.getRecentTicketsByUser(this.currentUserName, 5).subscribe(tickets => {
                 this.recentTickets = tickets;
             });
         });
+    }
+    currentUser(currentUser: any, arg1: number) {
+        throw new Error('Method not implemented.');
     }
 
     onGroupSelect(group: Group) {
@@ -164,7 +174,7 @@ export class HomeComponent implements OnInit {
 
     reloadCurrentView() {
         // Recargar tickets recientes
-        this.ticketService.getRecentTicketsByUser(this.currentUser, 5).subscribe(tickets => {
+        this.ticketService.getRecentTicketsByUser(this.currentUserName, 5).subscribe(tickets => {
             this.recentTickets = tickets;
         });
 
