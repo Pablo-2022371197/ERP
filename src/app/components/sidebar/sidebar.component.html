@@ -17,7 +17,7 @@
             <i class="pi pi-home"></i>
             <span *ngIf="!collapsed">Home</span>
         </a>
-        <a routerLink="/group" routerLinkActive="active-menu-item" class="menu-item">
+        <a routerLink="/group" *ifHasPermission="'groups_view'" routerLinkActive="active-menu-item" class="menu-item">
             <i class="pi pi-users"></i>
             <span *ngIf="!collapsed">Group</span>
         </a>

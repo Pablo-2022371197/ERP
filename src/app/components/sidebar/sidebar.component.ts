@@ -1,13 +1,15 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { IfHasPermissionDirective } from "../../directives/if-has-permission.directive";
 
 @Component({
     selector: 'app-sidebar',
     standalone: true,
     imports: [
         CommonModule,
-        RouterModule
+        RouterModule,
+        IfHasPermissionDirective
     ],
     templateUrl: './sidebar.component.html',
     styleUrls: ['./sidebar.component.css']

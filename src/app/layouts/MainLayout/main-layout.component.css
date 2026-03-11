@@ -25,7 +25,7 @@
     min-height: 70px;
     position: sticky;
     top: 0;
-    z-index: 50;
+    z-index: 100;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
@@ -134,10 +134,15 @@
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s ease;
+    position: relative;
 }
 
 .user-menu:hover {
     background: #f3f4f6;
+}
+
+.user-menu:active {
+    transform: scale(0.98);
 }
 
 :host ::ng-deep .user-menu .p-avatar {
@@ -145,6 +150,11 @@
     height: 40px;
     font-size: 1rem;
     font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.user-menu:hover :host ::ng-deep .p-avatar {
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
 }
 
 .user-details {
@@ -167,6 +177,83 @@
 .user-menu i {
     color: #9ca3af;
     font-size: 0.8rem;
+}
+
+/* User Menu Dropdown Styles */
+:host ::ng-deep .p-menu.p-component {
+    border: none;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15), 0 5px 10px rgba(0, 0, 0, 0.05);
+    border-radius: 12px;
+    padding: 0.5rem;
+    min-width: 200px;
+    margin-top: 0.5rem;
+    z-index: 9999 !important;
+    animation: fadeInDown 0.2s ease-out;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+:host ::ng-deep .p-menu .p-menuitem-link {
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    gap: 0.75rem;
+    color: #1f2937;
+    font-weight: 500;
+}
+
+:host ::ng-deep .p-menu .p-menuitem-link:hover {
+    background: #f3f4f6;
+}
+
+:host ::ng-deep .p-menu .p-menuitem-link .p-menuitem-icon {
+    color: #6b7280;
+    font-size: 1rem;
+}
+
+:host ::ng-deep .p-menu .p-menuitem-link:hover .p-menuitem-icon {
+    color: #667eea;
+}
+
+:host ::ng-deep .p-menu .p-menuitem-text {
+    font-size: 0.9rem;
+}
+
+:host ::ng-deep .p-menu .p-menu-separator {
+    margin: 0.5rem 0;
+    border-top: 1px solid #e5e7eb;
+}
+
+:host ::ng-deep .p-menu .p-menuitem-link:focus {
+    box-shadow: 0 0 0 2px #667eea20;
+}
+
+/* Cerrar Sesión con estilo especial */
+:host ::ng-deep .p-menu .p-menuitem:last-child .p-menuitem-link {
+    color: #ef4444;
+}
+
+:host ::ng-deep .p-menu .p-menuitem:last-child .p-menuitem-link .p-menuitem-icon {
+    color: #ef4444;
+}
+
+:host ::ng-deep .p-menu .p-menuitem:last-child .p-menuitem-link:hover {
+    background: #fee2e2;
+}
+
+/* Asegurar que el overlay del menú esté por encima de todo */
+:host ::ng-deep .p-menu-overlay {
+    z-index: 9999 !important;
 }
 
 /* Page Content */

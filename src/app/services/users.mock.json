@@ -72,7 +72,8 @@
             "github": "github.com/mgarcia",
             "permissions": [
                 "tickets_view",
-                "ticket_view"
+                "ticket_view",
+                "user_edit"
             ]
         },
         {
