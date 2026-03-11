@@ -29,7 +29,9 @@
         <div class="flex! flex-col! gap-2!">
             <label for="groupAutor" class="font-semibold! text-gray-700!">Autor *</label>
             <input pInputText id="groupAutor" [(ngModel)]="currentGroup.autor" placeholder="Nombre del autor"
-                class="w-full!" />
+                class="w-full!" [readonly]="!isEditMode" [disabled]="!isEditMode"
+                [style.background]="!isEditMode ? '#f3f4f6' : 'white'"
+                [style.cursor]="!isEditMode ? 'not-allowed' : 'text'" />
         </div>
 
         <!-- Miembros (MultiSelect) -->
@@ -63,12 +65,12 @@
             </p-multiselect>
         </div>
 
-        <!-- Miembros seleccionados para eliminar (solo en modo edición con miembros guardados) -->
-        @if (isEditMode && currentGroup.miembros && currentGroup.miembros.length > 0) {
+        <!-- Miembros seleccionados para eliminar (mostrar miembros guardados) -->
+        @if (currentGroup.miembros && currentGroup.miembros.length > 0) {
         <div class="flex! flex-col! gap-3! md:col-span-2! mt-2! drop-shadow-sm">
             <div class="flex! items-center! gap-2!">
                 <i class="pi pi-users text-indigo-600!"></i>
-                <label class="font-semibold! text-gray-700!">Miembros Guardados ({{ currentGroup.miembros.length
+                <label class="font-semibold! text-gray-700!">Miembros del Grupo ({{ currentGroup.miembros.length
                     }})</label>
             </div>
             <div class="space-y-2! max-h-60! overflow-y-auto! border! border-gray-200! rounded-lg! p-3! bg-gray-50!">
@@ -79,13 +81,20 @@
                             class="flex! items-center! justify-center! w-10! h-10! rounded-full! bg-indigo-100! text-indigo-600! font-bold! text-sm! shrink-0!">
                             {{ getInitials(member.nombre) }}
                         </span>
-                        <div>
+                        <div class="flex-1!">
                             <div class="font-semibold! text-gray-900!">{{ member.nombre }}</div>
                             <div class="text-xs! text-gray-500!">{{ member.email }}</div>
                         </div>
+                        @if (isGroupAuthor(member)) {
+                        <span class="text-xs! bg-indigo-100! text-indigo-700! px-2! py-1! rounded-full! font-medium!">
+                            <i class="pi pi-star-fill text-indigo-500! text-xs!"></i> Autor
+                        </span>
+                        }
                     </div>
+                    @if (!isGroupAuthor(member)) {
                     <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" size="small"
                         (onClick)="removeMemberFromSaved(member)" pTooltip="Eliminar del grupo"></p-button>
+                    }
                 </div>
             </div>
         </div>

@@ -9,6 +9,7 @@ import { SelectModule } from 'primeng/select';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { TooltipModule } from 'primeng/tooltip';
+import { AuthService } from '../../../services/auth.service';
 
 export interface User {
     id: number;
@@ -61,15 +62,33 @@ export class GroupFormComponent implements OnChanges {
     currentGroup: Partial<Group> = this.getEmptyGroup();
     selectedMembers: User[] = [];
 
+    constructor(private authService: AuthService) { }
+
     ngOnChanges(changes: SimpleChanges) {
-        if (changes['group'] && this.group) {
-            if (this.isEditMode) {
-                this.currentGroup = JSON.parse(JSON.stringify(this.group));
-                // En modo edición, no pre-seleccionamos los miembros guardados
-                this.selectedMembers = [];
-            } else {
-                this.currentGroup = this.getEmptyGroup();
-                this.selectedMembers = [];
+        if (changes['group'] || changes['visible']) {
+            if (this.visible) {
+                if (this.isEditMode && this.group) {
+                    this.currentGroup = JSON.parse(JSON.stringify(this.group));
+                    // En modo edición, no pre-seleccionamos los miembros guardados
+                    this.selectedMembers = [];
+                } else {
+                    // Modo creación: establecer usuario actual como autor y miembro
+                    this.currentGroup = this.getEmptyGroup();
+                    const currentUser = this.authService.getCurrentUser();
+                    if (currentUser) {
+                        this.currentGroup.autor = currentUser.name;
+                        // Crear usuario actual como miembro del grupo
+                        const currentUserAsMember: User = {
+                            id: this.generateUserId(),
+                            nombre: currentUser.name,
+                            email: currentUser.email,
+                            username: currentUser.username,
+                            displayName: `${currentUser.name} (${currentUser.email})`
+                        };
+                        this.currentGroup.miembros = [currentUserAsMember];
+                    }
+                    this.selectedMembers = [];
+                }
             }
         }
 
@@ -93,6 +112,11 @@ export class GroupFormComponent implements OnChanges {
         };
     }
 
+    private generateUserId(): number {
+        // Generar ID temporal basado en timestamp
+        return Date.now();
+    }
+
     getInitials(name: string): string {
         return name
             .split(' ')
@@ -101,14 +125,32 @@ export class GroupFormComponent implements OnChanges {
             .toUpperCase();
     }
 
+    // Verificar si un miembro es el autor del grupo (en modo creación)
+    isGroupAuthor(member: User): boolean {
+        if (this.isEditMode) return false;
+        const currentUser = this.authService.getCurrentUser();
+        return currentUser !== null && member.email === currentUser.email;
+    }
+
     // Filtrar usuarios para excluir los ya guardados en el grupo
     getFilteredUsers(): User[] {
         const savedMemberIds = (this.currentGroup.miembros || []).map(m => m.id);
-        return this.availableUsers.filter(user => !savedMemberIds.includes(user.id));
+        const currentUser = this.authService.getCurrentUser();
+        return this.availableUsers.filter(user => {
+            const isAlreadyMember = savedMemberIds.includes(user.id);
+            // En modo creación, también excluir al usuario actual por email
+            const isCurrentUser = !this.isEditMode && currentUser && user.email === currentUser.email;
+            return !isAlreadyMember && !isCurrentUser;
+        });
     }
 
     // Eliminar miembro de la lista guardada (solo en modo edición)
     removeMemberFromSaved(member: User) {
+        // No permitir eliminar al autor del grupo
+        const currentUser = this.authService.getCurrentUser();
+        if (!this.isEditMode && currentUser && member.email === currentUser.email) {
+            return; // No permitir eliminar al creador del grupo
+        }
         if (this.currentGroup.miembros) {
             this.currentGroup.miembros = this.currentGroup.miembros.filter(m => m.id !== member.id);
         }
