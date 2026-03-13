@@ -32,12 +32,32 @@
                 optionLabel="label" optionValue="value" placeholder="Seleccionar prioridad" class="w-full"></p-select>
         </div>
 
+        <!-- Grupo -->
+        <div class="flex flex-col gap-2 md:col-span-2">
+            <label for="ticketGrupo" class="font-semibold text-gray-700">Grupo *</label>
+            <p-select id="ticketGrupo" [(ngModel)]="selectedGroupId" [options]="availableGroups" optionLabel="nombre"
+                optionValue="id" placeholder="Seleccionar grupo" class="w-full" (onChange)="onGroupChange($event.value)"
+                [filter]="true" filterPlaceholder="Buscar grupo">
+                <ng-template let-group #item>
+                    <div class="flex items-center gap-2 p-2">
+                        <i class="pi pi-users text-indigo-600"></i>
+                        <div class="flex-1">
+                            <div class="font-semibold text-gray-900">{{ group.nombre }}</div>
+                            <div class="text-xs text-gray-500">{{ group.integrantes }} miembros</div>
+                        </div>
+                    </div>
+                </ng-template>
+            </p-select>
+        </div>
+
         <!-- Asignado a -->
         <div class="flex flex-col gap-2">
             <label for="ticketAsignadoA" class="font-semibold text-gray-700">Asignado a *</label>
             <p-select id="ticketAsignadoA" [(ngModel)]="currentTicket.asignadoA" [options]="availableUsers"
-                optionLabel="nombre" optionValue="nombre" placeholder="Seleccionar usuario" class="w-full"
-                [filter]="true" filterPlaceholder="Buscar por nombre o email" appendTo="body">
+                optionLabel="nombre" optionValue="nombre"
+                [placeholder]="selectedGroupId ? 'Seleccionar usuario' : 'Primero selecciona un grupo'" class="w-full"
+                [filter]="true" filterPlaceholder="Buscar por nombre o email" appendTo="body"
+                [disabled]="!selectedGroupId">
                 <ng-template let-user #item>
                     <div class="flex items-center gap-2 p-2">
                         <span
@@ -104,7 +124,7 @@
             <p-button label="Cancelar" icon="pi pi-times" severity="secondary" (onClick)="cancelTicket()"></p-button>
             <p-button [label]="isEditMode ? 'Actualizar' : 'Guardar'" icon="pi pi-check" severity="primary"
                 (onClick)="saveTicket()"
-                [disabled]="!currentTicket.titulo || !currentTicket.estado || !currentTicket.prioridad || !currentTicket.asignadoA || !currentTicket.fechaLimite"></p-button>
+                [disabled]="!currentTicket.titulo || !currentTicket.estado || !currentTicket.prioridad || !selectedGroupId || !currentTicket.asignadoA || !currentTicket.fechaLimite"></p-button>
         </div>
     </ng-template>
 </p-dialog>

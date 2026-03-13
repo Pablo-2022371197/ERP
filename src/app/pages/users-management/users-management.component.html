@@ -1,0 +1,129 @@
+<div class="users-management-container">
+    <!-- Header Section with Total -->
+    <div class="header-section">
+        <div class="total-card">
+            <div class="total-content">
+                <div class="total-icon">
+                    <i class="pi pi-users"></i>
+                </div>
+                <div class="total-info">
+                    <h3>Total Usuarios</h3>
+                    <p class="total-number">{{ totalUsers }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table Section Title -->
+    <div class="section-title">
+        <h2>
+            <i class="pi pi-table"></i>
+            Usuarios Registrados
+        </h2>
+    </div>
+
+    <!-- Users Table -->
+    <div class="table-container">
+        <p-table [value]="users" [paginator]="true" [rows]="5" [rowsPerPageOptions]="[5, 10, 25]"
+            [showCurrentPageReport]="true"
+            currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} usuarios"
+            [tableStyle]="{ 'min-width': '60rem' }" styleClass="p-datatable-striped p-datatable-gridlines"
+            [globalFilterFields]="['name', 'email', 'role', 'department']">
+
+            <ng-template #header>
+                <tr>
+                    <th pSortableColumn="name">
+                        <div class="flex items-center gap-2 min-w-30">
+                            Nombre
+                            <p-sortIcon field="name"></p-sortIcon>
+                        </div>
+                    </th>
+                    <th pSortableColumn="email">
+                        <div class="flex items-center gap-2 min-w-30">
+                            Email
+                            <p-sortIcon field="email"></p-sortIcon>
+                        </div>
+                    </th>
+                    <th pSortableColumn="phone">
+                        <div class="flex items-center gap-2">
+                            Teléfono
+                            <p-sortIcon field="phone"></p-sortIcon>
+                        </div>
+                    </th>
+                    <th pSortableColumn="role" class="text-center">
+                        <div class="flex items-center justify-center gap-2">
+                            Rol
+                            <p-sortIcon field="role"></p-sortIcon>
+                        </div>
+                    </th>
+                    <th pSortableColumn="permissions" class="text-center">
+                        <div class="flex items-center justify-center gap-2 min-w-20">
+                            Permisos
+                            <p-sortIcon field="permissions"></p-sortIcon>
+                        </div>
+                    </th>
+                    <th class="text-center">Acciones</th>
+                </tr>
+            </ng-template>
+
+            <ng-template #body let-user>
+                <tr>
+                    <td>
+                        <div class="flex items-center gap-2">
+                            <span
+                                class="flex items-center justify-center min-w-8 min-h-8 rounded-full bg-indigo-100 text-indigo-600 font-semibold text-sm shrink-0">
+                                {{ getInitials(user.name) }}
+                            </span>
+                            <span class="font-medium text-gray-800">{{ user.name }}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="font-semibold text-indigo-600">{{ user.email }}</span>
+                    </td>
+                    <td>
+                        <div class="flex items-center gap-1">
+                            <i class="pi pi-phone text-gray-400"></i>
+                            <span class="text-gray-600">{{ user.phone }}</span>
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        <p-tag [value]="user.role" [severity]="getRoleSeverity(user.role)" [rounded]="true"></p-tag>
+                    </td>
+                    <td class="text-center">
+                        <div class="inline-flex items-center justify-center scale-125 w-full">
+                            <p-badge [value]="user.permissions.length" severity="info"></p-badge>
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        <div class="flex items-center justify-center gap-1">
+                            <p-button *ifHasPermission="'user_view'" icon="pi pi-eye" [rounded]="true" [text]="true"
+                                severity="info" size="small" (onClick)="viewUser(user)"></p-button>
+                            <p-button *ifHasPermission="'users_edit'" icon="pi pi-pencil" [rounded]="true" [text]="true"
+                                severity="secondary" size="small" (onClick)="editUser(user)"></p-button>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+
+            <ng-template #emptymessage>
+                <tr>
+                    <td colspan="6" class="text-center py-8">
+                        <div class="flex flex-col items-center gap-2 text-gray-400">
+                            <i class="pi pi-inbox text-4xl"></i>
+                            <span>No se encontraron usuarios</span>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+
+<!-- User Edit Dialog (will be created as separate component) -->
+<app-user-edit-form [(visible)]="displayUserDialog" [user]="editingUser" (onSave)="onSaveUser($event)"
+    (onCancel)="onCancelUserForm()">
+</app-user-edit-form>
+
+<!-- User View Dialog (will be created as separate component) -->
+<app-user-view [(visible)]="displayViewDialog" [user]="viewingUser" (onClose)="onCloseView()">
+</app-user-view>

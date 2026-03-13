@@ -261,10 +261,11 @@ export class HomeComponent implements OnInit {
                 }
             });
         } else {
-            // Crear nuevo ticket - asignar al primer grupo del usuario si hay grupo seleccionado
+            // Crear nuevo ticket - usar el groupId seleccionado en el formulario
             const ticketData = {
                 ...ticket,
-                groupId: this.selectedGroup?.id || (this.userGroups.length > 0 ? this.userGroups[0].id : 1)
+                // El groupId ya viene del formulario, solo usar fallback si no existe
+                groupId: ticket.groupId || this.selectedGroup?.id || (this.userGroups.length > 0 ? this.userGroups[0].id : 1)
             } as Partial<Ticket>;
 
             this.ticketService.createTicket(ticketData).subscribe({

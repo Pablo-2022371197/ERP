@@ -1,0 +1,29 @@
+.permission-group {
+    padding: 1rem;
+    background: linear-gradient(to bottom right, #f9fafb, #f3f4f6);
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    margin-bottom: 0.75rem;
+}
+
+.permission-group:last-child {
+    margin-bottom: 0;
+}
+
+.permission-group h4 {
+    font-size: 0.875rem;
+    color: #374151;
+}
+
+::ng-deep .p-multiselect {
+    width: 100% !important;
+}
+
+::ng-deep .p-multiselect-panel {
+    max-width: 100% !important;
+}
+
+::ng-deep .p-chip {
+    font-size: 0.75rem !important;
+    padding: 0.25rem 0.5rem !important;
+}

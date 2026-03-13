@@ -25,6 +25,11 @@
             <i class="pi pi-ticket"></i>
             <span *ngIf="!collapsed">Ticket</span>
         </a>
+        <a routerLink="/users-management" *ifHasPermission="'users_edit'" routerLinkActive="active-menu-item"
+            class="menu-item">
+            <i class="pi pi-users"></i>
+            <span *ngIf="!collapsed">Usuarios</span>
+        </a>
         <a routerLink="/user" routerLinkActive="active-menu-item" class="menu-item">
             <i class="pi pi-user"></i>
             <span *ngIf="!collapsed">User</span>

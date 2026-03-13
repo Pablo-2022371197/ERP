@@ -1,0 +1,61 @@
+urlPath: https://spatial-delcine-devemma-edfc3f92.koyeb.app/
+ver permisos: /permissions
+[post] login: /login
+
+[
+  // ADMIN - Todos los permisos (21 total)
+  {
+    email: 'admin@marher.com',
+    password: '$p4$ww0rD1234', // password: 'password'
+    permissions: [
+      // USERS (7)
+      'user:view', 'user:add', 'user:edit', 'user:edit:profile', 'user:delete', 'user:manage',
+      // GROUPS (6)
+      'group:view', 'group:add', 'group:edit', 'group:delete', 'group:manage',
+      // TICKETS (8)
+      'ticket:view', 'ticket:add', 'ticket:edit', 'ticket:delete', 'ticket:edit:state', 'ticket:edit:comment', 'ticket:manage'
+    ]
+  },
+
+  //  PROJECT MANAGER - Gestión tickets + grupos
+  {
+    email: 'pm@marher.com',
+    password: '$p4$ww0rD1234', // password: 'password'
+    permissions: [
+      // USERS (básico)
+      'user:view', 'user:edit:profile',
+      // GROUPS (completo)
+      'group:view', 'group:add', 'group:edit', 'group:delete', 'group:manage',
+      // TICKETS (completo)
+      'ticket:view', 'ticket:add', 'ticket:edit', 'ticket:delete', 'ticket:edit:state', 'ticket:edit:comment', 'ticket:manage'
+    ]
+  },
+
+  //  DEVELOPER - Tickets propios + colaboración
+  {
+    email: 'dev@marher.com',
+    password: '$p4$ww0rD1234', // password: 'password'
+    permissions: [
+      // USERS (solo perfil)
+      'user:view', 'user:edit:profile',
+      // GROUPS (lectura)
+      'group:view',
+      // TICKETS (propios + colaboración)
+      'ticket:view', 'ticket:add', 'ticket:edit', 'ticket:edit:state', 'ticket:edit:comment'
+    ]
+  },
+
+  //  SUPPORT - Solo tickets + comentarios
+  {
+    email: 'support@marher.com',
+    password: '$p4$ww0rD1234', // password: 'password'
+    permissions: [
+      // USERS (solo perfil)
+      'user:view', 'user:edit:profile',
+      // GROUPS (lectura)
+      'group:view',
+      // TICKETS (soporte básico)
+      'ticket:view', 'ticket:add', 'ticket:edit:comment'
+    ]
+  }
+];

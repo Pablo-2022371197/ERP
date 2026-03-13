@@ -7,7 +7,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { TextareaModule } from 'primeng/textarea';
 import { SelectModule } from 'primeng/select';
 import { DatePickerModule } from 'primeng/datepicker';
-import { GroupService, User } from '../../../services/group.service';
+import { GroupService, User, Group } from '../../../services/group.service';
 import { AuthService } from '../../../services/auth.service';
 
 interface Comentario {
@@ -26,6 +26,7 @@ interface HistorialCambio {
 
 export interface Ticket {
     id: number;
+    groupId?: number;
     titulo: string;
     descripcion: string;
     estado: string;
@@ -68,6 +69,10 @@ export class TicketFormComponent implements OnChanges {
     originalTicket: Partial<Ticket> | null = null;
     today = new Date();
 
+    // Grupos disponibles
+    availableGroups: Group[] = [];
+    selectedGroupId: number | null = null;
+
     // Usuarios disponibles para asignar
     availableUsers: User[] = [];
 
@@ -75,7 +80,7 @@ export class TicketFormComponent implements OnChanges {
         private groupService: GroupService,
         private authService: AuthService
     ) {
-        this.loadAvailableUsers();
+        this.loadAvailableGroups();
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -91,18 +96,58 @@ export class TicketFormComponent implements OnChanges {
                 if (this.currentTicket.fechaLimite) {
                     this.currentTicket.fechaLimite = new Date(this.currentTicket.fechaLimite);
                 }
+                // Cargar usuarios del grupo del ticket en modo edición
+                if (this.currentTicket.groupId) {
+                    this.selectedGroupId = this.currentTicket.groupId;
+                    this.loadUsersFromGroup(this.currentTicket.groupId);
+                }
             } else {
                 this.currentTicket = this.getEmptyTicket();
                 this.originalTicket = null;
+                this.selectedGroupId = null;
+                this.availableUsers = [];
             }
         }
     }
 
-    // Cargar usuarios disponibles desde el servicio de grupos
-    private loadAvailableUsers(): void {
-        this.groupService.getAllAvailableUsers().subscribe(users => {
-            this.availableUsers = users;
+    // Cargar grupos según el rol del usuario
+    private loadAvailableGroups(): void {
+        const isAdmin = this.authService.isAdmin();
+        const userEmail = this.authService.getUserEmail();
+
+        if (isAdmin) {
+            // Administrador: cargar todos los grupos
+            this.groupService.getAllGroups().subscribe(groups => {
+                this.availableGroups = groups;
+            });
+        } else {
+            // Usuario normal: cargar solo sus grupos
+            this.groupService.getUserGroupsByEmail(userEmail).subscribe(groups => {
+                this.availableGroups = groups;
+            });
+        }
+    }
+
+    // Cargar usuarios de un grupo específico
+    private loadUsersFromGroup(groupId: number): void {
+        this.groupService.getGroupById(groupId).subscribe(group => {
+            if (group) {
+                this.availableUsers = group.miembros;
+            }
         });
+    }
+
+    // Manejar cambio de grupo
+    onGroupChange(groupId: number | null): void {
+        this.selectedGroupId = groupId;
+        this.currentTicket.groupId = groupId || undefined;
+        this.currentTicket.asignadoA = ''; // Limpiar usuario asignado
+
+        if (groupId) {
+            this.loadUsersFromGroup(groupId);
+        } else {
+            this.availableUsers = [];
+        }
     }
 
     getInitials(name: string): string {
@@ -115,6 +160,7 @@ export class TicketFormComponent implements OnChanges {
 
     private getEmptyTicket(): Partial<Ticket> {
         return {
+            groupId: undefined,
             titulo: '',
             descripcion: '',
             estado: '',
@@ -244,6 +290,8 @@ export class TicketFormComponent implements OnChanges {
         this.visibleChange.emit(false);
         this.currentTicket = this.getEmptyTicket();
         this.originalTicket = null;
+        this.selectedGroupId = null;
+        this.availableUsers = [];
         this.onCancel.emit();
     }
 

@@ -1,0 +1,26 @@
+.modal-title-section {
+    border-bottom: 2px solid #e5e7eb;
+    padding-bottom: 1rem;
+}
+
+.modal-user-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.permission-category {
+    padding: 1rem;
+    background: linear-gradient(to bottom right, #f9fafb, #f3f4f6);
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+}
+
+.permission-category h4 {
+    font-size: 1rem;
+    color: #374151;
+}
+
+::ng-deep .p-chip {
+    font-size: 0.75rem !important;
+    padding: 0.5rem 0.75rem !important;
+}

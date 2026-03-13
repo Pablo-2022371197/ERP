@@ -34,6 +34,11 @@ export const routes: Routes = [
                     import('./pages/ticket/ticket.component').then((m) => m.TicketComponent),
             },
             {
+                path: 'users-management',
+                loadComponent: () =>
+                    import('./pages/users-management/users-management.component').then((m) => m.UsersManagementComponent),
+            },
+            {
                 path: 'user',
                 loadComponent: () =>
                     import('./pages/user/user.component').then((m) => m.UserComponent),
