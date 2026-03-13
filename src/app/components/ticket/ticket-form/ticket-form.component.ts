@@ -250,4 +250,13 @@ export class TicketFormComponent implements OnChanges {
     onEstadoChange() {
         // Para validaciones adicionales cuando cambia el estado
     }
+
+    getSortedHistorial(): HistorialCambio[] {
+        if (!this.currentTicket.historial) return [];
+        return [...this.currentTicket.historial].sort((a, b) => {
+            const dateA = new Date(a.fecha).getTime();
+            const dateB = new Date(b.fecha).getTime();
+            return dateB - dateA; // Orden descendente (más recientes primero)
+        });
+    }
 }

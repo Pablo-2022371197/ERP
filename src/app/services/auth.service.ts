@@ -87,4 +87,9 @@ export class AuthService {
             .join('')
             .toUpperCase();
     }
+
+    isAdmin(): boolean {
+        const user = this.currentUserSignal();
+        return user ? user.role === 'Administrador' : false;
+    }
 }

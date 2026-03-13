@@ -182,7 +182,7 @@
                                 </h3>
                             </div>
                             <div class="space-y-3!">
-                                <div *ngFor="let cambio of ticket.historial; let i = index"
+                                <div *ngFor="let cambio of getSortedHistorial(); let i = index"
                                     class="p-4! bg-linear-to-br! from-purple-50! to-purple-100/30! border! border-purple-200! rounded-lg! shadow-sm! hover:shadow-md! transition-shadow! duration-200!">
                                     <div class="flex! justify-between! items-start! mb-3!">
                                         <div class="flex! items-center! gap-2! flex-wrap!">

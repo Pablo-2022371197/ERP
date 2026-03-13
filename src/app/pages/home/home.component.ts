@@ -100,9 +100,14 @@ export class HomeComponent implements OnInit {
     loadUserData() {
         const currentUserEmail = this.authService.getUserEmail();
         const currentUserUsername = this.currentUserUsername;
+        const isAdmin = this.authService.isAdmin();
 
-        // Cargar grupos del usuario basándose en su email
-        this.groupService.getUserGroupsByEmail(currentUserEmail).subscribe(groups => {
+        // Si es administrador, cargar TODOS los grupos. Si no, solo los del usuario
+        const groupsObservable = isAdmin
+            ? this.groupService.getAllGroups()
+            : this.groupService.getUserGroupsByEmail(currentUserEmail);
+
+        groupsObservable.subscribe(groups => {
             this.userGroups = groups;
 
             // Cargar TODOS los tickets (administrador ve todos)
@@ -282,9 +287,20 @@ export class HomeComponent implements OnInit {
     }
 
     onTicketStatusChange(event: { ticket: Ticket, newStatus: string }) {
+        // Crear entrada en el historial
+        const historialEntry = {
+            campo: 'Estado',
+            valorAnterior: event.ticket.estado,
+            valorNuevo: event.newStatus,
+            fecha: new Date(),
+            autor: this.authService.getUserName()
+        };
+
+        // Actualizar ticket con nuevo estado y agregar entrada al historial
         const updatedTicket = {
             ...event.ticket,
-            estado: event.newStatus as 'Pendiente' | 'En progreso' | 'Revisión' | 'Finalizado'
+            estado: event.newStatus as 'Pendiente' | 'En progreso' | 'Revisión' | 'Finalizado',
+            historial: [...(event.ticket.historial || []), historialEntry]
         };
 
         this.ticketService.updateTicket(updatedTicket).subscribe({

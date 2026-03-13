@@ -148,6 +148,15 @@ export class TicketViewComponent {
         }
     }
 
+    getSortedHistorial(): HistorialCambio[] {
+        if (!this.ticket || !this.ticket.historial) return [];
+        return [...this.ticket.historial].sort((a, b) => {
+            const dateA = new Date(a.fecha).getTime();
+            const dateB = new Date(b.fecha).getTime();
+            return dateB - dateA; // Orden descendente (más recientes primero)
+        });
+    }
+
     closeDialog() {
         this.visible = false;
         this.visibleChange.emit(false);

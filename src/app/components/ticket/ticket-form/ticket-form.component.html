@@ -74,7 +74,7 @@
             <label class="font-semibold text-gray-700">Historial de Cambios ({{ currentTicket.historial.length
                 }})</label>
             <div class="space-y-2 max-h-48 overflow-y-auto">
-                <div *ngFor="let cambio of currentTicket.historial"
+                <div *ngFor="let cambio of getSortedHistorial()"
                     class="p-3 bg-purple-50 rounded-lg border border-purple-200">
                     <div class="flex justify-between items-start mb-2">
                         <div class="flex items-center gap-2">
